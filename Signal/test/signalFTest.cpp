@@ -66,7 +66,7 @@ void OptionParser(int argc, char *argv[]){
 		("recursive",																																							"Recursive fraction")
 		("forceFracUnity",																																				"Force fraction unity")
 		("isFlashgg",	po::value<bool>(&isFlashgg_)->default_value(true),													"Use flashgg format")
-		("verbose",	po::value<bool>(&verbose_)->default_value(false),													"Use flashgg format")
+		("verbose",	po::value<bool>(&verbose_)->default_value(true),													"Use flashgg format")
 		("flashggCats,f", po::value<string>(&flashggCatsStr_)->default_value("UntaggedTag_0,UntaggedTag_1,UntaggedTag_2,UntaggedTag_3,UntaggedTag_4,VBFTag_0,VBFTag_1,VBFTag_2,TTHHadronicTag,TTHLeptonicTag,VHHadronicTag,VHTightTag,VHLooseTag,VHEtTag"),       "Flashgg category names to consider")
 		("considerOnly", po::value<string>(&considerOnlyStr_)->default_value("All"), 
     "If you wish to only consider a subset cat in the list, list them as separated by commas. ")
@@ -214,8 +214,11 @@ int main(int argc, char *argv[]){
   
   // open input files using WS wrapper.
 	WSTFileWrapper *inWS 
-    = new WSTFileWrapper(filename_,"tagsDumper/cms_hgg_13TeV");
+    // = new WSTFileWrapper(filename_,"tagsDumper/cms_hgg_13TeV");
+    = new WSTFileWrapper(filename_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // changing for my file 
   if(verbose_) std::cout << "[INFO] Opened files OK!" << std::endl;
+//   if(verbose_) std::cout << "[INFO] Printing all workspace variables:" << inWS->allVars()->writeToFile() << endl; 
+	// inWS->allVars().writeToFile("WS_allVars.txt");
 	RooRealVar *mass = (RooRealVar*)inWS->var("CMS_hgg_mass");
   if(verbose_) std::cout << "[INFO] Got mass variable " << mass << std::endl;
 	//mass->setBins(80);
@@ -308,12 +311,14 @@ int main(int argc, char *argv[]){
 	    //RooRealVar *dZ = (RooRealVar*)inWS->var("dZ");
 	    RooRealVar *weight0 = new RooRealVar("weight","weight",-100000,1000000);
 	    RooRealVar *dZ = new RooRealVar("dZ","dZ",-100000,1000000);
+	    // RooRealVar *dZ = new RooRealVar("dZ","dZ",-998,1000000);
       if (verbose_) std::cout << "[INFO] got roorealvars from ws ? mass " << mass << " dz " << dZ << std::endl;
       
       // access dataset and immediately reduce it!
 			if (isFlashgg_){
 				RooDataSet *data0   = (RooDataSet*)inWS->data(
-          Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()));
+        //   Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()));
+          Form("_13TeV_%s_%s",proc.c_str(),flashggCats_[cat].c_str())); // changing to fit my file 
         if(verbose_) {
           std::cout << "[INFO] got dataset data0 ? " << data0 << "now make empty clones " << std::endl;
           if (data0) {
@@ -333,12 +338,15 @@ int main(int argc, char *argv[]){
             mass->setVal(data0->get(i)->getRealValue("CMS_hgg_mass"));
             weight0->setVal(data0->weight() ); // <--- is this correct?
             dZ->setVal(data0->get(i)->getRealValue("dZ"));
-            data->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
-            if (dZ->getVal() <1.){
-            dataRV->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
-            } else{
-            dataWV->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
-            }
+			// cout << "dZ->getVal() = " << dZ->getVal() << endl; 
+			if (dZ->getVal() != -999){  // don't plot events that don't pass preselection 
+				data->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
+				if (dZ->getVal() <1.){
+				dataRV->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
+				} else{
+				dataWV->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
+				}
+		  }
         }
 
         //print out contents, if you want... 
