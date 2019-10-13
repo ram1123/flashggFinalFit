@@ -214,8 +214,8 @@ int main(int argc, char *argv[]){
   
   // open input files using WS wrapper.
 	WSTFileWrapper *inWS 
-    // = new WSTFileWrapper(filename_,"tagsDumper/cms_hgg_13TeV");
-    = new WSTFileWrapper(filename_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // changing for my file 
+    // = new WSTFileWrapper(filename_,"tagsDumper/cms_HHWWgg_13TeV");
+    = new WSTFileWrapper(filename_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // changing for my file. Want tagsDumper directory but don't have it yet 
   if(verbose_) std::cout << "[INFO] Opened files OK!" << std::endl;
 //   if(verbose_) std::cout << "[INFO] Printing all workspace variables:" << inWS->allVars()->writeToFile() << endl; 
 	// inWS->allVars().writeToFile("WS_allVars.txt");
@@ -317,8 +317,8 @@ int main(int argc, char *argv[]){
       // access dataset and immediately reduce it!
 			if (isFlashgg_){
 				RooDataSet *data0   = (RooDataSet*)inWS->data(
-        //   Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()));
-          Form("_13TeV_%s_%s",proc.c_str(),flashggCats_[cat].c_str())); // changing to fit my file 
+          Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()));
+        //   Form("_13TeV_%s_%s",proc.c_str(),flashggCats_[cat].c_str())); // changing to fit my file 
         if(verbose_) {
           std::cout << "[INFO] got dataset data0 ? " << data0 << "now make empty clones " << std::endl;
           if (data0) {
@@ -339,7 +339,7 @@ int main(int argc, char *argv[]){
             weight0->setVal(data0->weight() ); // <--- is this correct?
             dZ->setVal(data0->get(i)->getRealValue("dZ"));
 			// cout << "dZ->getVal() = " << dZ->getVal() << endl; 
-			if (dZ->getVal() != -999){  // don't plot events that don't pass preselection 
+			if (dZ->getVal() != -999){  // don't plot events that don't pass preselection + MVA selections 
 				data->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );
 				if (dZ->getVal() <1.){
 				dataRV->add( RooArgList(*mass, *dZ, *weight0), weight0->getVal() );

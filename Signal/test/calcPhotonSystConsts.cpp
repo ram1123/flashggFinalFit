@@ -448,7 +448,7 @@ int main(int argc, char *argv[]){
 		inFiles[i]->Print();
 	}
 	//	inWS_ = (RooWorkspace*)inFiles[0]->Get("tagsDumper/cms_hgg_13TeV"); //FIXME should add all workspaces together from various files
-	inWS_ = new WSTFileWrapper(infilenamesStr_,"tagsDumper/cms_hgg_13TeV");
+	inWS_ = new WSTFileWrapper(infilenamesStr_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV");
 
 	ofstream outfile;
 	outfile.open(outfilename_.c_str());
@@ -488,8 +488,9 @@ int main(int argc, char *argv[]){
 					// this is to ensure nominal comes from the right file
 					vector<TH1F*> hists;
 					if (isFlashgg_){
-						string flashggCat = flashggCats_[cat]; 
-						hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
+						string flashggCat = flashggCats_[cat];  
+						// hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
+						hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("MCScale%s",phoCat->c_str())); // sloppy fix for now to match bad tree name I have 
 					}else{
 						hists= getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_scale_%s",phoCat->c_str()));
 					}
@@ -529,7 +530,8 @@ int main(int argc, char *argv[]){
 					vector<TH1F*> hists;
 					if (isFlashgg_){ // Smearing not yet supported for Flashgg
 						string flashggCat = flashggCats_[cat]; 
-						hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str()));
+						// Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str())
+						hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("MCSmear%s",phoCat->c_str())); // temporary sloppy fix for bad tree name 
 					}	 else {
 
 						// this is to ensure nominal comes from the right file
@@ -570,8 +572,9 @@ int main(int argc, char *argv[]){
 				if (photonCatScalesCorrStr_.size()!=0){
 					for (vector<string>::iterator phoCat=photonCatScalesCorr_.begin(); phoCat!=photonCatScalesCorr_.end(); phoCat++){
 						string flashggCat = flashggCats_[cat]; 
-						vector<TH1F*> hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("%s",phoCat->c_str()));
-
+						// vector<TH1F*> hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("%s",phoCat->c_str()));
+						vector<TH1F*> hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("%s",phoCat->c_str())); // changing to something stupid for now to match bad tree name I have 
+  
 						// this is to ensure nominal comes from the right file
 						TH1F *nominal = hists[0];
 						TH1F *scaleUp = hists[1];

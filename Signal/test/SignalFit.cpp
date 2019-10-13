@@ -52,8 +52,10 @@ string systfilename_;
 string plotDir_;
 //bool skipPlots_=false;
 bool skipPlots_=true;
-int mhLow_=115;
-int mhHigh_=135;
+// int mhLow_=115;
+// int mhHigh_=135;
+int mhLow_=120;
+int mhHigh_=130;
 int nCats_;
 float constraintValue_;
 float iterativeFitConstraint_;
@@ -104,7 +106,8 @@ float dataBeamSpotWidth_=3.5; //cm
 //string referenceProc_="ggh";
 string referenceProc_="GG2H";
 //string referenceProcWV_="ggh";
-string referenceProcWV_="GG2H";
+// string referenceProcWV_="GG2H";
+string referenceProcWV_="ggF"; //HHWWgg 
 //string referenceProcTTH_="tth";
 string referenceProcTTH_="TTH";
 string referenceTagWV_="UntaggedTag_2";
@@ -134,17 +137,19 @@ void OptionParser(int argc, char *argv[]){
 		("systfilename,s", po::value<string>(&systfilename_)->default_value("dat/photonCatSyst.dat"),		"Systematic model numbers")
 		("plotDir,p", po::value<string>(&plotDir_)->default_value("plots"),						"Put plots in this directory")
 		("skipPlots", 																																									"Do not make any plots")
-		("mhLow,L", po::value<int>(&mhLow_)->default_value(115),                                  			"Low mass point")
+		// ("mhLow,L", po::value<int>(&mhLow_)->default_value(115),                                  			"Low mass point")
+		("mhLow,L", po::value<int>(&mhLow_)->default_value(120),                                  			"Low mass point")
 		("mcBeamSpotWidth", po::value<float>(&mcBeamSpotWidth_)->default_value(5.14),                                  			"Default width of MC beamspot")
 		("dataBeamSpotWidth", po::value<float>(&dataBeamSpotWidth_)->default_value(3.50),                                  			"Default width of data beamspot")
 		("nThreads,t", po::value<int>(&ncpu_)->default_value(ncpu_),                               			"Number of threads to be used for the fits")
-		("mhHigh,H", po::value<int>(&mhHigh_)->default_value(135),                                			"High mass point")
+		// ("mhHigh,H", po::value<int>(&mhHigh_)->default_value(135),                                			"High mass point")
+		("mhHigh,H", po::value<int>(&mhHigh_)->default_value(130),                                			"High mass point")
 		("iterativeFitConstraint_,C", po::value<float>(&iterativeFitConstraint_)->default_value(0.1),            			"Constraint value for iterative fit (for SSF)(0.1 is +/- 10%)")
 		("useSSF", po::value<bool>(&useSSF_)->default_value(false),"Use a simulatenous fit of all mass points where the params of the functional form are functions of MH")
 		("constraintValueMass,M", po::value<int>(&constraintValueMass_)->default_value(125),                        "Constraint value mass")
 		("pdfWeights", po::value<int>(&pdfWeights_)->default_value(0),                        "If pdf systematics should be considered, say how many (default 0 = off)")
 		("skipSecondaryModels",                                                                   			"Turn off creation of all additional models")
-		("doQuadraticSigmaSum",  										        "Add sigma systematic terms in quadrature")
+		("doQuadraticSigmaSum",  			 							        "Add sigma systematic terms in quadrature")
 		("procs", po::value<string>(&procStr_)->default_value("ggh,vbf,wh,zh,tth"),					"Processes (comma sep)")
 		("massList", po::value<string>(&massListStr_)->default_value("120,125,130"),					"Masses to process.")
 		("skipMasses", po::value<string>(&massesToSkip_)->default_value(""),					"Skip these mass points - used eg for the 7TeV where there's no mc at 145")
@@ -297,7 +302,9 @@ RooDataSet * reduceDataset(RooDataSet *data0){
     mass_->setVal(data0->get(i)->getRealValue("CMS_hgg_mass"));
     weight0->setVal(data0->weight() ); // <--- is this correct?
     dZ_->setVal(data0->get(i)->getRealValue("dZ"));
-    data->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+    // if(mass_->getVal() != -99){ // Don't plot events that don't pass preselection + MVA selections 
+      data->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+    // }
     }
 return data;
 }
@@ -313,11 +320,13 @@ void plotBeamSpotDZdist(RooDataSet *data0, string suffix=""){
     mass_->setVal(data0->get(i)->getRealValue("CMS_hgg_mass"));
     weight0->setVal(data0->weight() ); // <--- is this correct?
     dZ_->setVal(data0->get(i)->getRealValue("dZ"));
-    if (fabs(dZ_->getVal()) <0.1){
-		histSmallDZ->Fill( dZ_->getVal(),data0->weight());
-		} else {
-		histLargeDZ->Fill( dZ_->getVal(),data0->weight());
-		}
+    // if(mass_->getVal() != -99){ // Don't plot events that don't pass preselection + MVA selections 
+      if (fabs(dZ_->getVal()) <0.1){
+      histSmallDZ->Fill( dZ_->getVal(),data0->weight());
+      } else {
+      histLargeDZ->Fill( dZ_->getVal(),data0->weight());
+      }
+    // }
   }
 	TCanvas *c = new TCanvas("c","c",500,500);
 	string extra="";
@@ -353,11 +362,13 @@ RooDataSet * rvwvDataset(RooDataSet *data0, string rvwv){
     mass_->setVal(data0->get(i)->getRealValue("CMS_hgg_mass"));
     weight0->setVal(data0->weight() ); 
 		dZ_->setVal(data0->get(i)->getRealValue("dZ"));
-    if (fabs(dZ_->getVal() )<1.){
-      dataRV->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
-    } else{
-      dataWV->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
-    }
+    // if(mass_->getVal() != -99){ // Don't plot events that don't pass preselection + MVA selections 
+      if (fabs(dZ_->getVal() )<1.){
+        dataRV->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+      } else{
+        dataWV->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+      }
+    // }
   }
   if (rvwv.compare("RV") ==0){
     return dataRV;
@@ -389,7 +400,9 @@ RooDataSet * beamSpotReweigh(RooDataSet *data0 /*original dataset*/){
 		}
     
 		weight0->setVal(factor * data0->weight() ); // <--- is this correct?
-    data->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+    // if(mass_->getVal() != -99){ // Don't plot events that don't pass preselection + MVA selections 
+      data->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+    // }
   }
 	//data->Print();
 	//plotBeamSpotDZdist(data,"after");
@@ -416,7 +429,9 @@ RooDataSet * intLumiReweigh(RooDataSet *data0 /*original dataset*/){
     mass_->setVal(data0->get(i)->getRealValue("CMS_hgg_mass"));
     dZ_->setVal(data0->get(i)->getRealValue("dZ"));
     weight0->setVal(factor * data0->weight() ); // <--- is this correct?
-    data->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+    // if(mass_->getVal() != -99){ // Don't plot events that don't pass preselection + MVA selections 
+      data->add( RooArgList(*mass_, *dZ_, *weight0), weight0->getVal() );
+    // }
   }
   if (verbose_) std::cout << "[INFO] Old dataset (before intLumi change): " << *data0 << std::endl;
   if (verbose_) std::cout << "[INFO] New dataset (intLumi change x"<< factor <<"): " << *data << std::endl;
@@ -444,11 +459,16 @@ int main(int argc, char *argv[]){
   // reference details for low stats cats
   // need to make this configurable ?! -LC
   //referenceProc_="ggh";
-  referenceProc_="GG2H";
+  // referenceProc_="GG2H";
+
+  referenceProc_="ggF"; // adding by hand for HHWWgg 
+  
   //referenceProcTTH_="tth";
   referenceProcTTH_="TTH";
-  referenceTagWV_="UntaggedTag_2"; // histest stats WV is ggh Untagged 3. 
-  referenceTagRV_="UntaggedTag_2"; // fairly low resolution tag even for ggh, more approprioate as te default than re-using the original tag.
+  referenceTagWV_="SL"; // HHWWgg
+  referenceTagRV_="SL"; // HHWWgg 
+  // referenceTagWV_="UntaggedTag_2"; // histest stats WV is ggh Untagged 3. 
+  // referenceTagRV_="UntaggedTag_2"; // fairly low resolution tag even for ggh, more approprioate as te default than re-using the original tag.
   // are WV which needs to borrow should be taken from here
   
   // isFlashgg should now be the only option.
@@ -477,7 +497,9 @@ int main(int argc, char *argv[]){
   // extract nEvents per proc/tag etc...
 	if (checkYields_){
 	  
-    WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_hgg_13TeV");
+    WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_HHWWgg_13TeV");
+    // WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_13TeV_All_HLT_Events");
+    // WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV");
 		std::list<RooAbsData*> data =  (inWS0->allData()) ;
 		for (std::list<RooAbsData*>::const_iterator iterator = data.begin(), end = data.end();
       iterator != end;
@@ -493,7 +515,7 @@ int main(int argc, char *argv[]){
   //time to open the signal file for the main script!
 	WSTFileWrapper *inWS;
 	if (isFlashgg_){
-    inWS = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_hgg_13TeV");
+    inWS = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_HHWWgg_13TeV");
 		std::list<RooAbsData*> test =  (inWS->allData()) ;
 		if (verbose_) {
 			std::cout << " [INFO] WS contains " << std::endl;
@@ -722,8 +744,10 @@ int main(int argc, char *argv[]){
       RooDataSet *data;  
       RooDataHist *dataH;  
 
+
         if (verbose_)std::cout << "[INFO] Opening dataset called "<< Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str()) << " in in WS " << inWS << std::endl;
         RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str())));
+        // RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh)));
 				if (beamSpotReweigh_){
         data = beamSpotReweigh(intLumiReweigh(data0));
 				} else {
@@ -767,6 +791,8 @@ int main(int argc, char *argv[]){
                         		intLumiReweigh(
                           		reduceDataset(
                           			(RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          			// (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
+                                
                               )
                             ), "RV"
                           )
@@ -777,6 +803,8 @@ int main(int argc, char *argv[]){
                         intLumiReweigh(
                           reduceDataset(
                           (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          // (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
+                          
                          )
                        ), "RV"
                       );
@@ -818,8 +846,9 @@ int main(int argc, char *argv[]){
 				               rvwvDataset(
                         intLumiReweigh(
                           reduceDataset(
-                          //(RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
-                            (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
+                            // (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
+                            
                          )
                        ), "WV"
                       )
@@ -828,8 +857,9 @@ int main(int argc, char *argv[]){
          data0Ref   = rvwvDataset(
                         intLumiReweigh(
                           reduceDataset(
-                          //(RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
-                          	(RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
+                          	// (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
+                            
                          )
                        ), "WV"
                       );

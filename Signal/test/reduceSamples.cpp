@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
     TDirectory* saveDir = outfile->mkdir("tagsDumper");
     saveDir->cd();
 
-    RooWorkspace *inWS = (RooWorkspace*) infile->Get("tagsDumper/cms_hgg_13TeV");
+    RooWorkspace *inWS = (RooWorkspace*) infile->Get("HHWWggCandidateDumper/cms_HHWWgg_13TeV");
     RooRealVar *intLumi = (RooRealVar*)inWS->var("IntLumi");
     RooWorkspace *outWS = new RooWorkspace("cms_hgg_13TeV");
     outWS->import(*intLumi);
