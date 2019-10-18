@@ -675,7 +675,8 @@ vector<string> flashggCats_;
   RooWorkspace *inWS;
 	if(isFlashgg_){
 		if (isData_){
-			inWS = (RooWorkspace*)inFile->Get("tagsDumper/cms_hgg_13TeV");
+			// inWS = (RooWorkspace*)inFile->Get("tagsDumper/cms_hgg_13TeV");
+			inWS = (RooWorkspace*)inFile->Get("HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // for HHWWgg analysis 
 		} else {
 			inWS = (RooWorkspace*)inFile->Get("cms_hgg_workspace");
 		}
@@ -692,7 +693,8 @@ vector<string> flashggCats_;
 		if (isFlashgg_){
 			//intL  = (RooRealVar*)inWS->var("IntLumi");
 			intL  = intLumi_;
-			sqrts = (RooRealVar*)inWS->var("SqrtS");
+			// sqrts = (RooRealVar*)inWS->var("SqrtS");
+			sqrts = new RooRealVar("SqrtS","SqrtS",13); // adding here because HHWWgg doesn't have variable in WS  
 			if (!sqrts){ sqrts = new RooRealVar("SqrtS","SqrtS",13); }
 		std::cout << "[INFO] got intL and sqrts " << intL << ", " << sqrts << std::endl;
 
@@ -772,6 +774,9 @@ vector<string> flashggCats_;
 		if (verbose) std::cout << "[INFO] opened data for  "  << Form("data_mass_%s",catname.c_str()) <<" - " << dataFull <<std::endl;
     }
 
+		// Need to set range since wasn't correct by default in HHWWgg 
+		mass->setMin(mgg_low); 
+		mass->setMax(mgg_high);
 
 		mass->setBins(nBinsForMass);
 		RooDataSet *data;
@@ -875,7 +880,7 @@ vector<string> flashggCats_;
 					RooAbsPdf *bkgPdf = getPdf(pdfsModel,*funcType,order,Form("env_pdf_%d_%s",cat,ext.c_str()));
 					if (!bkgPdf ){
 						// assume this order is not allowed
-						if (order >6) { std::cout << " [WARNING] could not add ] " << std::endl; break ;}
+						if (order >6) { std::cout << " [WARNING] could not ] " << std::endl; break ;}
 						order++;
 					}
 					else {
