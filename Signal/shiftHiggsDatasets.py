@@ -9,7 +9,7 @@ mass = [250]
 for m in mass:
     print "Looking at mass = ", m
     # inDir = '/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/'
-    inDir = '/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/test2/'
+    inDir = '/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/24Oct/'
     values = [-5,0,5]
     higgs_mass = 125
 
@@ -30,14 +30,14 @@ for m in mass:
         dataset.changeObservableName('CMS_hgg_mass','CMS_hgg_mass_old')
         higgs_old = dataset.get()['CMS_hgg_mass_old']
         higgs_new = RooFormulaVar( 'CMS_hgg_mass', 'CMS_hgg_mass', "(@0+%.1f)"%value,RooArgList(higgs_old) );
-        dataset.addColumn(higgs_new).setRange(110,140)
+        dataset.addColumn(higgs_new).setRange(105,145)
         dataset.Print()
 
         #output = TFile('/afs/cern.ch/work/t/twamorka/ThesisAnalysis/CMSSW_10_5_0/src/flashgg/testshift.root','RECREATE')
         # output = TFile(inDir+'VtxZero/w_signal_'+str(m)+'_'+str(shift)+'.root','RECREATE')
         # output = TFile('/eos/user/t/twamorka/newCatalog_fixVtx_3Oct2019/hadd_WS/reducedWS/w_signal_'+str(m)+'_'+str(shift)+'.root','RECREATE')
         # output = TFile('/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/X_signal_'+str(m)+'_'+str(shift)+'_HHWWgg_qqlnu.root','RECREATE')
-        output = TFile('/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/test2/X_signal_'+str(m)+'_'+str(shift)+'_HHWWgg_qqlnu.root','RECREATE')
+        output = TFile('/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/24Oct/X_signal_'+str(m)+'_'+str(shift)+'_HHWWgg_qqlnu.root','RECREATE')
         output.mkdir("tagsDumper")
         output.cd("tagsDumper")
         # ws_new = ROOT.RooWorkspace("cms_h4g_13TeV_4photons")
