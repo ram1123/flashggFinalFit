@@ -691,8 +691,8 @@ vector<string> flashggCats_;
 		RooRealVar *sqrts;
 
 		if (isFlashgg_){
-			//intL  = (RooRealVar*)inWS->var("IntLumi");
-			intL  = intLumi_;
+			intL  = (RooRealVar*)inWS->var("IntLumi");
+			// intL  = intLumi_;
 			// sqrts = (RooRealVar*)inWS->var("SqrtS");
 			sqrts = new RooRealVar("SqrtS","SqrtS",13); // adding here because HHWWgg doesn't have variable in WS  
 			if (!sqrts){ sqrts = new RooRealVar("SqrtS","SqrtS",13); }
@@ -775,8 +775,11 @@ vector<string> flashggCats_;
     }
 
 		// Need to set range since wasn't correct by default in HHWWgg 
-		mass->setMin(mgg_low); 
-		mass->setMax(mgg_high);
+		// mass->setMin((float)mgg_low); 
+		// mass->setMax((float)mgg_high);
+		mass->setMin(100.); 
+		mass->setMax(180.);
+		// mass->setRange(100.,180.);
 
 		mass->setBins(nBinsForMass);
 		RooDataSet *data;

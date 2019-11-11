@@ -256,7 +256,7 @@ print options.infilename
 inWS = WSTFileWrapper(options.infilename,"wsig_13TeV")
 #inWS = inFile.Get('wsig_13TeV')
 #if (inWS==None) : inWS = inFile.Get('tagsDumper/cms_hgg_%sTeV'%sqrts)
-#intL = inWS.var('IntLumi').getVal() #FIXME
+# intL = inWS.var('IntLumi').getVal() #FIXME
 #intL = 2600
 intL = 1000* options.intLumi
 intL2017 = 1000* options.intLumi2017

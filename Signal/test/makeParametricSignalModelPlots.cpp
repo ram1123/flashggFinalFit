@@ -458,6 +458,8 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   if (data) data->plotOn(plotchi2,Invisible());
   std::cout << " LC DEBIG A : data content: " << data->sumEntries() << std::endl;
   data->Print();
+  std::cout << "parameters: " << endl;
+  // std::cout << pdf->getParameters(*mass)->Print() << endl; // HHWWgg 
 
   pdf->plotOn(plot,NormRange("higgsRange"),Range(semin,semax),FillColor(19),DrawOption("F"),LineWidth(2),FillStyle(1001),VLines(),LineColor(15));
   TObject *seffLeg = plot->getObject(int(plot->numItems()-1));

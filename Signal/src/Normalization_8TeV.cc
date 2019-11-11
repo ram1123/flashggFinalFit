@@ -24,7 +24,8 @@ int Normalization_8TeV::Init(int sqrtS){
     TPython::Eval(Form("buildSMHiggsSignalXSBR.Init%dTeV()", sqrtS));
     
     for (double mH=120;mH<=135.0;mH+=0.1){ // Do we need this up to 250 ?
-	double valBR    =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getBR(%f)",mH));
+	// double valBR    =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getBR(%f)",mH));
+	double valBR    =  1.; // set equal to 1 because for HHWWgg for now, don't want to apply branching ratio 
 	double valXSggH =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getXS(%f,'%s')",mH,"ggH"));
 	double valXSqqH =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getXS(%f,'%s')",mH,"qqH"));
 	double valXSttH =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getXS(%f,'%s')",mH,"ttH"));
@@ -38,6 +39,7 @@ int Normalization_8TeV::Init(int sqrtS){
         XSectionMap_wh[mH]	= valXSWH; 	
         XSectionMap_zh[mH]	= valXSZH;	
         XSectionMap_wzh[mH]	= valXSWH+valXSZH;	
+		// XSectionMap_HHWWgg[mH] = 2.169;
 		XSectionMap_HHWWgg[mH] = 0.001;
 
         XSectionMap_QQ2HLNU[mH]	= valXSWH*(3.*10.86*0.01)/*3xBR(W to lv)*/;	

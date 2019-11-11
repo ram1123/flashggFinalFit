@@ -4,12 +4,12 @@ from ROOT import *
 import sys
 import os
 
-# mass = [15,20,25,30,35,40,45,50,55,60]
-mass = [250]
+inDir = sys.argv[1]
+outDir = inDir 
+
+mass = [250] # radion mass 
 for m in mass:
-    print "Looking at mass = ", m
-    # inDir = '/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/'
-    inDir = '/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/24Oct/'
+    print "Looking at Radion mass = ", m
     values = [-5,0,5]
     higgs_mass = 125
 
@@ -37,7 +37,7 @@ for m in mass:
         # output = TFile(inDir+'VtxZero/w_signal_'+str(m)+'_'+str(shift)+'.root','RECREATE')
         # output = TFile('/eos/user/t/twamorka/newCatalog_fixVtx_3Oct2019/hadd_WS/reducedWS/w_signal_'+str(m)+'_'+str(shift)+'.root','RECREATE')
         # output = TFile('/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/X_signal_'+str(m)+'_'+str(shift)+'_HHWWgg_qqlnu.root','RECREATE')
-        output = TFile('/afs/cern.ch/work/a/atishelm/21JuneFlashgg/CMSSW_10_5_0/src/flashgg/fggfinalfit_files/24Oct/X_signal_'+str(m)+'_'+str(shift)+'_HHWWgg_qqlnu.root','RECREATE')
+        output = TFile(outDir + 'X_signal_'+str(m)+'_'+str(shift)+'_HHWWgg_qqlnu.root','RECREATE')
         output.mkdir("tagsDumper")
         output.cd("tagsDumper")
         # ws_new = ROOT.RooWorkspace("cms_h4g_13TeV_4photons")
