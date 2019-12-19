@@ -4,6 +4,14 @@
 ## 3 November 2019 
 ## Create HHWWgg Signal Model, datacard and combine from flashgg EventDumper output file located at $signalFile
 
+
+# Need input file name format: X<mass>_HHWWgg_qqlnu.root
+
+# Example usage:
+
+# . HHWWgg_Signal_Fit_Steps.sh -i /eos/user/a/atishelm/ntuples/HHWWgg/HHWWgg_v1_Dumper_Signal_AllEvents_WithWorkspace/X250_HHWWgg_qqlnu.root -r RedoX250Signal -k
+# This takes /eos/.../X250_HHWWgg_qqlnu.root as an input file, and names all corresponding outputs with RedoX250Signal, and runs only the signalfit step (-k). 
+
 cmsenv 
 
 # options may be followed by one colon to indicate they have a required argument
@@ -116,7 +124,7 @@ then
     datacardName+=".dat"
     photonCatScales=$fggfinalfitDirec
     photonCatScales+="Signal/empty.dat"
-    python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c SL --photonCatScales $photonCatScales --isMultiPdf --intLumi 42.17
+    python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c SL --photonCatScales $photonCatScales --isMultiPdf --intLumi 41.5
 # python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c SL --photonCatScales $photonCatScales --isMultiPdf
 fi
 
@@ -125,6 +133,9 @@ if [ $runCombine == 'true' ]
 then
     # combineDir=$fggfinalfitDirec
     # combineDir+="Plots/FinalResults"
+
+    datacardName=$runName
+    datacardName+=".dat" 
 
     combineDir="/afs/cern.ch/work/a/atishelm/4NovCombineUpdated/CMSSW_10_2_13/src/HiggsAnalysis/CombinedLimit"
 

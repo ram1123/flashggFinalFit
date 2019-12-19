@@ -13,7 +13,7 @@ for m in mass:
     values = [-5,0,5]
     higgs_mass = 125
 
-    ws_name = 'HHWWggCandidateDumper/cms_HHWWgg_13TeV'
+    ws_name = 'tagsDumper/cms_hgg_13TeV'
     dataset_name = 'ggF_125_13TeV_SL'
     #temp_ws = TFile(inDir+'testWS.root').Get(ws_name)
     temp_ws = TFile(inDir+'/X'+str(m)+'_HHWWgg_qqlnu.root').Get(ws_name)
@@ -41,7 +41,7 @@ for m in mass:
         output.mkdir("tagsDumper")
         output.cd("tagsDumper")
         # ws_new = ROOT.RooWorkspace("cms_h4g_13TeV_4photons")
-        ws_new = ROOT.RooWorkspace("cms_HHWWgg_13TeV")
+        ws_new = ROOT.RooWorkspace("cms_hgg_13TeV")
         getattr(ws_new,'import')(dataset,RooCmdArg())
         ws_new.Write()
         output.Close()

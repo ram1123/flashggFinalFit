@@ -497,7 +497,7 @@ int main(int argc, char *argv[]){
   // extract nEvents per proc/tag etc...
 	if (checkYields_){
 	  
-    WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_HHWWgg_13TeV");
+    WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_hgg_13TeV");
     // WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_13TeV_All_HLT_Events");
     // WSTFileWrapper * inWS0 = new WSTFileWrapper(filenameStr_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV");
 		std::list<RooAbsData*> data =  (inWS0->allData()) ;
@@ -515,7 +515,7 @@ int main(int argc, char *argv[]){
   //time to open the signal file for the main script!
 	WSTFileWrapper *inWS;
 	if (isFlashgg_){
-    inWS = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_HHWWgg_13TeV");
+    inWS = new WSTFileWrapper(filenameStr_,"tagsDumper/cms_hgg_13TeV");
 		std::list<RooAbsData*> test =  (inWS->allData()) ;
 		if (verbose_) {
 			std::cout << " [INFO] WS contains " << std::endl;

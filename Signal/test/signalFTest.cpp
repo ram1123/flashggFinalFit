@@ -214,8 +214,8 @@ int main(int argc, char *argv[]){
   
   // open input files using WS wrapper.
 	WSTFileWrapper *inWS 
-    // = new WSTFileWrapper(filename_,"tagsDumper/cms_HHWWgg_13TeV");
-    = new WSTFileWrapper(filename_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // changing for my file. Want tagsDumper directory but don't have it yet 
+    = new WSTFileWrapper(filename_,"tagsDumper/cms_hgg_13TeV");
+    // = new WSTFileWrapper(filename_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // changing for my file. Want tagsDumper directory but don't have it yet 
   if(verbose_) std::cout << "[INFO] Opened files OK!" << std::endl;
 //   if(verbose_) std::cout << "[INFO] Printing all workspace variables:" << inWS->allVars()->writeToFile() << endl; 
 	// inWS->allVars().writeToFile("WS_allVars.txt");

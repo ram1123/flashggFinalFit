@@ -675,8 +675,11 @@ vector<string> flashggCats_;
   RooWorkspace *inWS;
 	if(isFlashgg_){
 		if (isData_){
-			// inWS = (RooWorkspace*)inFile->Get("tagsDumper/cms_hgg_13TeV");
-			inWS = (RooWorkspace*)inFile->Get("HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // for HHWWgg analysis 
+			cout << "Getting Workspace" << endl;
+			inWS = (RooWorkspace*)inFile->Get("tagsDumper/cms_hgg_13TeV");
+			cout << "inWS = " << inWS << endl;
+			cout << "Just got workspace" << endl;
+			// inWS = (RooWorkspace*)inFile->Get("HHWWggCandidateDumper/cms_HHWWgg_13TeV"); // for HHWWgg Dumper  
 		} else {
 			inWS = (RooWorkspace*)inFile->Get("cms_hgg_workspace");
 		}
