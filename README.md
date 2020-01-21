@@ -16,6 +16,32 @@ Repositories:
 
 This repository contains flashgg final fit scripts and instructions specific to the HHWWgg analysis. 
 
+## Cloning the Repository 
+
+export SCRAM_ARCH=slc7_amd64_gcc700
+cmsrel CMSSW_10_2_13
+cd CMSSW_10_2_13/src
+cmsenv
+git cms-init
+
+Install the GBRLikelihood package which contains the RooDoubleCBFast implementation
+
+git clone git@github.com:jonathon-langford/HiggsAnalysis.git
+
+Install Combine as per the documentation here: cms-analysis.github.io/HiggsAnalysis-CombinedLimit/
+
+git clone git@github.com:cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+
+# Compile external libraries
+cd HiggsAnalysis
+cmsenv
+scram b -j 
+
+# Install Flashgg Final Fit packages
+cd ..
+git clone -b HHWWgg_Dev git@github.com:atishelmanch/flashggFinalFit.git
+cd flashggFinalFit/
+
 # HHWWgg_v2-2
 
 This section describes instructions specific to the HHWWgg_v2-2 tag. The HHWWgg_v2-2 tag is used to mark the point in the anlaysis where the 95% CL limit on the HH cross section was placed on the 250 GeV semileptonically decaying Radion using the HHWWgg tagger plugin with workspaceStd.py WITHOUT systematics. The purpose of the tag is to document everything used to obtain this *very* preliminary result.
@@ -49,10 +75,8 @@ These are the commands to create a background model with Background directory us
 cd Background 
 cmsenv 
 make
-/eos/user/a/atishelm/ntuples/HHWWgg_v2-2/Data.root
+./bin/fTest -i /eos/user/a/atishelm/ntuples/HHWWgg_v2-2/Data.root --saveMultiPdf HHWWgg_Background.root  -D HHWWgg_Background -f SL --isData 1
 ```
-
-. HHWWgg_Signal_Fit_Steps.sh -i /eos/user/a/atishelm/ntuples/HHWWgg_v2-2/X250_HHWWgg_qqlnu.root -r HHWWgg_v2-2_X250_qqlnu -c # run combine with background model in Background directory 
 
 ## Combine 
 
