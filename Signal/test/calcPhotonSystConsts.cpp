@@ -61,12 +61,13 @@ vector<string> flashggCats_;
 string plotDir_;
 bool doPlots_;
 int mh_;
+string HHWWgg_Label; // HHWWgg - string for heavy resonant mass + WWgg + final state 
 int nCats_;
 string sqrtS_;
 int quadInterpolate_;
 int verbosity_;
 bool isFlashgg_;
-//RooWorkspace *inWS_;
+// RooWorkspace *inWS_;
 WSTFileWrapper * inWS_;
 RooRealVar *mass_ = new RooRealVar("CMS_hgg_mass","CMS_hgg_mass",125);
 
@@ -78,6 +79,7 @@ void OptionParser(int argc, char *argv[]){
 		("infilenames,i", po::value<string>(&infilenamesStr_),                                           		"Input file names (comma sep)")
 		("outfilename,o", po::value<string>(&outfilename_)->default_value("dat/photonCatSyst.dat"), 				"Output file name")
 		("mh,m", po::value<int>(&mh_)->default_value(125),                                  								"Mass point")
+		("HHWWggLabel,HHWWggL", po::value<string>(&HHWWgg_Label)->default_value(""),                                  								"Mass point")
 		("sqrtS", po::value<string>(&sqrtS_)->default_value("13"),																								"CoM energy")
 		("procs,p",po::value<string>(&procStr_)->default_value("ggh,vbf,wh,zh,tth"),												"Processes (comma sep)")
 		("plotDir,D", po::value<string>(&plotDir_)->default_value("plots"),																	"Out directory for plots")
@@ -337,7 +339,8 @@ double getRateVar(TH1F* nom, TH1F *up, TH1F* down){
 }
 
 vector<TH1F*> getHistograms(vector<TFile*> files, string name, string syst){
-
+	cout << "name = " << name << endl;
+	cout << "syst = " << syst << endl;
 	vector<TH1F*> ret_hists;
 	for (unsigned int i=0; i<files.size(); i++){
 		files[i]->cd();
@@ -351,7 +354,9 @@ vector<TH1F*> getHistograms(vector<TFile*> files, string name, string syst){
 				
 			RooDataHist *rds_up_h = (RooDataHist*) inWS_->data((Form("%s_%sUp01sigma",name.c_str(),syst.c_str())));
 			RooDataHist *rds_down_h = (RooDataHist*) inWS_->data((Form("%s_%sDown01sigma",name.c_str(),syst.c_str())));
-
+			cout << "up = " << up << endl;
+			// cout << "*mass = " << *mass_ << endl;
+			cout << "RooArgList(*mass_) = " << RooArgList(*mass_) << endl;
 			if(rds_up){
 				rds_up->fillHistogram(up,RooArgList(*mass_));
 			} else {
@@ -447,8 +452,8 @@ int main(int argc, char *argv[]){
 		if (verbosity_)	cout << "[INFO] Opened file " << infilenames_[i] << endl;
 		inFiles[i]->Print();
 	}
-	//	inWS_ = (RooWorkspace*)inFiles[0]->Get("tagsDumper/cms_hgg_13TeV"); //FIXME should add all workspaces together from various files
-	inWS_ = new WSTFileWrapper(infilenamesStr_,"HHWWggCandidateDumper/cms_HHWWgg_13TeV");
+		// inWS_ = (RooWorkspace*)inFiles[0]->Get("tagsDumper/cms_hgg_13TeV"); //FIXME should add all workspaces together from various files
+	inWS_ = new WSTFileWrapper(infilenamesStr_,"tagsDumper/cms_hgg_13TeV");
 
 	ofstream outfile;
 	outfile.open(outfilename_.c_str());
@@ -490,9 +495,11 @@ int main(int argc, char *argv[]){
 					if (isFlashgg_){
 						string flashggCat = flashggCats_[cat];  
 						// hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
-						hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("MCScale%s",phoCat->c_str())); // sloppy fix for now to match bad tree name I have 
+						hists= getHistograms(inFiles,Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCScale%s",phoCat->c_str())); // HHWWgg 
+						// hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("MCScale%s",phoCat->c_str())); // sloppy fix for now to match bad tree name I have 
 					}else{
-						hists= getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_scale_%s",phoCat->c_str()));
+						// hists= getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_scale_%s",phoCat->c_str()));
+						hists= getHistograms(inFiles,Form("th1f_sig_%s_mass_m%s_cat%d",proc->c_str(),HHWWgg_Label.c_str(),cat),Form("E_scale_%s",phoCat->c_str())); // HHWWgg
 					}
 					TH1F *nominal = hists[0];
 					TH1F *scaleUp = hists[1];
@@ -531,11 +538,14 @@ int main(int argc, char *argv[]){
 					if (isFlashgg_){ // Smearing not yet supported for Flashgg
 						string flashggCat = flashggCats_[cat]; 
 						// Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str())
-						hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("MCSmear%s",phoCat->c_str())); // temporary sloppy fix for bad tree name 
+						hists= getHistograms(inFiles,Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str())); // HHWWgg 
+						// hists = getHistograms(inFiles,Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str())); // HHWWgg
+						// hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("MCSmear%s",phoCat->c_str())); // temporary sloppy fix for bad tree name 
 					}	 else {
 
 						// this is to ensure nominal comes from the right file
-						hists = getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_res_%s",phoCat->c_str()));
+						// hists = getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_res_%s",phoCat->c_str()));
+						hists = getHistograms(inFiles,Form("th1f_sig_%s_mass_m%s_cat%d",proc->c_str(),HHWWgg_Label.c_str(),cat),Form("E_res_%s",phoCat->c_str())); // HHWWgg
 					}
 					TH1F *nominal = hists[0];
 					TH1F *smearUp = hists[1];
@@ -572,8 +582,10 @@ int main(int argc, char *argv[]){
 				if (photonCatScalesCorrStr_.size()!=0){
 					for (vector<string>::iterator phoCat=photonCatScalesCorr_.begin(); phoCat!=photonCatScalesCorr_.end(); phoCat++){
 						string flashggCat = flashggCats_[cat]; 
+						// vector<TH1F*> hists= getHistograms(inFiles,Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("%s",phoCat->c_str())); // HHWWgg 
+						vector<TH1F*> hists= getHistograms(inFiles,Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("%s",phoCat->c_str())); // HHWWgg 
 						// vector<TH1F*> hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("%s",phoCat->c_str()));
-						vector<TH1F*> hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("%s",phoCat->c_str())); // changing to something stupid for now to match bad tree name I have 
+						// vector<TH1F*> hists= getHistograms(inFiles,Form("_13TeV_%s_%s",proc->c_str(),flashggCats_[cat].c_str()),Form("%s",phoCat->c_str())); // changing to something stupid for now to match bad tree name I have 
   
 						// this is to ensure nominal comes from the right file
 						TH1F *nominal = hists[0];
@@ -612,7 +624,8 @@ int main(int argc, char *argv[]){
 					for (vector<string>::iterator phoCat=photonCatSmearsCorr_.begin(); phoCat!=photonCatSmearsCorr_.end(); phoCat++){
 
 						// this is to ensure nominal comes from the right file
-						vector<TH1F*> hists = getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_res_%s",phoCat->c_str()));
+						// vector<TH1F*> hists = getHistograms(inFiles,Form("th1f_sig_%s_mass_m%d_cat%d",proc->c_str(),mh_,cat),Form("E_res_%s",phoCat->c_str()));
+						vector<TH1F*> hists = getHistograms(inFiles,Form("th1f_sig_%s_mass_m%s_cat%d",proc->c_str(),HHWWgg_Label.c_str(),cat),Form("E_res_%s",phoCat->c_str())); // HHWWgg 
 						TH1F *nominal = hists[0];
 						TH1F *smearUp = hists[1];
 						TH1F *smearDown = hists[2];
