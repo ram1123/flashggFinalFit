@@ -42,6 +42,7 @@ string datfilename_;
 string json_dict_;
 string outdir_;
 int mass_;
+string HHWWgg_Label; // HHWWgg - string for heavy resonant mass + WWgg + final state 
 string procString_;
 int ncats_;
 bool recursive_=false;
@@ -62,6 +63,7 @@ void OptionParser(int argc, char *argv[]){
 		("outdir,o", po::value<string>(&outdir_)->default_value("plots"),      "Output configuration file")
 		("json_dict,j", po::value<string>(&json_dict_)->default_value(""),      "Output configuration file")
 		("mass,m", po::value<int>(&mass_)->default_value(125),                                    "Mass to run at")
+		("HHWWggLabel,HHWWggL", po::value<string>(&HHWWgg_Label)->default_value(""),                                  								"HHWWgg label. ex: X250_WWgg_qqlnugg ")	
 		("procs,p", po::value<string>(&procString_)->default_value("ggh,vbf,wh,zh,tth"),          "Processes")
 		("recursive",																																							"Recursive fraction")
 		("forceFracUnity",																																				"Force fraction unity")
@@ -317,7 +319,8 @@ int main(int argc, char *argv[]){
       // access dataset and immediately reduce it!
 			if (isFlashgg_){
 				RooDataSet *data0   = (RooDataSet*)inWS->data(
-          Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()));
+          // Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str())); 
+          Form("%s_%s_13TeV_%s",proc.c_str(),HHWWgg_Label.c_str(),flashggCats_[cat].c_str())); // HHWWgg 
         //   Form("_13TeV_%s_%s",proc.c_str(),flashggCats_[cat].c_str())); // changing to fit my file 
         if(verbose_) {
           std::cout << "[INFO] got dataset data0 ? " << data0 << "now make empty clones " << std::endl;
@@ -365,7 +368,8 @@ int main(int argc, char *argv[]){
 				if (verbose_) {
           std::cout 
             << "[INFO] Retrieved combined RV/WV data " 
-            << Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()) 
+            // << Form("%s_%d_13TeV_%s",proc.c_str(),mass_,flashggCats_[cat].c_str()) 
+            << Form("%s_%s_13TeV_%s",proc.c_str(),HHWWgg_Label.c_str(),flashggCats_[cat].c_str()) // HHWWgg 
             << "? "<< data<<std::endl;
         }
         

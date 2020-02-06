@@ -456,9 +456,9 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   double offset =0.05;
   if (data) data->plotOn(plot,Invisible());
   if (data) data->plotOn(plotchi2,Invisible());
-  std::cout << " LC DEBIG A : data content: " << data->sumEntries() << std::endl;
-  data->Print();
-  std::cout << "parameters: " << endl;
+  // std::cout << " LC DEBIG A : data content: " << data->sumEntries() << std::endl;
+  // data->Print();
+  // std::cout << "parameters: " << endl;
   // std::cout << pdf->getParameters(*mass)->Print() << endl; // HHWWgg 
 
   pdf->plotOn(plot,NormRange("higgsRange"),Range(semin,semax),FillColor(19),DrawOption("F"),LineWidth(2),FillStyle(1001),VLines(),LineColor(15));
@@ -510,11 +510,11 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   fwhmText->SetLineColor(kWhite);
   fwhmText->SetTextSize(0.037);
   fwhmText->AddText(Form("FWHM = %1.2f GeV",(fwmax-fwmin)));
-  std::cout << " [FOR TABLE] Tag " << data->GetName() << "=, Mass " << mass->getVal() << " sigmaEff=" << 0.5*(semax-semin) << "= , FWMH=" << (fwmax-fwmin)/2.35 << "=" << std::endl;
+  // std::cout << " [FOR TABLE] Tag " << data->GetName() << "=, Mass " << mass->getVal() << " sigmaEff=" << 0.5*(semax-semin) << "= , FWMH=" << (fwmax-fwmin)/2.35 << "=" << std::endl;
   //std::cout << " [RESOLUTION CHECK] Ta/Procg " << data->GetName() << ", Mass " << mass->getVal() << " sigmaEff=" << 0.5*(semax-semin) << " , FWMH=" << (fwmax-fwmin)/2.35 << "" << std::endl;
 
   //TLatex lat1(0.65,0.85,"#splitline{CMS Simulation}{}");
-  TLatex  lat1(.129+0.03+offset,0.85,"H#rightarrow#gamma#gamma");
+  TLatex  lat1(.129+0.03+offset,0.85,"HH #rightarrow WW#gamma#gamma");
   lat1.SetNDC(1);
   lat1.SetTextSize(0.047);
 
@@ -531,6 +531,7 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   lat2.SetNDC(1);
   lat2.SetTextSize(0.045);
 
+  // TCanvas *canv = new TCanvas("canv","canv",650,600);
   TCanvas *canv = new TCanvas("canv","canv",650,600);
   canv->SetLeftMargin(0.16);
   canv->SetTickx(); canv->SetTicky();
@@ -538,7 +539,7 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   plot->GetXaxis()->SetTitle("m_{#gamma#gamma} (GeV)");
   plot->GetXaxis()->SetTitleSize(0.05);
   plot->GetYaxis()->SetTitleSize(0.05);
-  plot->GetYaxis()->SetTitleOffset(1.5);
+  // plot->GetYaxis()->SetTitleOffset(1.5);
   plot->SetMinimum(0.0);
   plot->Draw();
   fwhmArrow->Draw("same <>");
@@ -562,8 +563,15 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   string sim="Simulation Preliminary";
   //string sim="Simulation"; //for the paper
   CMS_lumi( canv, 0,0,sim);
+  
+  //std::string s = "scott>=tiger";
+  std::string delimiter = "/";
+  //std::string longsavePath(savename.c_str());
+  std::string uniqueSavePath = savename.substr(0, savename.find(delimiter)); 
+
   canv->Print(Form("%s.pdf",savename.c_str()));
   canv->Print(Form("%s.png",savename.c_str()));
+  canv->Print(Form("/eos/user/a/atishelm/www/HHWWgg_Analysis/fggfinalfit/%s.pdf",uniqueSavePath.c_str()));
   //string path = savename.substr(0,savename.find('/'));
   //canv->Print(Form("%s/animation.gif+100",path.c_str()));
 

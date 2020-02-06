@@ -14,7 +14,7 @@
 cmsenv 
 
 # options may be followed by one colon to indicate they have a required argument
-if ! options=$(getopt -u -o i:r:fkpdc -l help,inputDirectory:,procs:,smears:,massList:,scales:,scalesCorr:,useSSF:,useDCB_1G:,scalesGlobal:,flashggCats:,ext:,fTestOnly,calcPhoSystOnly,sigFitOnly,sigPlotsOnly,intLumi:,batch: -- "$@")
+if ! options=$(getopt -u -o i:r:fskpdc -l help,inputDirectory:,procs:,smears:,massList:,scales:,scalesCorr:,useSSF:,useDCB_1G:,scalesGlobal:,flashggCats:,ext:,fTestOnly,calcPhoSystOnly,sigFitOnly,sigPlotsOnly,intLumi:,batch: -- "$@")
 then
 # something went wrong, getopt will put out an error message for us
 echo "should exit"
@@ -25,6 +25,7 @@ set -- $options
 signalDirectory=""
 runName=""
 dofTest="false"
+doPhoSyst="false"
 createPoints="false"
 doSignalFit="false"
 plotSignal="false"
@@ -39,6 +40,7 @@ case $1 in
 -i|--inputDirectory) signalDirectory=$2; shift ;; 
 -r|--run) runName=$2; shift ;;
 -f|--fTest) dofTest="true"; shift ;;
+-s|--phosys) doPhoSyst="true"; shift ;;
 -k|--signalfit) doSignalFit="true"; shift ;; 
 -p|--plotsig) plotSignal="true"; shift ;;
 -d|--dcard) makeDatacard="true"; shift ;;
@@ -93,19 +95,47 @@ do
     datfilename+="Signal/dat/"
     datfilename+=$runName
     datfilename+=".dat"
+    mass="$(cut -d'_' -f1 <<<$runName)"
+    HHWWggLabel="${mass}_WWgg_qqlnugg"
+    # HHWWggLabel=$runName
+    # HHWWggLabel+="gg"
+    # HHWWggLabel=X250_W #Wgg_qqlnugg
     echo "signalFile: $signalFile"
     echo "fTestOutput: $fTestOutput"
     echo "datfilename: $datfilename"
-    ./bin/signalFTest -i $signalFile -p ggF -f SL -o $fTestOutput --datfilename $datfilename
+    echo "HHWWggLabel: $HHWWggLabel"
+    ./bin/signalFTest -i $signalFile -p ggF --HHWWggLabel $HHWWggLabel -f HHWWggTag_0 -o $fTestOutput --datfilename $datfilename
 
 done
 fi
 
 ##-- Produce photon systematics dat file 
-# Doing stat only for now 
+if [ $doPhoSyst == 'true' ]
+then
+  signalDirectory+="*"
+  for f in $signalDirectory
+  do
+  echo "Processing $f file..."
+  signalFile=$f
 
-# ./bin/calcPhotonSystConsts -i /eos/user/a/atishelm/ntuples/HHWWgg/HHWWgg_v2-3_Syst_Workspace_LowEvents_outputagain/X250_HHWWgg_qqlnu.root -o test.dat -p ggF -s HighR9EB,HighR9EE,LowR9EB,LowR9EE -r HighR9EBPhi,HighR9EBRho,HighR9EEPhi,HighR9EERho,LowR9EBPhi,LowR9EBRho,LowR9EEPhi,LowR9EERho -S MaterialCentralBarrel,MaterialForward,FNUFEB,ShowerShapeHighR9EE,ShowerShapeHighR9EB,ShowerShapeLowR9EE,ShowerShapeLowR9EB  -D outdir_HHWWgg_test -f HHWWggTag_0 -v 1 --HHWWggLabel X250_WWgg_qqlnugg
+        if [[ $f == *"signal"* ]]; then
+                echo "file contains 'signal', skipping"
+                continue
+        fi
+  runName=${f##*/} # This trims everything from the front until a '/', greedily.
+  runName=${runName::-5}
+  mass="$(cut -d'_' -f1 <<<$runName)"
+  HHWWggLabel="${mass}_WWgg_qqlnugg"
+  outFile="${HHWWggLabel}.dat"
 
+  echo "signalFile: $signalFile"
+  echo "outFile: $outFile"
+  echo "HHWWggLabel: $HHWWggLabel"
+
+  ./bin/calcPhotonSystConsts -i $signalFile -o $outFile -p ggF -s HighR9EB,HighR9EE,LowR9EB,LowR9EE -r HighR9EBPhi,HighR9EBRho,HighR9EEPhi,HighR9EERho,LowR9EBPhi,LowR9EBRho,LowR9EEPhi,LowR9EERho -S MaterialCentralBarrel,MaterialForward,FNUFEB,ShowerShapeHighR9EE,ShowerShapeHighR9EB,ShowerShapeLowR9EE,ShowerShapeLowR9EB  -D outdir_HHWWgg_test -f HHWWggTag_0 -v 1 --HHWWggLabel $HHWWggLabel
+
+  done 
+fi
 #./bin/calcPhotonSystConsts -i <input files comma separated> -o <output file> -p <comma separated process names> -s <photon energy scale categories> -r <photon energy scale categories>  -D <output dir for plots> -f <comma separated tag names>
 
 
@@ -124,42 +154,46 @@ do
                 continue
         fi
 
-
-  signalFile=$f
+    signalFile=$f
     runName=${f##*/} # This trims everything from the front until a '/', greedily.
     runName=${runName::-5}
     mass="$(cut -d'_' -f1 <<<$runName)" 
+    HHWWggLabel="${mass}_WWgg_qqlnugg"
     
-    python DirecShiftHiggsDatasets.py $fileDir $mass
+    python DirecShiftHiggsDatasets.py $fileDir $mass $HHWWggLabel
 
     sigFiles=""
     for m in 120 125 130
     do
-        sigFiles+=$fileDir
-        sigFiles+="X_signal_"
-        sigFiles+=$mass
-        sigFiles+="_"
-        sigFiles+=$m
-        sigFiles+="_HHWWgg_qqlnu.root,"
+        sigFiles+="${fileDir}X_signal_${mass}_${m}_HHWWgg_qqlnu.root,"
+        # sigFiles+=$fileDir
+        # sigFiles+="X_signal_"
+        # sigFiles+=$mass
+        # sigFiles+="_"
+        # sigFiles+=$m
+        # sigFiles+="_HHWWgg_qqlnu.root,"
     done        
 
     sigFiles=${sigFiles: : -1} # remove extra ","
-    outputFile="CMS-HGG_sigfit"
-    outputFile+="_"
-    outputFile+=$mass
-    outputFile+=".root"
+    outputFile="CMS-HGG_sigfit_${mass}.root"
+    # outputFile="CMS-HGG_sigfit"
+    # outputFile+="_"
+    # outputFile+=$mass
+    # outputFile+=".root"
+
+    phosysdat="${HHWWggLabel}.dat"
 
     echo "outputFile: $outputFile"
+    echo "mass: $mass"
+    echo "sigFiles: $sigFiles"
+    echo "runName.dat: $runName.dat"
+    echo "phosysdat: $phosysdat"
 
     ##-- SignalFit 
-    ./bin/SignalFit -i $sigFiles -o $outputFile -p ggF -f SL -d dat/$runName.dat -s empty.dat --procs ggF -v 1 --changeIntLumi 1
-    
-echo "mass: $mass"
-echo "sigFiles: $sigFiles"
-echo "runName.dat: $runName.dat"
+    ./bin/SignalFit -i $sigFiles -o $outputFile -p ggF -f HHWWggTag_0 --HHWWggLabel $HHWWggLabel -d dat/$runName.dat -s $phosysdat --procs ggF -v 1 --changeIntLumi 1 # key changeintlumi to 1 here 
+  
 
-#./bin/SignalFit -i $sigFiles -p ggF -f SL -d dat/$runName.dat -s empty.dat --procs ggF --changeIntLumi 1 # one femtobarn 
-    
+#./bin/SignalFit -i $sigFiles -p ggF -f SL -d dat/$runName.dat -s empty.dat --procs ggF --changeIntLumi 1 # one inverse femtobarn     
 # ./bin/SignalFit -i $sigFiles -p ggF -f SL -d dat/$runName.dat -s empty.dat --procs ggF --changeIntLumi 42.17
 done
 fi
@@ -191,7 +225,7 @@ inputFile+=".root"
 echo "runName: $runName"
 echo "inputFile: $inputFile"
   #./bin/makeParametricSignalModelPlots -i CMS-HGG_sigfit.root  -o $runName -p ggF -f SL
-	./bin/makeParametricSignalModelPlots -i $inputFile  -o $runName -p ggF -f SL
+	./bin/makeParametricSignalModelPlots -i $inputFile  -o $runName -p ggF -f HHWWggTag_0
 done
 fi 
 
@@ -233,11 +267,16 @@ do
     inputSignal+=$mass
     inputSignal+=".root"
     
+    HHWWggLabel="${mass}_WWgg_qqlnugg"
+    phosysdat="${HHWWggLabel}.dat"
+
     datacardName=$runName
     datacardName+=".dat"
-    photonCatScales=$fggfinalfitDirec
-    photonCatScales+="Signal/empty.dat"
-    python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c SL --photonCatScales $photonCatScales --isMultiPdf --intLumi 41.5
+    photonCatScales="${fggfinalfitDirec}Signal/${phosysdat}"
+
+    echo "photonCatScales: $photonCatScales"
+
+    python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c HHWWggTag_0 --photonCatScales $photonCatScales --isMultiPdf --intLumi 41.5
 
     cd $origDirec 
 
@@ -281,7 +320,7 @@ do
     cmsenv
     # cp ${fggfinalfitDirec}Signal/CMS-HGG_sigfit.root CMS-HGG_sigfit_data_ggF_SL.root
 
-    cp ${fggfinalfitDirec}Signal/CMS-HGG_sigfit_${mass}.root CMS-HGG_sigfit_data_ggF_SL.root
+    cp ${fggfinalfitDirec}Signal/CMS-HGG_sigfit_${mass}.root CMS-HGG_sigfit_data_ggF_HHWWggTag_0.root
     cp ${fggfinalfitDirec}Background/HHWWgg_Background.root CMS-HGG_mva_13TeV_multipdf.root
     cp ${fggfinalfitDirec}Datacard/$datacardName CMS-HGG_mva_13TeV_datacard.txt
 

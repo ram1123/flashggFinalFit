@@ -7,7 +7,7 @@ import os
 inDir = sys.argv[1]
 outDir = inDir 
 
-mass = [250] # radion mass 
+mass = [400] # radion mass 
 for m in mass:
     print "Looking at Radion mass = ", m
     values = [-5,0,5]

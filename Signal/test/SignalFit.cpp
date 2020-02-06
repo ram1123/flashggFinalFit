@@ -125,6 +125,8 @@ RooRealVar *dZ_;
 RooRealVar *intLumi_;
 bool beamSpotReweigh_ = false;
 bool useDCBplusGaus_ = false;
+string HHWWgg_Label; // HHWWgg - string for heavy resonant mass + WWgg + final state 
+
 
 void OptionParser(int argc, char *argv[]){
 	po::options_description desc1("Allowed options");
@@ -166,7 +168,8 @@ void OptionParser(int argc, char *argv[]){
       ("split", po::value<string>(&splitStr_)->default_value(""), "do just one tag,proc ")
 		("changeIntLumi",	po::value<float>(&newIntLumi_)->default_value(0),														"If you want to specify an intLumi other than the one in the file. The event weights and rooRealVar IntLumi are both changed accordingly. (Specify new intlumi in fb^{-1})")
 		("flashggCats,f", po::value<string>(&flashggCatsStr_)->default_value("UntaggedTag_0,UntaggedTag_1,UntaggedTag_2,UntaggedTag_3,UntaggedTag_4,VBFTag_0,VBFTag_1,VBFTag_2,TTHHadronicTag,TTHLeptonicTag,VHHadronicTag,VHTightTag,VHLooseTag,VHEtTag"),       "Flashgg categories if used")
-		;                                                                                             		
+		("HHWWggLabel,HHWWggL", po::value<string>(&HHWWgg_Label)->default_value(""),                               								"HHWWgg label. ex: X250_WWgg_qqlnugg ")
+  	;                                                                                             		
 	po::options_description desc("Allowed options");
 	desc.add(desc1);
 
@@ -465,8 +468,10 @@ int main(int argc, char *argv[]){
   
   //referenceProcTTH_="tth";
   referenceProcTTH_="TTH";
-  referenceTagWV_="SL"; // HHWWgg
-  referenceTagRV_="SL"; // HHWWgg 
+  // referenceTagWV_="SL"; // HHWWgg
+  // referenceTagRV_="SL"; // HHWWgg
+  referenceTagWV_="HHWWggTag_0"; // HHWWgg
+  referenceTagRV_="HHWWggTag_0"; // HHWWgg 
   // referenceTagWV_="UntaggedTag_2"; // histest stats WV is ggh Untagged 3. 
   // referenceTagRV_="UntaggedTag_2"; // fairly low resolution tag even for ggh, more approprioate as te default than re-using the original tag.
   // are WV which needs to borrow should be taken from here
@@ -620,7 +625,7 @@ int main(int argc, char *argv[]){
       }
     }
   } else {
-    if (verbose_) std::cout << "[INFO] openign dat file "<< datfile<< std::endl;
+    if (verbose_) std::cout << "[INFO] opening dat file "<< datfile<< std::endl;
     //loop over it 
 	  while (datfile.good()){
 		  string line;
@@ -745,8 +750,10 @@ int main(int argc, char *argv[]){
       RooDataHist *dataH;  
 
 
-        if (verbose_)std::cout << "[INFO] Opening dataset called "<< Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str()) << " in in WS " << inWS << std::endl;
-        RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str())));
+        // if (verbose_)std::cout << "[INFO] Opening dataset called "<< Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str()) << " in in WS " << inWS << std::endl; 
+        if (verbose_)std::cout << "[INFO] Opening dataset called "<< Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh) << " in in WS " << inWS << std::endl; // HHWWgg 
+        // RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str())));
+        RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)));
         // RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh)));
 				if (beamSpotReweigh_){
         data = beamSpotReweigh(intLumiReweigh(data0));
@@ -790,7 +797,10 @@ int main(int argc, char *argv[]){
 													rvwvDataset(
                         		intLumiReweigh(
                           		reduceDataset(
-                          			(RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          			// (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          			// (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str())) // HHWWgg 
+                          			(RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",replancementProc.c_str(),HHWWgg_Label.c_str(),replancementCat.c_str(),mh)) // HHWWgg 
+                                // Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)
                           			// (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
                                 
                               )
@@ -802,7 +812,8 @@ int main(int argc, char *argv[]){
           data0Ref   = rvwvDataset(
                         intLumiReweigh(
                           reduceDataset(
-                          (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
+                          	(RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",replancementProc.c_str(),HHWWgg_Label.c_str(),replancementCat.c_str(),mh)) // HHWWgg 
+                            // (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",replancementProc.c_str(),mh,replancementCat.c_str()))
                           // (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
                           
                          )
@@ -846,7 +857,8 @@ int main(int argc, char *argv[]){
 				               rvwvDataset(
                         intLumiReweigh(
                           reduceDataset(
-                          (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
+                          // (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
+                          (RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",referenceProcWV_.c_str(),HHWWgg_Label.c_str(),referenceTagWV_.c_str(),mh)) // HHWWgg
                             // (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
                             
                          )
@@ -856,8 +868,9 @@ int main(int argc, char *argv[]){
 				 } else {
          data0Ref   = rvwvDataset(
                         intLumiReweigh(
-                          reduceDataset(
-                          (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
+                          reduceDataset( 
+                          // (RooDataSet*)inWS->data(Form("%s_%d_13TeV_%s",referenceProcWV_.c_str(),mh,referenceTagWV_.c_str()))
+                          (RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",referenceProcWV_.c_str(),HHWWgg_Label.c_str(),referenceTagWV_.c_str(),mh)) // HHWWgg
                           	// (RooDataSet*)inWS->data(Form("HHWWgg_%d_13TeV_",mh))
                             
                          )
