@@ -10,6 +10,8 @@
 
 # . DirecHHWWggSignalFitSteps.sh -i /eos/user/a/atishelm/ntuples/HHWWgg/testoutput/ -r HHWWgg_Signals -f
 # This takes /eos/user/a/atishelm/ntuples/HHWWgg/testoutput/ as an input directory, and names all corresponding outputs with RedoX250Signal, and runs only the signalfit step (-k). 
+#
+# -f, -s, -k, -p, -d, -c 
 
 cmsenv 
 
@@ -262,10 +264,12 @@ do
 
     cd $datacardDir
 
-    inputSignal=$fggfinalfitDirec
-    inputSignal+="Signal/CMS-HGG_sigfit_"
-    inputSignal+=$mass
-    inputSignal+=".root"
+    inputSignal="${fggfinalfitDirec}Signal/CMS-HGG_sigfit_${mass}.root"
+
+    # inputSignal=$fggfinalfitDirec
+    # inputSignal+="Signal/CMS-HGG_sigfit_"
+    # inputSignal+=$mass
+    # inputSignal+=".root"
     
     HHWWggLabel="${mass}_WWgg_qqlnugg"
     phosysdat="${HHWWggLabel}.dat"
@@ -275,8 +279,11 @@ do
     photonCatScales="${fggfinalfitDirec}Signal/${phosysdat}"
 
     echo "photonCatScales: $photonCatScales"
+    echo "HHWWggLabel: $HHWWggLabel"
+    echo "inputSignal: $inputSignal"
 
-    python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c HHWWggTag_0 --photonCatScales $photonCatScales --isMultiPdf --intLumi 41.5
+    # python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c HHWWggTag_0 --photonCatScales $photonCatScales --photonCatScales HighR9EB,HighR9EE,LowR9EB,LowR9EE --photonCatSmears HighR9EBPhi,HighR9EBRho,HighR9EEPhi,HighR9EERho,LowR9EBPhi,LowR9EBRho,LowR9EEPhi,LowR9EERho  --isMultiPdf --intLumi 41.5
+    python test_makeParametricModelDatacardFLASHgg.py -i $inputSignal -o $datacardName -p ggF -c HHWWggTag_0 --HHWWgg_Label $HHWWggLabel --photonCatScales HighR9EB,HighR9EE,LowR9EB,LowR9EE --photonCatSmears HighR9EBPhi,HighR9EBRho,HighR9EEPhi,HighR9EERho,LowR9EBPhi,LowR9EBRho,LowR9EEPhi,LowR9EERho --photonCatSmearsCorr MaterialCentralBarrel,MaterialForward,FNUFEB,ShowerShapeHighR9EE,ShowerShapeHighR9EB,ShowerShapeLowR9EE,ShowerShapeLowR9EB --isMultiPdf --intLumi 41.5
 
     cd $origDirec 
 

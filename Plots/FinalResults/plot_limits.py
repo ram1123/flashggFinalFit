@@ -2,6 +2,18 @@ import ROOT
 from ROOT import TFile, TTree, TCanvas, TGraph, TMultiGraph, TGraphErrors, TLegend, kBlack, TLatex, gPad
 import CMS_lumi, tdrstyle
 import subprocess # to execute shell command
+
+import argparse
+
+# ol = '/afs/cern.ch/work/a/atishelm/private/ecall1algooptimization/PileupMC_v2/Plot/ntuples/'
+ol = '/eos/user/a/atishelm/www/EcalL1Optimization/BX-1/'
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-AC","--atlas_compare", action="store_true", default=False, help="Display limits in way to compare to ATLAS HHWWgg limits", required=False)
+parser.add_argument("-CMSC","--CMS_compare", action="store_true", default=False, help="Display limits in way to compare to CMS HH limits", required=False)
+parser.add_argument("-SM","--SM_Radion",action="store_true", default=False, help="Display SM limits", required=False)
+args = parser.parse_args()
+
 ROOT.gROOT.SetBatch(ROOT.kTRUE)
  
 # CMS style
@@ -10,6 +22,8 @@ CMS_lumi.extraText = "Preliminary"
 CMS_lumi.cmsTextSize = 0.65
 CMS_lumi.outOfFrame = True
 tdrstyle.setTDRStyle()
+ 
+
  
  
 # CREATE datacards
@@ -72,8 +86,10 @@ def getLimits(file_name):
     # print'tree = ',tree
     for quantile in tree:
         # print'quantile = ',quantile 
-        limits.append(tree.limit)
-        # limits.append(tree.limit*1000.) # fb 
+        if(args.atlas_compare):
+            limits.append(tree.limit)
+        elif(args.CMS_compare):
+            limits.append(tree.limit*1000.) # fb 
         # print ">>>   %.2f" % limits[-1]
  
     return limits[:6]
@@ -91,7 +107,7 @@ def plotUpperLimits(labels,values):
     up2s = [ ]
     for i in range(N):
         # file_name = "higgsCombine"+labels[i]+"AsymptoticLimits.mH125.root"
-        file_name = "higgsCombine"+labels[i]+".AsymptoticLimits.mH125.root"
+        file_name = "higgsCombine.AsymptoticLimits.mH125." + labels[i] +  ".root"
         limit = getLimits(file_name)
         # print'limit = ',limit
         # print'values[i] = ',values[i] 
@@ -135,19 +151,26 @@ def plotUpperLimits(labels,values):
     frame.GetXaxis().SetNdivisions(508)
     frame.GetYaxis().CenterTitle(True)
     # frame.GetYaxis().SetTitle("95% upper limit on #sigma / #sigma_{SM}")
-    # frame.GetYaxis().SetTitle("95% CL limit on #sigma(gg#rightarrow X#rightarrow HH) (fb)")
-    frame.GetYaxis().SetTitle("95% CL limits on #sigma(gg#rightarrow X)#times B(X#rightarrow HH) [pb]")
+    
+    if(args.atlas_compare):
+        frame.GetYaxis().SetTitle("95% CL limits on #sigma(gg#rightarrow X)#times B(X#rightarrow HH) [pb]")
+    elif(args.CMS_compare):
+        frame.GetYaxis().SetTitle("95% CL limit on #sigma(gg#rightarrow X#rightarrow HH) (fb)")
 #    frame.GetYaxis().SetTitle("95% upper limit on #sigma #times BR / (#sigma #times BR)_{SM}")
     # frame.GetXaxis().SetTitle("background systematic uncertainty [%]")
-    frame.GetXaxis().SetTitle("Radion Mass (GeV)")
+    #if(args.SM_Radion): frame.GetXaxis.SetTitle("Standard Model")
+    #else: frame.GetXaxis().SetTitle("Radion Mass (GeV)")
     # frame.SetMinimum(0)
     # frame.SetMinimum(1) # need Minimum > 0 for log scale 
     frame.SetMinimum(1.000001) # need Minimum > 0 for log scale 
     # frame.SetMaximum(max(up2s)*1.05)
     # frame.SetMaximum(max(up2s)*2)
     # frame.SetMaximum(1000.)
-    # frame.SetMaximum(8*1e4) # CMS HH 
-    frame.SetMaximum(7*1e2) # ATLAS
+    
+    if(args.atlas_compare):
+        frame.SetMaximum(7*1e2) # ATLAS
+    elif(args.CMS_compare):
+        frame.SetMaximum(8*1e4) # CMS HH 
     frame.GetXaxis().SetLimits(min(values),max(values))
     # frame.SetLogy()
     # frame.GetXaxis().SetLimits(min(values)-10,max(values)+10)
@@ -202,8 +225,17 @@ def plotUpperLimits(labels,values):
     print " "
     # c.SaveAs("UpperLimit.png")
     
-    c.SaveAs("UpperLimit.pdf")
-    c.SaveAs("UpperLimit.C")
+    outFile = ''
+    if(args.CMS_compare):
+        outFile += "CMS_Compare_"
+    if(args.atlas_compare):
+        outFile += "atlas_Compare_"
+
+
+    if args.SM_Radion: outFile += "SM_"
+
+    c.SaveAs(outFile + "UpperLimit.pdf")
+    c.SaveAs(outFile + "UpperLimit.C")
     c.Close()
  
  
@@ -222,10 +254,19 @@ def main():
 
     labels = [ ]
     values = [ ]
-    labels.append("Test")
-    labels.append("Test2")
-    values.append(249)
-    values.append(251)
+    if args.SM_Radion: 
+        labels.append("SM")
+        labels.append("SM")
+        values.append(-1)
+        values.append(1)
+    else:       
+	    masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000] 
+	    masses = [250, 260, 270, 280, 300, 320, 350, 400, 500]
+	    for m in masses:
+		labels.append("X" + str(m))
+		values.append(m)
+
+
     # for theta_B in frange(0.0,5.0,1):
     #     values.append(theta_B)
     #     label = "%d" % (theta_B*10)

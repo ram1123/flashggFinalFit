@@ -91,7 +91,7 @@ then
     for m in 120 125 130
     do
         sigFiles+=$fileDir
-        sigFiles+="X_signal_250_"
+        sigFiles+="X_signal_400_"
         sigFiles+=$m
         sigFiles+="_HHWWgg_qqlnu.root,"
     done        
