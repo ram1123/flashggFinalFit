@@ -6,9 +6,9 @@ signalScriptCfg = {
   
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file 
-  'inputWSDir':'/eos/user/a/atishelm/ntuples/HHWWgg/HHWWgg_v2-6_Workspaces_X600_Synch_Hadded',
-  'usrprocs':'ggF', # if you want user input production categories 
-  # 'usrprocs':'GluGluToHHTo', # if you want user input production categories 
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_1July/GluGluToHHTo_WWgg_qqqq_node11_Hadded',
+  # 'usrprocs':'ggF', # if you want user input production categories 
+  'usrprocs':'GluGluToHHTo', # if you want user input production categories 
   #Procs will be inferred automatically from filenames
   'cats':'HHWWggTag_0,HHWWggTag_1',
   # 'ext':'HHWWgg_v2-3_%s_2CatsSyst'%_year,
@@ -16,9 +16,9 @@ signalScriptCfg = {
   # 'analysis':'stage1_2', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   'analysis':'HHWWgg', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   # 'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM 
-  'analysis_type':'Res', # For HHWWgg: Res, EFT or NMSSM 
+  'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM 
   # 'analysis_type':'NMSSM', # For HHWWgg: Res, EFT or NMSSM 
-  'FinalState':'qqlnu', # For HHWWgg. Should choose qqlnu, lnulnu, or qqqq for final state. Will look for this in expected name formats. When we combine channels, and they're defined by tags, we'll add "combined" here and naming format in file will be something like "combined" instead of qqlnu, etc.
+  'FinalState':'qqqq', # For HHWWgg. Should choose qqlnu, lnulnu, or qqqq for final state. Will look for this in expected name formats. When we combine channels, and they're defined by tags, we'll add "combined" here and naming format in file will be something like "combined" instead of qqlnu, etc.
   'year':'%s'%_year, 
   'beamspot':'3.4',
   'numberOfBins':'320',
@@ -48,6 +48,6 @@ signalScriptCfg = {
   ##-- Steps to run: 
   # No systematics: std, sigFitOnly, packageOnly, sigPlotsOnly
   # With systematics: std, std 
-  'verbosity':'0',
+  'verbosity':'1',
 
 }

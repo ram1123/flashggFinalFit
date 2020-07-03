@@ -565,7 +565,7 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   // catLabel_humanReadable.ReplaceAll("all","All Categories");
   string hhwwggMass;
   if (analysis_ == "HHWWgg"){
-    website = "/eos/user/a/atishelm/www/HHWWgg/fggfinalfit/Signal/";
+    website = "/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/Signal/";
     process = "HH#rightarrowWW#gamma#gamma";
     // Can add stat or stat + sys with systematics flag 
 
