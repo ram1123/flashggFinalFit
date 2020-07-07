@@ -1,15 +1,17 @@
 # Config file: options for background fitting
 
+_year = '2017'
+
 backgroundScriptCfg = {
-  
+
   # Setup
-  'inputWSDir':'/eos/user/a/atishelm/ntuples/HHWWgg/HHWWgg_v2-6_2017_Data_Workspaces_v2_Hadded_againtest_Combined', 
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_5July_v3/HHWWgg_2017_Data_Trees_Hadded_Combined',
   #Procs will be inferred automatically from filenames
-  'cats':'HHWWggTag_0,HHWWggTag_1',
+  'cats':'HHWWggTag_0,HHWWggTag_2',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-6_2017_Synch',
-  'ext':'HHWWgg_v2-6_2017_ChannelTest',
-  'year':'2017', 
+  'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
+  'year':'2017',
   'unblind':0,
 
   # Job submission options
@@ -19,6 +21,6 @@ backgroundScriptCfg = {
   'analysis':'HHWWgg',
 
   # Mode allows script to carry out single function
-  'mode':'fTestOnly', # Options: [std,fTestOnly,bkgPlotsOnly]
-  
+  'mode':'std', # Options: [std,fTestOnly,bkgPlotsOnly]
+
 }

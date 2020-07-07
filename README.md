@@ -149,7 +149,7 @@ After cloning the repository, the main HHWWgg script to use is HHWWggFinalFitScr
 
 ### f-Test
 
-To produce a background model, you first need a config file. You can begin with the example Background/HHWWgg_Synch_Background_Config.py. This contains the parameters for running the background fits. 
+To produce a background model, you first need a config file. You can begin with the example `Background/HHWWgg_Synch_Background_Config.py`. This contains the parameters for running the background fits. 
 
 An explanation of the important parameters to set:
   
@@ -172,7 +172,7 @@ If this works properly, you should see the directory Background/outdir_<extensio
 
 ## Signal 
 
-Next are the functions to run on the signal. You can begin with the example configuration Signal/HHWWgg_Synch_Signal_Config.py. 
+Next are the functions to run on the signal. You can begin with the example configuration `Signal/HHWWgg_Synch_Signal_Config.py`.
 
 This configuration contains the following parameters:
   * systematics: Set to 1 to look for systematic trees in signal workspace. Set to 0 to not generate a systematics dat file.
@@ -190,7 +190,7 @@ This configuration contains the following parameters:
 
 After setting the parameters properly, you are ready to run the signal fit steps. 
 
-To run with systematics, you should set the mode to "std", make sure the correct configuration file name is specified in HHWWggFinalFitScript for the signal step, and then run the command . HHWWggFinalFitScript.sh signal. 
+To run with systematics, you should set the mode to "std", make sure the correct configuration file name is specified in HHWWggFinalFitScript for the signal step, and then run the command `. HHWWggFinalFitScript.sh signal`. 
 
 This should run the fTest step, providing the recommended number of gaussians to use to fit each signal category. If this runs properly, you should find a directory Signal/outdir_<entension>_<signalPoint>_<Process>. In this directory you should find sigfTest containing the gaussian sum f-test fits for rv (right vertex) and wv (wrong vertex) for each category.
 
@@ -201,7 +201,7 @@ To continue with the signal fitting, run the same command: . HHWWggFinalFitScrip
 The next step is to create the datacard containing information from the Background and Signal workspaces to be used by combine. An example configuration file used for this step is HHWWgg_Synch_Combine_Config.py. Most if not all of the parameters here are previously explained in either the Signal or Background sections. The main thing to remember is that the extension needs to stay consistent here. As long as the parameters are set properly, and the datacard step of HHWWggFinalFitScript.sh is looking for the proper configuration file, you should now run: 
 
 ```
-. HHWWggFinalFitScript.sh datacard 
+. HHWWggFinalFitScript.sh datacard
 ```
 
 If it works properly, this should create a directory Datacard/<extension>, containing the datacard. Note that the datacard ending with "_cleaned.txt" is the one used in the combine step.
