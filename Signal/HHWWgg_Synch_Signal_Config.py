@@ -6,11 +6,12 @@ signalScriptCfg = {
 
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_5July_v3/GluGluToHHTo_WWgg_qqqq_node11_Hadded',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/GluGluToHHTo_WWgg_qqqq_EFT_Workspaces_Hadded',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/11July/',
   # 'usrprocs':'ggF', # if you want user input production categories
   'usrprocs':'GluGluToHHTo', # if you want user input production categories
   #Procs will be inferred automatically from filenames
-  'cats':'HHWWggTag_0,HHWWggTag_2',
+  'cats':'HHWWggTag_0,HHWWggTag_1,HHWWggTag_2,HHWWggTag_4',
   # 'ext':'HHWWgg_v2-3_%s_2CatsSyst'%_year,
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   # 'analysis':'stage1_2', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)

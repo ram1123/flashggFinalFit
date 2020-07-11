@@ -5,9 +5,9 @@ _year = '2017'
 backgroundScriptCfg = {
 
   # Setup
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_5July_v3/HHWWgg_2017_Data_Trees_Hadded_Combined',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/HHWWgg_2017_Data_Trees_Hadded_Combined',
   #Procs will be inferred automatically from filenames
-  'cats':'HHWWggTag_0,HHWWggTag_2',
+  'cats':'HHWWggTag_0,HHWWggTag_1,HHWWggTag_2,HHWWggTag_4',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-6_2017_Synch',
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
