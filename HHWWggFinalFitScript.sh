@@ -83,7 +83,7 @@ if [ $step == "plot" ]; then
     # python plot_limits.py -AC --HHWWggCatLabel  $tagLabel --systematics --campaign HHWWgg_v2-6_2017 --resultType WWgg --unit pb --ymin 1.000001 --ymax 1 --yboost 0.09 # atlas compare
     # python plot_limits.py -CMSC --HHWWggCatLabel  $tagLabel --systematics --campaign HHWWgg_v2-6_2017 --resultType HH --unit fb --ymin 10 --ymax 1e5 --yboost -0.2
     ###used this ####python plot_limits.py -CMSC --HHWWggCatLabel  $tagLabel --systematics --campaign HHWWgg_v2-3_2017 --resultType HH --unit fb --ymin 10 --ymax 1e5 --yboost -0.2
-    python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 10 --ymax 1e6 --yboost -0.32 # EFT
+    python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 0.0001 --ymax 1e3 --yboost -0.32 # EFT
     # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --campaign HHWWgg_v2-3_2017 --resultType HH --unit fb --ymin 10 --ymax 1e6 --yboost -0.32 # standard model
     # python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign HHWWgg_v2-3_2017 --resultType HH --unit pb --ymin 1 --ymax 100 --yboost 0.09 # EFT
     # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --campaign HHWWgg_v2-3_2017 --resultType HH --unit pb --ymin 1 --ymax 100 --yboost 0.09 # standard model

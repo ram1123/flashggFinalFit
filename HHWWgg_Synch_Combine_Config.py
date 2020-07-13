@@ -18,13 +18,14 @@ combineScriptCfg = {
   'mode':mode,
   # 'mode':'combine',
   'doSystematics':1, # 0: do not include systematics in datacard. 1: include systematics in datacard
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_5July_v3/GluGluToHHTo_WWgg_qqqq_node11_Hadded',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/GluGluToHHTo_WWgg_qqqq_EFT_Workspaces_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/HHWWgg_2017_Data_Trees_Hadded_Combined',
   #Procs will be inferred automatically from filenames
   #'HHWWggCatLabel':'2TotCatsCOMBINEDWithSyst', # for name of combine output files
   'HHWWggCatLabel':'2TotCatsbothcombined',
   # 'cats':'HHWWggTag_0',
   # 'cats':'HHWWggTag_1',
-  'cats':'HHWWggTag_0,HHWWggTag_2',
+  'cats':'HHWWggTag_2',
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',

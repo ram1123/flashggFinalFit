@@ -462,8 +462,8 @@ if [ $SIGPLOTSONLY == 1 ]; then
     # if [ $SYSTEMATICS == 0 ]; then
     #   sysOption="-s dat/empty.dat"
     # fi
-    echo " ./bin/makeParametricSignalModelPlots -i ${inFile}  -o $OUTDIR -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE"
-    ./bin/makeParametricSignalModelPlots -i ${inFile}  -o $OUTDIR/sigplots -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE # Need to not output to .txt file in order to debug
+    echo " ./bin/makeParametricSignalModelPlots -i ${inFile} -w ${WEBSITE} -o $OUTDIR -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE"
+    ./bin/makeParametricSignalModelPlots -i ${inFile} -w ${WEBSITE} -o $OUTDIR/sigplots -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE # Need to not output to .txt file in order to debug
     # ./bin/makeParametricSignalModelPlots -i ${inFile}  -o $OUTDIR/sigplots -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS > signumbers_${EXT}.txt
 
     if [[ $ANALYSIS != "HHWWgg" ]]; then

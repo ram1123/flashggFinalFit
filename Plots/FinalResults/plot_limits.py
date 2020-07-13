@@ -22,7 +22,7 @@ import argparse
 
 # ol = '/afs/cern.ch/work/a/atishelm/private/ecall1algooptimization/PileupMC_v2/Plot/ntuples/'
 #ol = '/eos/user/a/atishelm/www/EcalL1Optimization/BX-1/'
-ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/limits2'
+ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/13July/limits2'
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-AC","--atlas_compare", action="store_true", default=False, help="Display limits in way to compare to ATLAS HHWWgg limits", required=False)
@@ -120,13 +120,15 @@ def executeDataCards(labels):
 
 # GET limits from root file
 def getLimits(file_name):
+    print "\n\n\n---> Inside getLimits Function."
 
-    # print'file_name = ',file_name
+    print '--->  file_name = ',file_name
     file = TFile(file_name)
     tree = file.Get("limit")
 
     limits = [ ]
     for quantile in tree:
+        print "quantile: ",quantile
         if(args.unit == "fb"):
             limits.append(tree.limit) # value is already in fb because multiplied by arb. XS = 1fb
         elif(args.unit == "pb"):
@@ -134,6 +136,7 @@ def getLimits(file_name):
         elif(args.SM_Point):
             limits.append(tree.limit)
 
+    print '---> limits',limits
     return limits[:6]
 
 
@@ -524,9 +527,11 @@ def plotRatio(values, labels1, labels2):
 # plot in style that is bin per label, not graph with mass trend
 def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     labelTitle= args.HHWWggCatLabel
-    # print"labels:",labels
-    # print"campaign:",campaign
-    # print"args.HHWWggCatLabel:",args.HHWWggCatLabel
+    print "==> labels:",labels
+    print "==> campaign:",campaign
+    print "==> resultType:",resultType
+    print "==> plotLabels:",plotLabels
+    print "==> args.HHWWggCatLabel:",args.HHWWggCatLabel
     # exit(1)
     # see CMS plot guidelines: https://ghm.web.cern.ch/ghm/plots/
     N = len(labels) # should be same
@@ -564,10 +569,11 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
 
         # file_name = "%s_limits/%s_%s_HHWWgg_qqlnu.root"%(direc,campaign,labels[i])
         file_name = "%s_limits/%s_%s_HHWWgg_qqqq.root"%(direc,campaign,labels[i])
-        print"file name:",file_name
+        print"====> file name:",file_name
         # file_name = direc + "_limits/HHWWgg_v2-3_2017_" + labels[i] + "_HHWWgg_qqlnu.root"
         #print'file_name:',file_name
         limit = getLimits(file_name)
+        print"====> limit:",limit
         yellow.SetPoint(    i,    xvalues[i], limit[4]*HHWWgg_factor ) # + 2 sigma
         green.SetPoint(     i,    xvalues[i], limit[3]*HHWWgg_factor ) # + 1 sigma
         # median_h.Fill(xvalues[i], limit[2]*HHWWgg_qqlnu_factor)
@@ -622,7 +628,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # print"green:",green
     # exit(1)
 
-    W = 800
+    W = 1100
     H  = 600
     T = 0.08*H
     B = 0.12*H
@@ -791,11 +797,14 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
 
     # yboost = 0.075
     yboost = args.yboost
+    print '==> yboost = ',yboost
 
-    x1 = 0.15
+    x1 = 0.60
     x2 = x1 + 0.24
-    y2 = 0.76 + yboost
-    y1 = 0.60 + yboost
+    # y2 = 1. + yboost
+    # y1 = 0.95 + yboost
+    y1 = 0.9
+    y2 = 0.7
     legend = TLegend(x1,y1,x2,y2)
     legend.SetFillStyle(0)
     legend.SetBorderSize(0)
@@ -815,7 +824,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     label.SetTextSize(0.045)
     label.SetLineWidth(2)
 
-    if(args.systematics): label.DrawLatex(0.7,0.7 + yboost,"SYST + STAT")
+    if(args.systematics): label.DrawLatex(0.7,0.95 + yboost,"SYST + STAT")
     else: label.DrawLatex(0.7,0.7 + yboost,"STAT ONLY")
 
     print " "
@@ -855,6 +864,8 @@ def frange(start, stop, step):
 def main():
     campaign = args.campaign
     resultType = args.resultType
+    print "campaign: ",campaign
+    print "resultType: ",resultType
     values = [ ] # x axis values for limit plots. Ex: Radion masses
     # if args.SM_Point:
         # values.append(-1) #FIXME: change x axis to a label saying SM rather than -1 to 1
@@ -892,7 +903,7 @@ def main():
 
     elif args.Grid:
         print'Creating grid of limit values'
-        ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/grid'
+        ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/13July/grid'
         # ol = '/eos/user/a/atishelm/www/HHWWgg_Analysis/fggfinalfit/gridSyst'
         masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
         #masses = [250]
@@ -991,10 +1002,15 @@ def main():
             plotLabels = ["SM Non-Res"]
             # labels.append("SM_" + args.HHWWggCatLabel)
         elif args.EFT:
+            labels.append("2017_node02_" + args.HHWWggCatLabel)
+            labels.append("2017_node03_" + args.HHWWggCatLabel)
+            labels.append("2017_node04_" + args.HHWWggCatLabel)
+            labels.append("2017_node05_" + args.HHWWggCatLabel)
+            labels.append("2017_node06_" + args.HHWWggCatLabel)
+            labels.append("2017_node09_" + args.HHWWggCatLabel)
             labels.append("2017_node11_" + args.HHWWggCatLabel)
-            # labels.append("node9_" + args.HHWWggCatLabel)
-            plotLabels = ["EFT Node 11"]
-            # plotLabels = ["EFT Node 3","EFT Node 10"]
+            labels.append("2017_nodeSM_" + args.HHWWggCatLabel)
+            plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 9","Node 11","SM"]
         elif args.NMSSM:
             labels.append("MX300_MY170_" + args.HHWWggCatLabel)
             labels.append("MX1000_MY800_" + args.HHWWggCatLabel)
@@ -1006,6 +1022,8 @@ def main():
             for m in masses:
                 labels.append("X" + str(m) + '_' + str(args.HHWWggCatLabel))
 
+        print "labels: ",labels
+        print "plotLabels: ",plotLabels
         # createDataCardsThetaB(labels,values)
         # executeDataCards(labels)
         if(args.SM_Point) or (args.EFT) or(args.NMSSM):
