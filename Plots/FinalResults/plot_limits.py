@@ -128,7 +128,6 @@ def getLimits(file_name):
 
     limits = [ ]
     for quantile in tree:
-        print "quantile: ",quantile
         if(args.unit == "fb"):
             limits.append(tree.limit) # value is already in fb because multiplied by arb. XS = 1fb
         elif(args.unit == "pb"):
@@ -555,7 +554,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # e, mu (no tau), qq (assuming negligible b quark BR): 3.4916
     # 1030.7153
     HHWWgg_qqlnu_factor = 3.4916 # e, mu semileptonic channels only
-    HHWWgg_qqqq_factor = 1.1138 # e, mu semileptonic channels only
+    HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
     HHWWgg_WWgg_factor = 1030.7153
     if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
     elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqqq_factor*HHWWgg_WWgg_factor
@@ -839,9 +838,9 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # if(args.atlas_compare):
         # outFile += "atlas_Compare_"
 
-    if args.SM_Point: outFile += "SM_"
-    elif args.EFT: outFile += "EFT_"
-    elif args.NMSSM: outFile += "NMSSM_"
+    if args.SM_Point: outFile += "SM_"+resultType+"_"
+    elif args.EFT: outFile += "EFT_"+resultType+"_"
+    elif args.NMSSM: outFile += "NMSSM_"+resultType+"_"
 
     # outFile += Label_1 + "_" + Label_2 + "_"
 
