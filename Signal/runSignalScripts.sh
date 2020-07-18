@@ -265,7 +265,7 @@ if [ $SIGFITONLY == 1 ]; then
       ID="$(cut -d'_' -f1 <<<$fileID)" # get text before first '_'. ex: SM, X250, X260, ...
       # echo "fileDir: $fileDir"
       # echo "mass: $mass"
-      HHWWggLabel="${ID}_WWgg_${FINALSTATE}gg"
+      HHWWggLabel="${ID}_HHWWgg_${FINALSTATE}"
       proc="ggF"
     elif [[ $ANALYSIS_TYPE == "EFT" ]];
     then

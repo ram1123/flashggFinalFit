@@ -184,7 +184,7 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
 			vector<string> tmpV2;
 			split(tmpV2,endPath,boost::is_any_of("_"));
 			string mass_str = tmpV2[0];
-			HHWWgg_Label = Form("%s_WWgg_%sgg",mass_str.c_str(),FinalState_.c_str());
+			HHWWgg_Label = Form("%s_HHWWgg_%s",mass_str.c_str(),FinalState_.c_str());
 			// HHWWgg_Label = Form("%s_HHWWgg_qqlnu",mass_str.c_str());
 		}
 		else if (analysis_type_ == "EFT"){

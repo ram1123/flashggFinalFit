@@ -20,10 +20,6 @@ from array import array
 
 import argparse
 
-# ol = '/afs/cern.ch/work/a/atishelm/private/ecall1algooptimization/PileupMC_v2/Plot/ntuples/'
-#ol = '/eos/user/a/atishelm/www/EcalL1Optimization/BX-1/'
-ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/13July/limits2'
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-AC","--atlas_compare", action="store_true", default=False, help="Display limits in way to compare to ATLAS HHWWgg limits", required=False)
 parser.add_argument("-CMSC","--CMS_compare", action="store_true", default=False, help="Display limits in way to compare to CMS HH limits", required=False)
@@ -43,6 +39,8 @@ parser.add_argument("--ymax",type=float, default=0, help="Y maximum", required=T
 parser.add_argument("--yboost",type=float, default=0, help="Y boost of legend. Ex: -0.2, 0.090", required=True)
 parser.add_argument("--EFT",action="store_true", default=False, help="EFT results", required=False)
 parser.add_argument("--NMSSM",action="store_true", default=False, help="NMSSM results", required=False)
+parser.add_argument("--FinalState",type=str, default="", help="Which Final state; qqqq, lnuqq, lnulnu", required=True) # Ex: WWgg, HH
+parser.add_argument("--website",type=str, default="", help="path of website to send plots", required=True) # Ex: WWgg, HH
 
 parser.add_argument("--campaignOne",type=str, default="UnLabeled", help="Campaign of first limits in ratio", required=False)
 parser.add_argument("--campaignTwo",type=str, default="UnLabeled", help="Campaign of second limits in ratio", required=False)
@@ -50,6 +48,7 @@ parser.add_argument("--campaignTwo",type=str, default="UnLabeled", help="Campaig
 args = parser.parse_args()
 
 ROOT.gROOT.SetBatch(ROOT.kTRUE)
+
 
 # CMS style
 CMS_lumi.cmsText = "CMS"
@@ -158,7 +157,7 @@ def plotUpperLimits(labels,values,resultType):
         print"file: ",file_name
         #print'file_name:',file_name
         limit = getLimits(file_name)
-        # print'limit = ',limit
+        print'limit = ',limit
         # print'values[i] = ',values[i]
         #print'limit = ',limit
         up2s.append(limit[4])
@@ -170,10 +169,15 @@ def plotUpperLimits(labels,values,resultType):
         ##
         # HHWWgg_qqlnu_factor = 2.2779 ## (1 / BR) with Electron, Muon, all Tau decays INCLUDED
         HHWWgg_qqlnu_factor = 2.3079 ## (1 / BR) with Electron, Muon, all Tau decays INCLUDED
-
+        HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
         HHWWgg_WWgg_factor = 1030.7153
-        if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqlnu_factor
-        elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqlnu_factor*HHWWgg_WWgg_factor
+
+        if (args.FinalState == "qqqq"):
+            if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
+            elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqqq_factor*HHWWgg_WWgg_factor
+        elif (args.FinalState == "lnuqq"):
+            if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqlnu_factor
+            elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqlnu_factor*HHWWgg_WWgg_factor
         # HHWWgg_qqlnu_factor = 2061.43 # 1 / branching ratio of qqlnugg including electron and muon channels. Need to multiply measured XS by this to get measured XS of HH production
         # HHWWgg_qqlnu_factor = 2.06143 # 1 / SM BR of HH->WWgg
         # HHWWgg_qqlnu_factor = 1 # 1 / SM BR of HH->WWgg
@@ -323,7 +327,7 @@ def plotUpperLimits(labels,values,resultType):
     # c.SaveAs("UpperLimit.png")
 
     outFile = ''
-    outFile += ol + '/'
+    # outFile += ol + '/'
     if(args.CMS_compare):
         outFile += "CMS_Compare_"
     if(args.All_Points):
@@ -339,6 +343,10 @@ def plotUpperLimits(labels,values,resultType):
     c.SaveAs(outFile + "UpperLimit.pdf")
     c.SaveAs(outFile + "UpperLimit.png")
     c.SaveAs(outFile + "UpperLimit.C")
+    if args.website != "":
+        c.SaveAs(args.website + '/' + outFile + "UpperLimit.pdf")
+        c.SaveAs(args.website + '/' + outFile + "UpperLimit.png")
+        c.SaveAs(args.website + '/' + outFile + "UpperLimit.C")
     c.Close()
 
 def plotRatio(values, labels1, labels2):
@@ -503,7 +511,7 @@ def plotRatio(values, labels1, labels2):
     # c.SaveAs("UpperLimit.png")
 
     outFile = ''
-    outFile += ol + '/'
+    # outFile += ol + '/'
     if(args.CMS_compare):
         outFile += "CMS_Compare_"
     if(args.All_Points):
@@ -519,6 +527,11 @@ def plotRatio(values, labels1, labels2):
     c.SaveAs(outFile + "RatioUpperLimit.pdf")
     c.SaveAs(outFile + "RatioUpperLimit.png")
     c.SaveAs(outFile + "RatioUpperLimit.C")
+    if args.website != "":
+        c.SaveAs(args.website + '/' + outFile + "RatioUpperLimit.pdf")
+        c.SaveAs(args.website + '/' + outFile + "RatioUpperLimit.png")
+        c.SaveAs(args.website + '/' + outFile + "RatioUpperLimit.C")
+
     c.Close()
 
 
@@ -556,9 +569,13 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     HHWWgg_qqlnu_factor = 3.4916 # e, mu semileptonic channels only
     HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
     HHWWgg_WWgg_factor = 1030.7153
-    if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
-    elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqqq_factor*HHWWgg_WWgg_factor
 
+    if (args.FinalState == "qqqq"):
+        if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
+        elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqqq_factor*HHWWgg_WWgg_factor
+    elif (args.FinalState == "lnuqq"):
+        if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqlnu_factor
+        elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqlnu_factor*HHWWgg_WWgg_factor
     # green_h = TH1F("")
     xvalues = []
     for i in range(N):
@@ -627,7 +644,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # print"green:",green
     # exit(1)
 
-    W = 1100
+    W = 1600
     H  = 600
     T = 0.08*H
     B = 0.12*H
@@ -830,7 +847,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # c.SaveAs("UpperLimit.png")
 
     outFile = ''
-    outFile += ol + '/'
+    # outFile += ol + '/'
     # if(args.CMS_compare):
         # outFile += "CMS_Compare_"
     # if(args.All_Points):
@@ -849,6 +866,10 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     c.SaveAs(outFile + "UpperLimit.pdf")
     c.SaveAs(outFile + "UpperLimit.png")
     c.SaveAs(outFile + "UpperLimit.C")
+    if args.website != "":
+        c.SaveAs(args.website + '/' + outFile + "UpperLimit.pdf")
+        c.SaveAs(args.website + '/' + outFile + "UpperLimit.png")
+        c.SaveAs(args.website + '/' + outFile + "UpperLimit.C")
     c.Close()
 
 # RANGE of floats
@@ -872,9 +893,9 @@ def main():
     # else:
     masses = []
     # if(args.CMS_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000]
-    if(args.CMS_compare): masses = [260,1000]
+    if(args.CMS_compare): masses = [260,1100]
     # if(args.All_Points): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
-    if(args.All_Points): masses = [260,1000]
+    if(args.All_Points): masses = [260,270,1100,1200,1300,1500,2000]
     # if(args.atlas_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500]
     if(args.atlas_compare): masses = [260,1000]
     for m in masses:
@@ -902,8 +923,8 @@ def main():
 
     elif args.Grid:
         print'Creating grid of limit values'
-        ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/13July/grid'
-        # ol = '/eos/user/a/atishelm/www/HHWWgg_Analysis/fggfinalfit/gridSyst'
+        # ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18July/grid'
+        # ol = args.website
         masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
         #masses = [250]
         massLabels = []
@@ -975,8 +996,10 @@ def main():
             # label.DrawLatex(0.5,0.9,ml)
             # if(args.systematics): label.DrawLatex(0.7,0.7 + yboost,"SYST + STAT")
             # else: label.DrawLatex(0.7,0.7 + yboost,"STAT ONLY")
-            outNamepng = "%s/%s_grid.png"%(ol,ml)
-            outNamepdf = "%s/%s_grid.pdf"%(ol,ml)
+            # outNamepng = "%s/%s_grid.png"%(ol,ml)
+            # outNamepdf = "%s/%s_grid.pdf"%(ol,ml)
+            outNamepng = "%s_grid.png"%(ml)
+            outNamepdf = "%s_grid.pdf"%(ml)
             c_tmp = TCanvas('c_tmp','c_tmp',800,600)
             c_tmp.SetRightMargin(0.15)
             c_tmp.SetLeftMargin(0.1)
@@ -986,6 +1009,9 @@ def main():
             label.DrawLatex(0.3,0.95,"HHWWgg 95% CL Limits: " + ml)
             c_tmp.SaveAs(outNamepng)
             c_tmp.SaveAs(outNamepdf)
+            if args.website != "":
+                c_tmp.SaveAs(args.website + '/' + outNamepng)
+                c_tmp.SaveAs(args.website + '/' + outNamepdf)
 
     else:
         if(args.HHWWggCatLabel == "UnLabeled"):
@@ -1001,15 +1027,19 @@ def main():
             plotLabels = ["SM Non-Res"]
             # labels.append("SM_" + args.HHWWggCatLabel)
         elif args.EFT:
+            labels.append("2017_node01_" + args.HHWWggCatLabel)
             labels.append("2017_node02_" + args.HHWWggCatLabel)
-            labels.append("2017_node03_" + args.HHWWggCatLabel)
             labels.append("2017_node04_" + args.HHWWggCatLabel)
             labels.append("2017_node05_" + args.HHWWggCatLabel)
             labels.append("2017_node06_" + args.HHWWggCatLabel)
+            labels.append("2017_node07_" + args.HHWWggCatLabel)
+            labels.append("2017_node08_" + args.HHWWggCatLabel)
             labels.append("2017_node09_" + args.HHWWggCatLabel)
+            labels.append("2017_node10_" + args.HHWWggCatLabel)
             labels.append("2017_node11_" + args.HHWWggCatLabel)
+            labels.append("2017_node12_" + args.HHWWggCatLabel)
             labels.append("2017_nodeSM_" + args.HHWWggCatLabel)
-            plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 9","Node 11","SM"]
+            plotLabels = ["Node 1","Node 2","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
         elif args.NMSSM:
             labels.append("MX300_MY170_" + args.HHWWggCatLabel)
             labels.append("MX1000_MY800_" + args.HHWWggCatLabel)
@@ -1021,13 +1051,14 @@ def main():
             for m in masses:
                 labels.append("X" + str(m) + '_' + str(args.HHWWggCatLabel))
 
-        print "labels: ",labels
-        print "plotLabels: ",plotLabels
         # createDataCardsThetaB(labels,values)
         # executeDataCards(labels)
         if(args.SM_Point) or (args.EFT) or(args.NMSSM):
+            print "labels: ",labels
+            print "plotLabels: ",plotLabels
             plotNonResUpperLimits(campaign,labels,resultType,plotLabels)
         else:
+            print "labels: ",labels
             plotUpperLimits(labels,values,resultType)
 
 

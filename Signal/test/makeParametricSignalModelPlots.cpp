@@ -585,9 +585,9 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
     if(analysis_type_ == "NMSSM"){
       string mX = tmpV2[5];
       string mY = tmpV2[6];
-      savename_2 = Form("%s_%s_%s_WWgg_%sgg",mX.c_str(),mY.c_str(),title.c_str(),FinalState_.c_str());
+      savename_2 = Form("%s_%s_%s_HHWWgg_%s",mX.c_str(),mY.c_str(),title.c_str(),FinalState_.c_str());
     }
-    else savename_2 = Form("%s_%s_WWgg_%sgg",mass_str.c_str(),title.c_str(),FinalState_.c_str());
+    else savename_2 = Form("%s_%s_HHWWgg_%s",mass_str.c_str(),title.c_str(),FinalState_.c_str());
 
     // savename = Form("%s");
     // savename = outdir_HHWWgg_v2-3_2017_SM_HHWWgg_qqlnu/sigplots/ggF_HHWWggTag_0.png

@@ -734,7 +734,7 @@ int main(int argc, char *argv[]){
           split(tmpV2,endPath,boost::is_any_of("_"));
           string mass_str = tmpV2[2];
 			    // HHWWgg_Label = Form("%s_HHWWgg_qqlnu",mass_str.c_str());
-          HHWWgg_Label = Form("%s_WWgg_%sgg",mass_str.c_str(),FinalState_.c_str());
+          HHWWgg_Label = Form("%s_HHWWgg_%s",mass_str.c_str(),FinalState_.c_str());
         }
         else if (analysis_type_ == "EFT"){
           // RooAbsData name format: GluGluToHHTo_WWgg_<FinalState>_nodeX_13TeV_HHWWggTag_Y
@@ -929,7 +929,7 @@ int main(int argc, char *argv[]){
           split(tmpV2,endPath,boost::is_any_of("_"));
           string mass_str = tmpV2[2];
     			// HHWWggLabel = Form("%s_HHWWgg_qqlnu",mass_str.c_str());
-          HHWWggLabel = Form("%s_WWgg_%sgg",mass_str.c_str(),FinalState_.c_str());
+          HHWWggLabel = Form("%s_HHWWgg_%s",mass_str.c_str(),FinalState_.c_str());
         }
         else if (analysis_type_ == "EFT"){
           // File name format: nodeX_HHWWgg_<FinalState>
