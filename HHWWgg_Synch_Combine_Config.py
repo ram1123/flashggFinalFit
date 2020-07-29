@@ -11,14 +11,14 @@ combineScriptCfg = {
 
   # Setup
   'analysis':'HHWWgg',
-  'analysis_type':'EFT',
+  # 'analysis_type':'EFT',
   # 'analysis_type':'NMSSM',
-  # 'analysis_type':'Res',
+  'analysis_type':'Res',
   'FinalState':'qqqq', # for HHWWgg. qqlnu, lnulnu, or qqqq. Will add combined eventually.
   'mode':mode,
   # 'mode':'combine',
   'doSystematics':1, # 0: do not include systematics in datacard. 1: include systematics in datacard
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/GluGluToHHTo_WWgg_qqqq_EFT_Workspaces_Hadded',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_16July/GluGluToHHTo_WWgg_qqqq_Radion_Trees_Hadded',
   # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/HHWWgg_2017_Data_Trees_Hadded_Combined',
   #Procs will be inferred automatically from filenames
   #'HHWWggCatLabel':'2TotCatsCOMBINEDWithSyst', # for name of combine output files
@@ -30,8 +30,8 @@ combineScriptCfg = {
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   'year':'2017',
-  'signalProcs':'GluGluToHHTo',
-  # 'signalProcs':'ggF',
+  # 'signalProcs':'GluGluToHHTo',
+  'signalProcs':'ggF',
 
   # Add UE/PS systematics to datacard (only relevant if mode == datacard)
   'doUEPS':0, # should I have this on?
