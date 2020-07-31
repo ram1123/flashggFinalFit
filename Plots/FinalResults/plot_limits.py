@@ -293,13 +293,19 @@ def plotUpperLimits(labels,values,resultType):
 
     # yboost = 0.075
     # yboost = 0.090
-    yboost = args.yboost
-    # yboost = -0.2
-
-    x1 = 0.15
+    # yboost = args.yboost
+    yboost = 0.0
+    x1 = 0.20
     x2 = x1 + 0.24
-    y2 = 0.76 + yboost
-    y1 = 0.60 + yboost
+    # y2 = 1. + yboost
+    # y1 = 0.95 + yboost
+    y1 = 0.5
+    y2 = 0.3
+
+    # x1 = 0.15
+    # x2 = x1 + 0.24
+    # y2 = 0.76 + yboost
+    # y1 = 0.60 + yboost
     legend = TLegend(x1,y1,x2,y2)
     legend.SetFillStyle(0)
     legend.SetBorderSize(0)
@@ -320,7 +326,7 @@ def plotUpperLimits(labels,values,resultType):
     label.SetTextFont(42)
     label.SetTextSize(0.045)
     label.SetLineWidth(2)
-    if(args.systematics): label.DrawLatex(0.7,0.7 + yboost,"SYST + STAT")
+    if(args.systematics): label.DrawLatex(0.7,0.3 + yboost,"SYST + STAT")
     else: label.DrawLatex(0.7,0.7 + yboost,"STAT ONLY")
 
     print " "
@@ -895,6 +901,7 @@ def main():
     # if(args.CMS_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000]
     if(args.CMS_compare): masses = [260,1100]
     # if(args.All_Points): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
+    # if(args.All_Points): masses = [260,270,1100,1300]
     if(args.All_Points): masses = [260,270,1100,1300,1500,2000]
     # if(args.All_Points): masses = [260,270,1100,1200,1300,1500,2000]
     # if(args.atlas_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500]
