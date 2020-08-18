@@ -165,7 +165,7 @@ An explanation of the important parameters to set:
 After setting the python configuration file you want to use in the backgroundftest option in HHWWggFinalFitScript.sh, and setting the proper parameters in your configuration file, you can run the background ftest with:
 
 ```
-. HHWWggFinalFitScript.sh backgroundftest 
+. HHWWggFinalFitScript.sh backgroundftest
 ```
 
 If this works properly, you should see the directory Background/outdir_<extension>/bkgfTest-Data containing many output images including multipdf_<category>.png/pdf showing the different functional fits to the data for each category. You should also see a root file Background/CMS-HGG-multipdf_<extension>.root containing the RooWorkspace "multipdf" containing the functional fit variables, pdfs and parameters, which can be seen with multipdf->Print(). 
@@ -198,19 +198,21 @@ To continue with the signal fitting, run the same command: . HHWWggFinalFitScrip
 
 ## Datacard 
 
-The next step is to create the datacard containing information from the Background and Signal workspaces to be used by combine. An example configuration file used for this step is HHWWgg_Synch_Combine_Config.py. Most if not all of the parameters here are previously explained in either the Signal or Background sections. The main thing to remember is that the extension needs to stay consistent here. As long as the parameters are set properly, and the datacard step of HHWWggFinalFitScript.sh is looking for the proper configuration file, you should now run: 
+The next step is to create the datacard containing information from the Background and Signal workspaces to be used by combine. An example configuration file used for this step is `HHWWgg_Synch_Combine_Config.py`. Most if not all of the parameters here are previously explained in either the Signal or Background sections. The main thing to remember is that the extension needs to stay consistent here. As long as the parameters are set properly, and the datacard step of HHWWggFinalFitScript.sh is looking for the proper configuration file, you should now run: 
 
-```
+```bash
 . HHWWggFinalFitScript.sh datacard
 ```
 
-If it works properly, this should create a directory Datacard/<extension>, containing the datacard. Note that the datacard ending with "_cleaned.txt" is the one used in the combine step.
+If it works properly, this should create a directory Datacard/<extension>, containing the datacard. Note that the datacard ending with "\_cleaned.txt" is the one used in the combine step.
+
+
 
 ## Combine
 
 If you are satisfied with the datacard, you can now run combine with: 
 
-```
+```bash
 . HHWWggFinalFitScript.sh combine  
 ```
 
@@ -220,6 +222,11 @@ In order to obtain the upper limit on WWgg you need to divide by the branching r
 
 For the moment, these computations are done in Plots/FinalResults/plot_limits.py 
 
+## Plot
+
+```bash
+. HHWWggFinalFitScript.sh plot
+```
 
 
 

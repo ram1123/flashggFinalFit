@@ -47,6 +47,7 @@ string filenameStr_;
 vector<string> filename_;
 
 string outfilename_;
+string website_;
 string mergefilename_;
 string datfilename_;
 string systfilename_;
@@ -128,6 +129,7 @@ void OptionParser(int argc, char *argv[]){
 		("help,h",                                                                                			"Show help")
 		("infilename,i", po::value<string>(&filenameStr_),                                           			"Input file name")
 		("outfilename,o", po::value<string>(&outfilename_)->default_value("CMS-HGG_sigfit.root"), 			"Output file name")
+		("website,w", po::value<string>(&website_),                                           "Path of website_, to send plots")
 		("merge,m", po::value<string>(&mergefilename_)->default_value(""),                               	        "Merge the output with the given workspace")
 		("datfilename,d", po::value<string>(&datfilename_)->default_value("dat/newConfig.dat"),      			"Configuration file")
 		("systfilename,s", po::value<string>(&systfilename_)->default_value("dat/photonCatSyst.dat"),		"Systematic model numbers")
@@ -699,6 +701,7 @@ int main(int argc, char *argv[]){
     map<int,RooDataSet*> datasets; // not used ?
 
     bool isProblemCategory =false;
+        string HHWWggLabel = "";
 
     for (int mhIndex=0; mhIndex< massList_.size() ; mhIndex++){
       int mh=massList_[mhIndex];
@@ -909,7 +912,8 @@ int main(int argc, char *argv[]){
         //  RooDataSet *data0Ref;
 
         if(analysis_ == "HHWWgg"){
-          string HHWWggLabel = "";
+          // string HHWWggLabel = "";
+          HHWWggLabel = "";
 
           // vector<string> tmpV;
           // split(tmpV,filename_[0],boost::is_any_of("/"));
@@ -1220,7 +1224,9 @@ int main(int argc, char *argv[]){
     if (isFlashgg_){
 
       outWS->import(*intLumi_);
-      FinalModelConstruction finalModel(massList_, mass_,MH,intLumi_,mhLow_,mhHigh_,proc,cat,doSecondaryModels_,systfilename_,skipMasses_,verbose_,procs_, flashggCats_,plotDir_, isProblemCategory,isCutBased_,sqrts_,year_,doQuadraticSigmaSum_);
+      if (verbose_) std::cout << "[SignalFit.cpp::INFO] HHWWggLabel= " << HHWWggLabel << std::endl;
+      string HHWWggLabel_ = HHWWggLabel;
+      FinalModelConstruction finalModel(massList_, mass_,MH,intLumi_,mhLow_,mhHigh_,proc,cat,doSecondaryModels_,systfilename_,skipMasses_,verbose_,procs_, flashggCats_,plotDir_, website_, HHWWggLabel_, isProblemCategory,isCutBased_,sqrts_,year_,doQuadraticSigmaSum_);
 
       finalModel.setSecondaryModelVars(MH_SM,DeltaM,MH_2,higgsDecayWidth);
       finalModel.setRVsplines(splinesRV);

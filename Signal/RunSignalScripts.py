@@ -135,6 +135,22 @@ else:
   printOnly    = opt.printOnly
   verbosity      = opt.verbosity
 
+
+print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+print "Create some direcoty to keep important plots at one place."
+print "==> List the created main directory."
+os.system("mkdir -p "+website+os.sep+"Signal")
+os.system("mkdir -p "+website+os.sep+"grid")
+os.system("mkdir -p "+website+os.sep+"limits2")
+os.system("mkdir -p "+website+os.sep+"EfficiencyAcceptance")
+os.system("cp index.php "+website+os.sep)
+os.system("cp index.php "+website+os.sep+"Signal/")
+os.system("cp index.php "+website+os.sep+"grid/")
+os.system("cp index.php "+website+os.sep+"limits2/")
+os.system("cp index.php "+website+os.sep+"EfficiencyAcceptance/")
+os.system("ls "+website)
+print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
 # Check if mode in allowed options
 if mode not in ['std','calcPhotonSyst','writePhotonSyst','sigFitOnly','packageOnly','sigPlotsOnly']:
   print " --> [ERROR] mode %s not allowed. Please use one of the following: [std,phoSystOnly,sigFitOnly,packageOnly,sigPlotsOnly]. Leaving..."%mode

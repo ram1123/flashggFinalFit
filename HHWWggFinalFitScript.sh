@@ -56,7 +56,8 @@ if [ $step == "plot" ]; then
     # SecondTagLabel="2TotCatsbothcombined"
     campaignOne="HHWWgg_v2-6"
     FinalState="qqqq"
-    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/31July/"
+    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18August_Bqrk/"
+    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18August_NoBqrkMinMass/"
     # campaignOne="HHWWgg_v2-3"
     # campaignTwo="HHWWgg_v2-6"
     # SecondTagLabel="2TotCatsCOMBINEDWithoutSyst"
@@ -72,7 +73,12 @@ if [ $step == "plot" ]; then
     #  python plot_limits.py -a --HHWWggCatLabel $tagLabel --systematics
      #python plot_limits.py -a --HHWWggCatLabel $SecondTagLabel
     # python plot_limits.py -a -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --campaignTwo $campaignTwo --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
+
+    ## qqqq Radion
     python plot_limits.py -a  --HHWWggCatLabel $tagLabel --website ${website}  --systematics  --campaignOne $campaignOne  --yboost 1 --ymin 0.1 --ymax 1 --unit fb --FinalState ${FinalState} --resultType HH  --ymin 1e1 --ymax 1e6 --campaign HHWWgg_dummy # ratio of all points
+    python plot_limits.py -a -g --GridLabels $tagLabel  --resultType HH --unit fb --ymin 0.1 --ymax 1 --yboost 1 --FinalState ${FinalState}  --website ${website}
+
+
      # python plot_limits.py -SM -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
      # python plot_limits.py -a -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --campaignTwo $campaignTwo --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
      #python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics

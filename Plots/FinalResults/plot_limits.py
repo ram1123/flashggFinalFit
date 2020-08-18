@@ -1,4 +1,4 @@
-##############################################################################
+#z#############################################################################
 # Abraham Tishelman-Charny
 # 11 March 2020
 #
@@ -350,9 +350,9 @@ def plotUpperLimits(labels,values,resultType):
     c.SaveAs(outFile + "UpperLimit.png")
     c.SaveAs(outFile + "UpperLimit.C")
     if args.website != "":
-        c.SaveAs(args.website + '/' + outFile + "UpperLimit.pdf")
-        c.SaveAs(args.website + '/' + outFile + "UpperLimit.png")
-        c.SaveAs(args.website + '/' + outFile + "UpperLimit.C")
+        c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.pdf")
+        c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.png")
+        c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.C")
     c.Close()
 
 def plotRatio(values, labels1, labels2):
@@ -534,9 +534,9 @@ def plotRatio(values, labels1, labels2):
     c.SaveAs(outFile + "RatioUpperLimit.png")
     c.SaveAs(outFile + "RatioUpperLimit.C")
     if args.website != "":
-        c.SaveAs(args.website + '/' + outFile + "RatioUpperLimit.pdf")
-        c.SaveAs(args.website + '/' + outFile + "RatioUpperLimit.png")
-        c.SaveAs(args.website + '/' + outFile + "RatioUpperLimit.C")
+        c.SaveAs(args.website + '/limits2/' + outFile + "RatioUpperLimit.pdf")
+        c.SaveAs(args.website + '/limits2/' + outFile + "RatioUpperLimit.png")
+        c.SaveAs(args.website + '/limits2/' + outFile + "RatioUpperLimit.C")
 
     c.Close()
 
@@ -873,9 +873,9 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     c.SaveAs(outFile + "UpperLimit.png")
     c.SaveAs(outFile + "UpperLimit.C")
     if args.website != "":
-        c.SaveAs(args.website + '/' + outFile + "UpperLimit.pdf")
-        c.SaveAs(args.website + '/' + outFile + "UpperLimit.png")
-        c.SaveAs(args.website + '/' + outFile + "UpperLimit.C")
+        c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.pdf")
+        c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.png")
+        c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.C")
     c.Close()
 
 # RANGE of floats
@@ -902,7 +902,9 @@ def main():
     if(args.CMS_compare): masses = [260,1100]
     # if(args.All_Points): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
     # if(args.All_Points): masses = [260,270,1100,1300]
-    if(args.All_Points): masses = [260,270,1100,1300,1500,2000]
+    # if(args.All_Points): masses = [260,270,300,350,400,450,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
+    if(args.All_Points): masses = [270,300,350,1100,2000]
+    # if(args.All_Points): masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
     # if(args.All_Points): masses = [260,270,1100,1200,1300,1500,2000]
     # if(args.atlas_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500]
     if(args.atlas_compare): masses = [260,1000]
@@ -933,13 +935,15 @@ def main():
         print'Creating grid of limit values'
         # ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18July/grid'
         # ol = args.website
-        masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
+        # masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
+        masses = [270,300,350,1100,2000]
         #masses = [250]
         massLabels = []
         for m in masses:
             mLabel = "X%s"%str(m)
             massLabels.append(mLabel)
-        massLabels.append("SM")
+        # massLabels.append("SM")
+        massLabels.append("nodeSM")
         # print args.GridLabels
         nGridLabels = len(args.GridLabels)
         print'nGridLabels:',nGridLabels
@@ -947,6 +951,7 @@ def main():
         # yaxisLabels = ['']
         for ml in massLabels:
             print'ml:',ml
+            print 'gridlabels: ',args.GridLabels
             lowestMedianVal, lowestMedianLabel, lowestMedianIndex = 9999999, "", -99
             highestMedianVal, highestMedianLabel, highestMedianIndex = -9999999, "", -99
             h_grid = ROOT.TH2F('h_grid','h_grid',nGridLabels,0,nGridLabels,5,0,5)
@@ -962,7 +967,9 @@ def main():
             for gl_i,gl in enumerate(args.GridLabels):
                 # print'gl:',gl
                 h_grid.GetXaxis().SetBinLabel(gl_i+1,gl)
-                file_name = gl + "_limits/HHWWgg_v2-3_2017_" + ml + "_" + gl + "_HHWWgg_qqlnu.root"
+                # file_name = gl + "_limits/HHWWgg_v2-3_2017_" + ml + "_" + gl + "_HHWWgg_qqlnu.root"
+                file_name = gl + "_limits/HHWWgg_v2-6_2017_" + ml + "_" + gl + "_HHWWgg_qqqq.root"
+                print "file_name: ",file_name
                 limit = getLimits(file_name)
                 m2sig, m1sig, median, p1sig, p2sig = limit[0], limit[1], limit[2], limit[3], limit[4]
                 # print'limit:',limit
@@ -1018,8 +1025,8 @@ def main():
             c_tmp.SaveAs(outNamepng)
             c_tmp.SaveAs(outNamepdf)
             if args.website != "":
-                c_tmp.SaveAs(args.website + '/' + outNamepng)
-                c_tmp.SaveAs(args.website + '/' + outNamepdf)
+                c_tmp.SaveAs(args.website + '/grid/' + outNamepng)
+                c_tmp.SaveAs(args.website + '/grid/' + outNamepdf)
 
     else:
         if(args.HHWWggCatLabel == "UnLabeled"):

@@ -37,8 +37,8 @@ usage(){
 		echo "calcPhotonSystConsts --> scale and smear ets of photons systematic variations"
 		echo "SignalFit --> actually determine the number of gaussians to fit"
 		echo "options:"
-		echo "-h|--help) "
-    echo "-i|--inputFile) "
+               echo "-h|--help) "
+		echo "-i|--inputFile) "
 		echo "-w|--website) "
 		echo "-p|--procs) "
 		echo "-f|--flashggCats) (default UntaggedTag_0,UntaggedTag_1,UntaggedTag_2,UntaggedTag_3,UntaggedTag_4,VBFTag_0,VBFTag_1,VBFTag_2,TTHHadronicTag,TTHLeptonicTag,VHHadronicTag,VHTightTag,VHLooseTag,VHEtTag)"
@@ -334,8 +334,8 @@ if [ $SIGFITONLY == 1 ]; then
     if [ $SYSTEMATICS == 0 ]; then
       sysdatOption="-s dat/empty.dat"
     fi
-    echo "./bin/SignalFit -i $FILE -d dat/newConfig_$EXT.dat  --mhLow=120 --mhHigh=130 ${sysdatOption} --procs $PROCS -o $OUTDIR/CMS-HGG_mva_13TeV_sigfit.root -p $OUTDIR/sigfit -f $CATS --changeIntLumi $INTLUMI  --useDCBplusGaus $USEDCBP1G --useSSF $SIMULATENOUSMASSPOINTFITTING --massList $MASSLIST --analysis $ANALYSIS --year $YEAR --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE" --verbose $VERBOSITY
-    ./bin/SignalFit -i $FILE -d dat/newConfig_$EXT.dat  --mhLow=120 --mhHigh=130 ${sysdatOption} --procs $PROCS -o $OUTDIR/CMS-HGG_mva_13TeV_sigfit.root -p $OUTDIR/sigfit -f $CATS --changeIntLumi $INTLUMI  --useDCBplusGaus $USEDCBP1G --useSSF $SIMULATENOUSMASSPOINTFITTING --massList $MASSLIST --analysis $ANALYSIS --year $YEAR --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE --verbose $VERBOSITY
+    echo "./bin/SignalFit -i $FILE -w ${WEBSITE} -d dat/newConfig_$EXT.dat  --mhLow=120 --mhHigh=130 ${sysdatOption} --procs $PROCS -o $OUTDIR/CMS-HGG_mva_13TeV_sigfit.root -p $OUTDIR/sigfit -f $CATS --changeIntLumi $INTLUMI  --useDCBplusGaus $USEDCBP1G --useSSF $SIMULATENOUSMASSPOINTFITTING --massList $MASSLIST --analysis $ANALYSIS --year $YEAR --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE" --verbose $VERBOSITY
+    ./bin/SignalFit -i $FILE -w ${WEBSITE} -d dat/newConfig_$EXT.dat  --mhLow=120 --mhHigh=130 ${sysdatOption} --procs $PROCS -o $OUTDIR/CMS-HGG_mva_13TeV_sigfit.root -p $OUTDIR/sigfit -f $CATS --changeIntLumi $INTLUMI  --useDCBplusGaus $USEDCBP1G --useSSF $SIMULATENOUSMASSPOINTFITTING --massList $MASSLIST --analysis $ANALYSIS --year $YEAR --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE --verbose $VERBOSITY
   else
     echo "./python/submitSignalFit.py -i $FILE -d dat/newConfig_$EXT.dat  --mhLow=120 --mhHigh=130 -s dat/photonCatSyst_$EXT.dat --procs $PROCS -o $OUTDIR/CMS-HGG_sigfit_$EXT.root -p $OUTDIR/sigfit -f $CATS --changeIntLumi $INTLUMI --batch $BATCH --massList $MASSLIST -q $QUEUE $BSOPT --useSSF $SIMULATENOUSMASSPOINTFITTING --useDCB_1G $USEDCBP1G --analysis $ANALYSIS --year $YEAR"
     ./python/submitSignalFit.py -i $FILE -d dat/newConfig_$EXT.dat  --mhLow=120 --mhHigh=130 -s dat/photonCatSyst_$EXT.dat --procs $PROCS -o $OUTDIR/CMS-HGG_sigfit_$EXT.root -p $OUTDIR/sigfit -f $CATS --changeIntLumi $INTLUMI --batch $BATCH --massList $MASSLIST -q $QUEUE $BSOPT --useSSF $SIMULATENOUSMASSPOINTFITTING --useDCB_1G $USEDCBP1G --analysis $ANALYSIS --year $YEAR
