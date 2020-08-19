@@ -139,6 +139,7 @@ else:
 print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 print "Create some direcoty to keep important plots at one place."
 print "==> List the created main directory."
+os.system("mkdir -p dat")
 os.system("mkdir -p "+website+os.sep+"Signal")
 os.system("mkdir -p "+website+os.sep+"grid")
 os.system("mkdir -p "+website+os.sep+"limits2")

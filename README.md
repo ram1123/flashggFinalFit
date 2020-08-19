@@ -1,40 +1,6 @@
 # FLASHgg Final Fits
 The Final Fits package is a series of scripts which are used to run the final stages of the CMS Hgg analysis: signal modelling, background modelling, datacard creation and final statistical interpretation and final result plots.
 
-## Download and setup instructions
-
-```
-export SCRAM_ARCH=slc7_amd64_gcc700
-cmsrel CMSSW_10_2_13
-cd CMSSW_10_2_13/src
-cmsenv
-git cms-init
-
-# Install the GBRLikelihood package which contains the RooDoubleCBFast implementation
-git clone git@github.com:jonathon-langford/HiggsAnalysis.git
-# Install Combine as per the documentation here: cms-analysis.github.io/HiggsAnalysis-CombinedLimit/
-git clone git@github.com:cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
-
-# Compile external libraries
-cd HiggsAnalysis
-cmsenv
-scram b -j 9
-
-# Install Flashgg Final Fit packages
-cd ..
-git clone -b dev_runII_102x git@github.com:cms-analysis/flashggFinalFit.git
-cd flashggFinalFit/
-```
-
-Two packages need to be built with their own makefiles, if needed. Please note that there will be verbose warnings from BOOST etc, which can be ignored. So long as the `make` commands finish without error, then the compilation happened fine.:
-
-```
-cd ${CMSSW_BASE}/src/flashggFinalFit/Background
-make
-cd ${CMSSW_BASE}/src/flashggFinalFit/Signal
-make
-```
-
 ## Contents
 The FLASHgg Finals Fits package contains several subfolders which are used for the following steps:
 
@@ -48,61 +14,6 @@ Each of the relevant folders are documented with specific `README.md` files.
 ## Known issues
 
 Recently some issues with memory have been observed with the workspaces (probably because there are so many processes and tags now). Crashes can occur due to a `std::bad_alloc()` error, which for now I have managed to circumvent by submitting to the batch (this is at Imperial College), e.g. for making the photon systematic dat files and the S+B fits. The problem is due to all the workspaces being loaded by the WSTFileWrapper class, so at some point this should be revisited and improved somwhow. 
-
-## Updates in dev_runII_102x branch
-
-* New, easier to navigate submission scripts: option for config file
-* Integration with HTCondor
-* Python module for replacement dataset map: used when too few entries to construct signal model
-* Pruning: removes processes below threshold in datacard
-
-Still some remaining updates to come in next months:
-
-* New datacard making script
-* Transition to combineTools package rather than having analysis specific script (./Plots/FinalResults/combineHarvester.py)
-* Option for skipping the RV/WV split in Signal modelling
-* Full functionality for merging categories across years. Currently run through each year separately
-
-### Temporary: extracting datacards + results
-The above updates will be propagated to the `Datacard` and `Results` folders soon. For now you can make the Datacards and do the fit using the `RunCombineScripts.py` submission script:
-```
-cmsenv
-python RunCombineScripts.py --inputConfig example_config_stage1_1.py
-```
-The script requires an input config file of the following format (change options where necessary):
-```
-combineScriptCfg = {
-  
-  # Setup
-  'mode':'datacard', # Options are datacard,combine,combinePlots
-  'inputWSDir':'/vols/cms/jl2117/hgg/ws/test_stage1_1_2018', #directory of input workspaces
-  #Procs will be inferred automatically from filenames
-  'cats':'RECO_0J_PTH_GT10_Tag0,RECO_0J_PTH_GT10_Tag1,' #analysis categories
-  'ext':'stage1_1_2018', #extension to be added to output directory. Must match that of S & B modelling
-  'year':'2018', 
-  'signalProcs':'all',
-
-  # Add UE/PS systematics to datacard (only relevant if mode == datacard)
-  'doUEPS':0,
-
-  #Photon shape systematics  
-  'scales':'HighR9EB,HighR9EE,LowR9EB,LowR9EE,Gain1EB,Gain6EB',
-  'scalesCorr':'MaterialCentralBarrel,MaterialOuterBarrel,MaterialForward,FNUFEE,FNUFEB,ShowerShapeHighR9EE,ShowerShapeHighR9EB,ShowerShapeLowR9EE,ShowerShapeLowR9EB',
-  'scalesGlobal':'NonLinearity:UntaggedTag_0:2,Geant4',
-  'smears':'HighR9EBPhi,HighR9EBRho,HighR9EEPhi,HighR9EERho,LowR9EBPhi,LowR9EBRho,LowR9EEPhi,LowR9EERho',
-
-  # Job submission options
-  'batch':'HTCONDOR',
-  'queue':'workday',
-
-  'printOnly':0 # For dry-run: print command only
-  
-}
-```
-The modes are used for the following (run in sequential order):
-  * `datacard` - build the .txt datacard using the S & B models. The yield variations from systematics are also calculated and specified in the datacard. To merge datacards for different years then use the `combineCards.py` script (in combine).
-  * `combine`  - compile the RooWorkspace from the .txt datacard. Run the fit in combine. Input options are specified in `Plots/FinalResults/combineHarvesterOptions_Template.dat`
-  * `combinePlots` - create plots from finished combine jobs. Options are specified in `Plots/FinalResults/combinePlotsOptions_Template.dat`
 
 # HHWWgg Specific Instructions 
 
@@ -190,11 +101,22 @@ This configuration contains the following parameters:
 
 After setting the parameters properly, you are ready to run the signal fit steps. 
 
-To run with systematics, you should set the mode to "std", make sure the correct configuration file name is specified in HHWWggFinalFitScript for the signal step, and then run the command `. HHWWggFinalFitScript.sh signal`. 
+To run with systematics, you should set the mode to "std", make sure the correct configuration file name is specified in HHWWggFinalFitScript for the signal step, and then run the command 
+
+```bash
+. HHWWggFinalFitScript.sh signal
+``` 
 
 This should run the fTest step, providing the recommended number of gaussians to use to fit each signal category. If this runs properly, you should find a directory Signal/outdir_<entension>_<signalPoint>_<Process>. In this directory you should find sigfTest containing the gaussian sum f-test fits for rv (right vertex) and wv (wrong vertex) for each category.
 
-To continue with the signal fitting, run the same command: . HHWWggFinalFitScript.sh signal. If this runs properly, you should see many new folders added to the Signal/outdir directory. 
+To continue with the signal fitting, run the same command: `. HHWWggFinalFitScript.sh signal`. If this runs properly, you should see many new folders added to the Signal/outdir directory. 
+
+**NOTE**: If you want to run the fTest again then you have to delete the `dat` directory which is present inside the `Signal` directory.
+
+```bash
+# to re-run the fTest
+rm -rf Signal/dat
+```
 
 ## Datacard 
 
@@ -230,3 +152,105 @@ For the moment, these computations are done in Plots/FinalResults/plot_limits.py
 
 
 
+# Known Issues
+
+## While running background
+
+For some reason there is a crash while running the background model. But, its not affecting any output.
+
+```bash
+[INFO] Current PDF and data:
+[INFO]  RooDataHist::roohist_data_mass_HHWWggTag_2[CMS_hgg_mass] = 320 bins (3866 weights)
+
+ *** Break *** segmentation violation
+[INFO]  
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+#0  0x00007f70abc7646c in waitpid () from /lib64/libc.so.6
+#1  0x00007f70abbf3f62 in do_system () from /lib64/libc.so.6
+#2  0x00007f70ae915a8b in TUnixSystem::StackTrace() () from /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libCore.so
+#3  0x00007f70ae9180cc in TUnixSystem::DispatchSignals(ESignals) () from /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libCore.so
+#4  <signal handler called>
+#5  0x00007f70ac9098a4 in RooMultiPdf::getCurrentPdf() const () from /afs/cern.ch/work/r/rasharma/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so
+#6  0x000000000044851a in main (argc=36, argv=0x7ffed7ca87f8) at /afs/cern.ch/user/r/rasharma/work/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/src/flashggFinalFit/Background/test/makeBkgPlots.cpp:866
+===========================================================
+
+
+The lines below might hint at the cause of the crash.
+You may get help by asking at the ROOT forum http://root.cern.ch/forum.
+Only if you are really convinced it is a bug in ROOT then please submit a
+report at http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#5  0x00007f70ac9098a4 in RooMultiPdf::getCurrentPdf() const () from /afs/cern.ch/work/r/rasharma/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so
+#6  0x000000000044851a in main (argc=36, argv=0x7ffed7ca87f8) at /afs/cern.ch/user/r/rasharma/work/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/src/flashggFinalFit/Background/test/makeBkgPlots.cpp:866
+===========================================================
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+
+## While running the signal model
+
+Also, while running the signal model there is some memory leak issue because of which we get the error as shown below. Again, this is not affecting our taks. So, temporarily we can live with this.
+```bash
+finished mass shift:  5
+*** Error in `python': free(): invalid pointer: 0x000000000721a71c ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x81299)[0x7f233b40a299]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libRooFitCore.so(_ZN13RooLinkedList6DeleteEPKc+0x23)[0x7f232cee7c23]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libRooFitCore.so(_ZN12RooWorkspaceD1Ev+0x39)[0x7f232cfa8a59]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libRooFitCore.so(_ZN12RooWorkspaceD0Ev+0x9)[0x7f232cfa8be9]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libCore.so(_ZN6TClass10DestructorEPvb+0x35)[0x7f233a99c8b5]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libPyROOT.so(_ZN6PyROOT17op_dealloc_nofreeEPNS_11ObjectProxyE+0xe7)[0x7f233b2f63c7]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libPyROOT.so(+0x67509)[0x7f233b2f6509]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(+0xbd518)[0x7f233c139518]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(+0x9b942)[0x7f233c117942]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(PyDict_SetItem+0x7e)[0x7f233c11a7ae]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(_PyModule_Clear+0x12b)[0x7f233c11f5bb]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(PyImport_Cleanup+0x41b)[0x7f233c19d4db]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(Py_Finalize+0x101)[0x7f233c1af731]
+/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libpython2.7.so.1.0(Py_Main+0x537)[0x7f233c1c82e7]
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f233b3ab555]
+python[0x40066e]
+======= Memory map: ========
+00400000-00401000 r-xp 00000000 00:32 528473                             /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/python/2.7.14-omkpbe4/bin/python2.7
+00401000-00402000 r--p 00000000 00:32 528473                             /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/python/2.7.14-omkpbe4/bin/python2.7
+00402000-00403000 rw-p 00001000 00:32 528473                             /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/python/2.7.14-omkpbe4/bin/python2.7
+01563000-0904d000 rw-p 00000000 00:00 0                                  [heap]
+7f2324000000-7f2324021000 rw-p 00000000 00:00 0 
+7f2324021000-7f2328000000 ---p 00000000 00:00 0 
+7f232b47b000-7f232bb7d000 rw-p 00000000 00:00 0 
+7f232bc0e000-7f232bc25000 r-xp 00000000 fc:01 6376382                    /usr/lib64/libnsl-2.17.so
+7f232bc25000-7f232be24000 ---p 00017000 fc:01 6376382                    /usr/lib64/libnsl-2.17.so
+7f232be24000-7f232be25000 r--p 00016000 fc:01 6376382                    /usr/lib64/libnsl-2.17.so
+7f232be25000-7f232be26000 rw-p 00017000 fc:01 6376382                    /usr/lib64/libnsl-2.17.so
+7f232be26000-7f232be28000 rw-p 00000000 00:00 0 
+7f232be59000-7f232beec000 r-xp 00000000 00:32 436837                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libDataFormatsStdDictionaries.so
+7f232beec000-7f232beed000 ---p 00093000 00:32 436837                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libDataFormatsStdDictionaries.so
+7f232beed000-7f232bef1000 r--p 00093000 00:32 436837                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libDataFormatsStdDictionaries.so
+7f232bef1000-7f232bef2000 rw-p 00097000 00:32 436837                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libDataFormatsStdDictionaries.so
+7f232bef2000-7f232beff000 rw-p 00000000 00:00 0 
+7f232c026000-7f232c140000 r-xp 00000000 00:32 343441                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGpad.so
+7f232c140000-7f232c141000 ---p 0011a000 00:32 343441                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGpad.so
+7f232c141000-7f232c14c000 r--p 0011a000 00:32 343441                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGpad.so
+7f232c14c000-7f232c14e000 rw-p 00125000 00:32 343441                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGpad.so
+7f232c14e000-7f232c154000 rw-p 00000000 00:00 0 
+7f232c154000-7f232c1e9000 r-xp 00000000 00:32 343436                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGraf3d.so
+7f232c1e9000-7f232c1f3000 r--p 00094000 00:32 343436                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGraf3d.so
+7f232c1f3000-7f232c1f5000 rw-p 0009e000 00:32 343436                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libGraf3d.so
+7f232c1f5000-7f232c1f9000 rw-p 00000000 00:00 0 
+7f232c1f9000-7f232c399000 r-xp 00000000 00:32 343247                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libTreePlayer.so
+7f232c399000-7f232c39a000 ---p 001a0000 00:32 343247                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libTreePlayer.so
+7f232c39a000-7f232c3a5000 r--p 001a0000 00:32 343247                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libTreePlayer.so
+7f232c3a5000-7f232c3a8000 rw-p 001ab000 00:32 343247                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/lcg/root/6.12.07-gnimlf5/lib/libTreePlayer.so
+7f232c3a8000-7f232c3f0000 rw-p 00000000 00:00 0 
+7f232c3f0000-7f232c480000 r-xp 00000000 00:32 611814                     /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/freetype/2.5.3-omkpbe2/lib/libfreetype.so.6.11.2./runSignalScripts.sh: line 389:  9208 Aborted                 (core dumped) python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE
+ANALYSIS: HHWWgg
+```
