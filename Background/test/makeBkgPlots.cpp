@@ -769,7 +769,7 @@ int main(int argc, char* argv[]){
 		("unblind",																																						"un blind central mass region")
 		("useBinnedData",																															 			"Data binned")
 		("makeCrossCheckProfPlots",																													"Make some cross check plots -- very slow!")
-		("massStep,m", po::value<double>(&massStep)->default_value(10.5),						   			"Mass step for calculating bands. Use a large number like 5 for quick running")
+		("massStep,m", po::value<double>(&massStep)->default_value(0.5),						   			"Mass step for calculating bands. Use a large number like 5 for quick running")
 		("nllTolerance,n", po::value<double>(&nllTolerance)->default_value(0.05),			 			"Tolerance for nll calc in %")
 		("mhLow,L", po::value<int>(&mhLow)->default_value(100),															"Starting point for scan")
 		("mhHigh,H", po::value<int>(&mhHigh)->default_value(180),														"End point for scan")
@@ -825,6 +825,7 @@ int main(int argc, char* argv[]){
 	useBinnedData=1; // HHWWgg hack
 	std::cout << "[makeBkgPlots] - in source code" << std::endl;
 
+
 	RooAbsData *data = (RooDataSet*)inWS->data(Form("data_mass_%s",catname.c_str()));
 	if (verbose_) std::cout << "useBinnedData: " << useBinnedData << std::endl;
 	// RooAbsData *data = (RooDataSet*)inWS->data(Form("roohist_data_mass_%s",catname.c_str()));
@@ -838,9 +839,9 @@ int main(int argc, char* argv[]){
 		std::cout << "[INFO] Inside isMultiPdf if condition." << std::endl;
 		if (verbose_) cout << "mpdf: " << mpdf << endl;
 		if (verbose_) cout << "mcat: " << mcat << endl;
-		if(analysis == "HHWWgg") mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%dTeV_bkgshape",catname.c_str(),sqrts)); // get rid of 13TeV in name
+		if(analysis == "HHWWgg") mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%d_%dTeV_bkgshape",catname.c_str(),year_,sqrts)); // get rid of 13TeV in name
 		else mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%dTeV_%d_bkgshape",catname.c_str(),sqrts,year_));
-		if(analysis == "HHWWgg") mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_13TeV",catname.c_str()));
+		if(analysis == "HHWWgg") mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_%d_13TeV",catname.c_str(),year_));
 		else mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_%dTeV_%d",catname.c_str(),sqrts,year_));
 
 		cout << "mpdf: " << mpdf << endl;

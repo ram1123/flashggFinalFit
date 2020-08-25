@@ -60,22 +60,25 @@ After cloning the repository, the main HHWWgg script to use is HHWWggFinalFitScr
 
 ### f-Test
 
-To produce a background model, you first need a config file. You can begin with the example `Background/HHWWgg_Synch_Background_Config.py`. This contains the parameters for running the background fits. 
+To produce a background model, you first need a config file. You can begin with the example `Background/HHWWgg_Synch_Background_Config.py`. This contains the parameters for running the background fits.
 
 An explanation of the important parameters to set:
-  
-  * inputWSDir: Input workspace directory. This is the directory containing your hadded data workspace. If you are running on one year of data, for example 2017, this directory should contain one file: allData.root 
-  * cats: These are the categories to fit, where these categories are originally defined in flashgg. For example, for the current state of the HHWWgg semileptonic analysis there are two categories: HHWWggTag_0 corresponding to the semi-leptonic electron channel, and HHWWggTag_1 corresponding to the semi-leptonic muon channel. To produced background models for both categories, you should specify both categories separated by commas like so: 'HHWWggTag_0,HHWWggTag_1'
-  * ext: Extension. This is used for the naming scheme of the output directory and files. This should be chosen and kept consistent for the extension used for the signal modelling. 
-  * year: The data year. 2017 for 2017 data. 
-  * unblind: (1): Data is unblinded. (0): Data blinded. 
-  * batch and queue: These are for running in batch mode, which is currently not setup for HHWWgg. For now it automatically runs locally. 
-  * analysis: This should be set to HHWWgg to run the HHWWgg specific naming schemes. 
-  * mode: The function to run the script on. Options: [std,fTestOnly,bkgPlotsOnly]
+
+  * **inputWSDir**: Input workspace directory. This is the directory containing your hadded data workspace. If you are running on one year of data, for example 2017, this directory should contain one file: `allData.root`. This file name is hardcoded into the framework.
+  * **website**: This contains the path of your webpage, where it will copy the necessary files.
+  * **cats**: These are the categories to fit, where these categories are originally defined in flashgg. For example, for the current state of the HHWWgg semileptonic analysis there are two categories: HHWWggTag_0 corresponding to the semi-leptonic electron channel, and HHWWggTag_1 corresponding to the semi-leptonic muon channel. To produced background models for both categories, you should specify both categories separated by commas like so: 'HHWWggTag_0,HHWWggTag_1'
+  * **ext**: Extension. This is used for the naming scheme of the output directory and files. This should be chosen and kept consistent for the extension used for the signal modelling. 
+  * **year**: The data year. 2017 for 2017 data. 
+  * **unblind**: (1): Data is unblinded. (0): Data blinded. 
+  * **batch and queue**: These are for running in batch mode, which is currently not setup for HHWWgg. For now it automatically runs locally. 
+  * **analysis**: This should be set to HHWWgg to run the HHWWgg specific naming schemes. 
+  * **mode**: The function to run the script on. Options: [std,fTestOnly,bkgPlotsOnly].
+  * **InSignalFitWSFile**: This is used for make background plot. When we don't have signal model then put `InSignalFitWSFile = ""`. Else, it will try to find the signal root file present in the signal directory. If RootFileName is `Signal/outdir_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq.root` then put `InSignalFitWSFile = "X550_HHWWgg_qqqq"`
+  * **massStep**: 
 
 After setting the python configuration file you want to use in the backgroundftest option in HHWWggFinalFitScript.sh, and setting the proper parameters in your configuration file, you can run the background ftest with:
 
-```
+```bash
 . HHWWggFinalFitScript.sh backgroundftest
 ```
 

@@ -451,12 +451,12 @@ void plot(RooRealVar *mass, RooMultiPdf *pdfs, RooCategory *catIndex, RooDataSet
   // enf extra bit for ratio plot///
   canv->SaveAs(Form("%s.pdf",name.c_str()));
   canv->SaveAs(Form("%s.png",name.c_str()));
-  vector<string> outName;
+  vector<string> outDistributionName;
   // name contains directory name as well as file name using "/"
   // So, split it using "/" then take the last argument.
-  split(outName,name,boost::is_any_of("/"));
-  canv->SaveAs(Form("%s/Background/%s.pdf",website.c_str(),outName[2].c_str()));
-  canv->SaveAs(Form("%s/Background/%s.png",website.c_str(),outName[2].c_str()));
+  split(outDistributionName,name,boost::is_any_of("/"));
+  canv->SaveAs(Form("%s/Background/%s.pdf",website.c_str(),outDistributionName[2].c_str()));
+  canv->SaveAs(Form("%s/Background/%s.png",website.c_str(),outDistributionName[2].c_str()));
   catIndex->setIndex(currentIndex);
   delete canv;
 }
@@ -505,12 +505,12 @@ void plot(RooRealVar *mass, map<string,RooAbsPdf*> pdfs, RooDataSet *data, strin
   CMS_lumi( canv, 0, 0);
   canv->SaveAs(Form("%s.pdf",name.c_str()));
   canv->SaveAs(Form("%s.png",name.c_str()));
-  vector<string> outName;
+  vector<string> outDistributionName;
   // name contains directory name as well as file name using "/"
   // So, split it using "/" then take the last argument.  
-  split(outName,name,boost::is_any_of("/"));
-  canv->SaveAs(Form("%s/Background/%s.pdf",website.c_str(),outName[2].c_str()));
-  canv->SaveAs(Form("%s/Background/%s.png",website.c_str(),outName[2].c_str()));
+  split(outDistributionName,name,boost::is_any_of("/"));
+  canv->SaveAs(Form("%s/Background/%s.pdf",website.c_str(),outDistributionName[2].c_str()));
+  canv->SaveAs(Form("%s/Background/%s.png",website.c_str(),outDistributionName[2].c_str()));
   delete canv;
 }
 
@@ -756,11 +756,11 @@ int main(int argc, char* argv[]){
 	std::string ext = is2011 ? "7TeV" : "8TeV";
         if( isFlashgg_ ){
           if( year_ == "all" ){ ext = "13TeV"; }
-          // else if (year_ == "2016" ) {ext = "13TeV"; }  
+          // else if (year_ == "2016" ) {ext = "13TeV"; }
           // else if (year_ == "2017" ) {ext = "13TeV"; }
           // else if (year_ == "2018" ) {ext = "13TeV"; }
           // else if( year_ == "2017" ){ ext = "13TeV"; }
-          //else{ ext = "13TeV"; } //FIXME 
+          //else{ ext = "13TeV"; } //FIXME
           else{ ext = Form("%s_13TeV",year_.c_str()); }
         }
 	//if (isFlashgg_) ext = "13TeV";
@@ -983,6 +983,8 @@ int main(int argc, char* argv[]){
 			//nBackground.removeRange(); // bug in roofit will break combine until dev branch brought in
 			//double check the best pdf!
       std::cout << "*********" << std::endl;
+      std::cout << "catname: " << catname << std::endl;
+      std::cout << "ext: " << ext << std::endl;
       std::cout << Form("CMS_hgg_%s_%s_bkgshape",catname.c_str(),ext.c_str()) << std::endl;
       std::cout << "*********" << std::endl;
 			int bestFitPdfIndex = getBestFitFunction(pdf,data,&catIndex,!verbose);

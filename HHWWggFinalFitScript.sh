@@ -14,12 +14,12 @@
 step=$1
 year=$2
 
-cmsenv 
+cmsenv
 #-- Background 
 if [ $step == "backgroundftest" ]; then 
     cd Background 
-    # python RunBackgroundScripts.py --inputConfig HHWWgg_Synch_Background_Config.py
-    python RunBackgroundScripts.py --inputConfig HHWWgg_SMqqqq${year}_Config.py
+    python RunBackgroundScripts.py --inputConfig HHWWgg_Synch_Background_Config.py
+    # python RunBackgroundScripts.py --inputConfig HHWWgg_SMqqqq${year}_Config.py
     # python RunBackgroundScripts.py --inputConfig HHWWgg_SM${year}_Config.py
     # python RunBackgroundScripts.py --inputConfig HHWWgg_v2-7_Config.py 
     cd .. 
@@ -36,26 +36,26 @@ fi
 #-- Signal
 if [ $step == "signal" ]; then
     cd Signal
-    # python RunSignalScripts.py --inputConfig HHWWgg_Synch_Signal_Config.py # signal models
+    python RunSignalScripts.py --inputConfig HHWWgg_Synch_Signal_Config.py # signal models
     # python RunSignalScripts.py --inputConfig HHWWgg_SMqqqq${year}_Config.py # signal models 
-    python RunSignalScripts.py --inputConfig HHWWgg_SM${year}_Config.py # signal models 
+    # python RunSignalScripts.py --inputConfig HHWWgg_SM${year}_Config.py # signal models 
     # python RunSignalScripts.py --inputConfig HHWWgg_v2-7_Config.py # signal models 
     cd .. 
 fi
 
 #-- Datacards
 if [ $step == "datacard" ]; then 
-    # python RunCombineScripts.py datacard --inputConfig HHWWgg_Synch_Combine_Config.py # Make datacard
+    python RunCombineScripts.py datacard --inputConfig HHWWgg_Synch_Combine_Config.py # Make datacard
     # python RunCombineScripts.py datacard --inputConfig HHWWgg_SMqqqq${year}_Config.py # Make datacard 
-    python RunCombineScripts.py datacard --inputConfig HHWWgg_SM${year}_Config.py # Make datacard 
+    # python RunCombineScripts.py datacard --inputConfig HHWWgg_SM${year}_Config.py # Make datacard 
     # python RunCombineScripts.py datacard --inputConfig HHWWgg_v2-7_Config.py # Make datacard 
 fi
 
 #-- Combine 
 if [ $step == "combine" ]; then 
-    #python RunCombineScripts.py combine --inputConfig HHWWgg_Synch_Combine_Config.py # Make datacard
+    python RunCombineScripts.py combine --inputConfig HHWWgg_Synch_Combine_Config.py # Make datacard
     # python RunCombineScripts.py combine --inputConfig HHWWgg_SMqqqq${year}_Config.py
-    python RunCombineScripts.py combine --inputConfig HHWWgg_SM${year}_Config.py
+    # python RunCombineScripts.py combine --inputConfig HHWWgg_SM${year}_Config.py
     # python RunCombineScripts.py combine --inputConfig HHWWgg_SMRun2_Config.py
     # python RunCombineScripts.py combine --inputConfig HHWWgg_v2-7_Config.py 
 fi
@@ -67,16 +67,7 @@ if [ $step == "plot" ]; then
     # SecondTagLabel="2TotCatsbothcombined"
     campaignOne="HHWWgg_v2-6"
     FinalState="qqqq"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18August_Bqrk/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_BqrkMinMass/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_BqrkMinMass/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_BqrkPtOrder/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_BqrkPtOrdered/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_NoBqrkPtOrdered/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_ZZMinMass/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_ZZPtOrder/"
-    # website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_CombinedMinMass/"
-    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_CombinedPtOrder/"
+    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/test3/"
     # campaignOne="HHWWgg_v2-3"
     # campaignTwo="HHWWgg_v2-6"
     # SecondTagLabel="2TotCatsCOMBINEDWithoutSyst"

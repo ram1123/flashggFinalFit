@@ -132,14 +132,6 @@ signalFitWSFile = ""
 if InSignalFitWSFile != "":
   # signalFitWSFile = "%s/../Signal/outdir_%s/CMS-HGG_sigfit_%s.root"%(os.environ['PWD'],ext,ext)
   signalFitWSFile = "%s/../Signal/outdir_%s_%s/CMS-HGG_sigfit_%s_%s.root"%(os.environ['PWD'],ext,InSignalFitWSFile,ext,InSignalFitWSFile)
-  print "DEBUGRK1: ",signalFitWSFile
-
-  # Signal/outdir_HHWWgg_v2-6_2017_ChannelTest/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest.root
-  # ext = HHWWgg_v2-6_2017_ChannelTest
-  # InSignalFitWSFile = X550_HHWWgg_qqqq
-
-  signalFitWSFile = "%s/../Signal/outdir_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq.root"%(os.environ['PWD'])
-  print "DEBUGRK2: ",signalFitWSFile
 
 if(analysis != "HHWWgg"):
   if not os.path.exists( signalFitWSFile ):
