@@ -13,9 +13,12 @@ def get_options():
 
   # Setup
   parser.add_option('--inputWSDir', dest='inputWSDir', default='/vols/cms/es811/FinalFits/ws_ReweighAndNewggHweights', help="Directory storing flashgg workspaces" )
+  parser.add_option('--website', dest='website', default='/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/11July', help="Directory storing flashgg workspaces" )
+  parser.add_option('--InSignalFitWSFile', dest='InSignalFitWSFile', default='', help="Signal File name" )
   parser.add_option('--cats', dest='cats', default='UntaggedTag_0,VBFTag_0', help="Define categories")
   parser.add_option('--ext', dest='ext', default='test', help="Extension: defines output dir which must matche xtension used for signal model building")
   parser.add_option('--year', dest='year', default='2016', help="Dataset year")
+  parser.add_option('--massStep', dest='massStep', default=10, type='int', help="Mass step to go from 100 to 180")
   parser.add_option('--unblind', dest='unblind', default=0, type='int', help="Unblind")
   
   # Options for running on the batch
@@ -46,16 +49,19 @@ if opt.inputConfig != '':
     _cfg = backgroundScriptCfg
 
     # Extract options
-    inputWSDir   = _cfg['inputWSDir']
-    cats         = _cfg['cats']
-    ext          = _cfg['ext']
-    year         = _cfg['year']
-    unblind      = _cfg['unblind']
-    batch        = _cfg['batch']
-    queue        = _cfg['queue']
-    mode         = _cfg['mode']
-    printOnly    = opt.printOnly
-    analysis     = _cfg['analysis']
+    inputWSDir        = _cfg['inputWSDir']
+    website           = _cfg['website']
+    InSignalFitWSFile = _cfg['InSignalFitWSFile']
+    cats              = _cfg['cats']
+    ext               = _cfg['ext']
+    year              = _cfg['year']
+    massStep           = _cfg['massStep']
+    unblind           = _cfg['unblind']
+    batch             = _cfg['batch']
+    queue             = _cfg['queue']
+    mode              = _cfg['mode']
+    printOnly         = opt.printOnly
+    analysis          = _cfg['analysis']
 
     # Delete copy of file
     os.system("rm config.py")
@@ -67,16 +73,30 @@ if opt.inputConfig != '':
 
 # ELSE extract from the option parser
 else:
-  inputWSDir   = opt.inputWSDir
-  cats         = opt.cats
-  ext          = opt.ext
-  year         = opt.year
-  unblind      = opt.unblind
-  batch        = opt.batch
-  queue        = opt.queue
-  mode         = opt.mode
-  printOnly    = opt.printOnly
-  analysis     = opt.analysis
+  inputWSDir        = opt.inputWSDir
+  website           = opt.website
+  InSignalFitWSFile = opt.InSignalFitWSFile
+  cats              = opt.cats
+  ext               = opt.ext
+  year              = opt.year
+  massStep           = opt.massStep
+  unblind           = opt.unblind
+  batch             = opt.batch
+  queue             = opt.queue
+  mode              = opt.mode
+  printOnly         = opt.printOnly
+  analysis          = opt.analysis
+
+print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+print "Create some direcoty to keep important plots at one place."
+print "==> List the created main directory."
+os.system("mkdir -p dat")
+os.system("mkdir -p "+website+os.sep+"Background")
+os.system("cp ../Signal/index.php "+website+"/")
+os.system("cp ../Signal/index.php "+website+os.sep+"Background/")
+os.system("ls "+website)
+print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
 
 # Check if mode is allowed in options
 if mode not in ['std','fTestOnly','bkgPlotsOnly']:
@@ -107,7 +127,19 @@ if len(procs)==0: procs = 'arbitrary'
 
 # Extract data file name and signal fit workspace filename
 dataFile = "%s/allData.root"%inputWSDir
-signalFitWSFile = "%s/../Signal/outdir_%s/CMS-HGG_sigfit_%s.root"%(os.environ['PWD'],ext,ext)
+
+signalFitWSFile = ""
+if InSignalFitWSFile != "":
+  # signalFitWSFile = "%s/../Signal/outdir_%s/CMS-HGG_sigfit_%s.root"%(os.environ['PWD'],ext,ext)
+  signalFitWSFile = "%s/../Signal/outdir_%s_%s/CMS-HGG_sigfit_%s_%s.root"%(os.environ['PWD'],ext,InSignalFitWSFile,ext,InSignalFitWSFile)
+  print "DEBUGRK1: ",signalFitWSFile
+
+  # Signal/outdir_HHWWgg_v2-6_2017_ChannelTest/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest.root
+  # ext = HHWWgg_v2-6_2017_ChannelTest
+  # InSignalFitWSFile = X550_HHWWgg_qqqq
+
+  signalFitWSFile = "%s/../Signal/outdir_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq.root"%(os.environ['PWD'])
+  print "DEBUGRK2: ",signalFitWSFile
 
 if(analysis != "HHWWgg"):
   if not os.path.exists( signalFitWSFile ):
@@ -115,10 +147,15 @@ if(analysis != "HHWWgg"):
 
 # Print info to user
 print " --> Input flashgg ws dir: %s"%inputWSDir
+print " --> Website dir: %s"%website
+print " --> InSignalFitWSFile: %s"%InSignalFitWSFile
+print " --> signalFitWSFile: %s"%signalFitWSFile
 print " --> Processes: %s"%procs
 print " --> Categories: %s"%cats
 print " --> Extension: %s"%ext
+print " --> massStep: %s"%massStep
 print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year])
+print " --> mode: %s"%mode
 print ""
 print " --> Job information:"
 print "     * Batch: %s"%batch
@@ -131,7 +168,8 @@ print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 # Construct input command
 print " --> Constructing input command..."
 
-cmdLine = "./runBackgroundScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --sigFile %s --isData "%(dataFile,procs,cats,ext,lumi[year],year,batch,queue,signalFitWSFile)
+cmdLine = "./runBackgroundScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --MASSSTEP %d --isData "%(dataFile,website,procs,cats,ext,lumi[year],year,batch,queue,massStep)
+if signalFitWSFile != "": cmdLine += " --sigFile %s "%signalFitWSFile
 if mode == "fTestOnly": cmdLine += '--fTestOnly '
 elif mode == "bkgPlotsOnly": cmdLine += '--bkgPlotsOnly '
 if unblind and not fTestOnly: cmdLine += '--undblind '

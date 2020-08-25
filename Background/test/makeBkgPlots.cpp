@@ -729,6 +729,7 @@ int main(int argc, char* argv[]){
 	string sigFileName;
 	string outFileName;
 	string outDir;
+	string website;
 	string analysis;
 	int cat;
 	string catLabel;
@@ -759,6 +760,7 @@ int main(int argc, char* argv[]){
 		("sigFileName,s", po::value<string>(&sigFileName), 																	"Input file name")
 		("outFileName,o", po::value<string>(&outFileName)->default_value("BkgPlots.root"),	"Output file name")
 		("outDir,d", po::value<string>(&outDir)->default_value("BkgPlots"),						 			"Output directory")
+		("website,w", po::value<string>(&website)->default_value("website"),						 			"Output directory")
 		("analysis,a", po::value<string>(&analysis)->default_value(""),						 			"Output directory")
 		("cat,c", po::value<int>(&cat),																								 			"Category")
 		("catLabel,l", po::value<string>(&catLabel),																	 			"Label category")
@@ -767,7 +769,7 @@ int main(int argc, char* argv[]){
 		("unblind",																																						"un blind central mass region")
 		("useBinnedData",																															 			"Data binned")
 		("makeCrossCheckProfPlots",																													"Make some cross check plots -- very slow!")
-		("massStep,m", po::value<double>(&massStep)->default_value(0.5),						   			"Mass step for calculating bands. Use a large number like 5 for quick running")
+		("massStep,m", po::value<double>(&massStep)->default_value(10.5),						   			"Mass step for calculating bands. Use a large number like 5 for quick running")
 		("nllTolerance,n", po::value<double>(&nllTolerance)->default_value(0.05),			 			"Tolerance for nll calc in %")
 		("mhLow,L", po::value<int>(&mhLow)->default_value(100),															"Starting point for scan")
 		("mhHigh,H", po::value<int>(&mhHigh)->default_value(180),														"End point for scan")
@@ -783,6 +785,8 @@ int main(int argc, char* argv[]){
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc,argv,desc),vm);
 	po::notify(vm);
+
+	cout << "[makeBkgPlots.cpp] [INFO]: sigFileName: " << sigFileName << endl;
 	if (vm.count("help")) { cout << desc << endl; exit(1); }
 	if (vm.count("doBands")) doBands=true;
 	if (vm.count("isMultiPdf")) isMultiPdf=true;
@@ -798,7 +802,7 @@ int main(int argc, char* argv[]){
   lumi_13TeV =Form("%.1f fb^{-1}",intLumi);
 	system(Form("mkdir -p %s",outDir.c_str()));
 	if (makeCrossCheckProfPlots) system(Form("mkdir -p %s/normProfs",outDir.c_str()));
-
+	if (verbose_) std::cout << "[makeBkgPlots.cpp][INFO]: bkgFileName: " << bkgFileName << std::endl;
 	TFile *inFile = TFile::Open(bkgFileName.c_str());
 	//RooWorkspace *inWS = (RooWorkspace*)inFile->Get("multipdf");
 	WSTFileWrapper * inWS = new WSTFileWrapper(bkgFileName,"multipdf");
@@ -822,6 +826,7 @@ int main(int argc, char* argv[]){
 	std::cout << "[makeBkgPlots] - in source code" << std::endl;
 
 	RooAbsData *data = (RooDataSet*)inWS->data(Form("data_mass_%s",catname.c_str()));
+	if (verbose_) std::cout << "useBinnedData: " << useBinnedData << std::endl;
 	// RooAbsData *data = (RooDataSet*)inWS->data(Form("roohist_data_mass_%s",catname.c_str()));
 	if (useBinnedData) data = (RooDataHist*)inWS->data(Form("roohist_data_mass_%s",catname.c_str()));
 
@@ -831,10 +836,8 @@ int main(int argc, char* argv[]){
 	std::cout << "[INFO] isMultiPdf = " << isMultiPdf << std::endl;
 	if (isMultiPdf) {
 		std::cout << "[INFO] Inside isMultiPdf if condition." << std::endl;
-		RooMultiPdf* mpdf;
-		RooCategory* mcat;
-		cout << "mpdf: " << mpdf << endl;
-		cout << "mcat: " << mcat << endl;
+		if (verbose_) cout << "mpdf: " << mpdf << endl;
+		if (verbose_) cout << "mcat: " << mcat << endl;
 		if(analysis == "HHWWgg") mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%dTeV_bkgshape",catname.c_str(),sqrts)); // get rid of 13TeV in name
 		else mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%dTeV_%d_bkgshape",catname.c_str(),sqrts,year_));
 		if(analysis == "HHWWgg") mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_13TeV",catname.c_str()));
@@ -862,8 +865,10 @@ int main(int argc, char* argv[]){
 	}
 
 	cout << "[INFO] Current PDF and data:" << endl;
-	cout << "[INFO] "<< "\t"; data->Print();
+	cout << "mpdf: " << mpdf << endl;
+	cout << "mcat: " << mcat << endl;
 	cout<< "[INFO] " << "\t"; mpdf->getCurrentPdf()->Print();
+	cout << "[INFO] "<< "\t"; data->Print();
 
 	// plot all the pdfs for reference
 	if (isMultiPdf || verbose_) plotAllPdfs(mgg,data,mpdf,mcat,Form("%s/allPdfs_%s",outDir.c_str(),catname.c_str()),cat,unblind, isFlashgg_, flashggCats_, year_);
@@ -924,7 +929,7 @@ int main(int argc, char* argv[]){
 	if (doBands) {
 		int p=0;
 		for (double mass=double(mhLow); mass<double(mhHigh)+massStep; mass+=massStep) {
-			//for (int i=1; i<(plot->GetXaxis()->GetNbins()+1); i++){
+			//for (int i=1; i<(plot->GetXaxis()->GetNbins()+1); i++)
 			double lowedge = mass-0.5;
 			double upedge = mass+0.5;
 			double center = mass;
@@ -1070,6 +1075,7 @@ int main(int argc, char* argv[]){
 		}
 
 		if (doSignal){
+			cout << "[makeBkgPlots.cpp][INFO]: Inside doSignal." << endl;
       int SignalType=0;
 			TFile *sigFile = TFile::Open(sigFileName.c_str());
 		//	RooWorkspace *w_sig = (RooWorkspace*)sigFile->Get("wsig_7TeV");
@@ -1205,6 +1211,9 @@ int main(int argc, char* argv[]){
 		canv->Print(Form("%s/bkgplot_%s.pdf",outDir.c_str(),catname.c_str()));
 		canv->Print(Form("%s/bkgplot_%s.png",outDir.c_str(),catname.c_str()));
 		canv->Print(Form("%s/bkgplot_%s.C",outDir.c_str(),catname.c_str()));
+		canv->Print(Form("%s/Background/bkgplot_%s.pdf",website.c_str(),catname.c_str()));
+		canv->Print(Form("%s/Background/bkgplot_%s.png",website.c_str(),catname.c_str()));
+		canv->Print(Form("%s/Background/bkgplot_%s.C",website.c_str(),catname.c_str()));
 		canv->SetName(Form("bkgplot_%s",catname.c_str()));
 		outFile->cd();
 		canv->Write();

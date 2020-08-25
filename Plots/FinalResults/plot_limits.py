@@ -900,12 +900,11 @@ def main():
     masses = []
     # if(args.CMS_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000]
     if(args.CMS_compare): masses = [260,1100]
-    # if(args.All_Points): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500, 550, 600, 650, 700, 800, 850, 900, 1000, 1250]
-    # if(args.All_Points): masses = [260,270,1100,1300]
-    # if(args.All_Points): masses = [260,270,300,350,400,450,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
-    if(args.All_Points): masses = [270,300,350,1100,2000]
-    # if(args.All_Points): masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
-    # if(args.All_Points): masses = [260,270,1100,1200,1300,1500,2000]
+
+    if(args.All_Points): masses = [260,270,300,350,400,450,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
+    # if(args.All_Points): masses = [270,300,350,1100,2000]
+    # if(args.All_Points): masses = [260,270,300,350,1100,1200,1300,1500,2000]
+
     # if(args.atlas_compare): masses = [250, 260, 270, 280, 300, 320, 350, 400, 500]
     if(args.atlas_compare): masses = [260,1000]
     for m in masses:
@@ -935,8 +934,9 @@ def main():
         print'Creating grid of limit values'
         # ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18July/grid'
         # ol = args.website
-        # masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
-        masses = [270,300,350,1100,2000]
+        masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
+        # masses = [270,300,350,1100,2000]
+        # masses = [260,270,300,350,1100,1200,1300,1500,2000]
         #masses = [250]
         massLabels = []
         for m in masses:
