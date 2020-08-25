@@ -18,9 +18,19 @@ combineScriptCfg = {
   'mode':mode,
   # 'mode':'combine',
   'doSystematics':1, # 0: do not include systematics in datacard. 1: include systematics in datacard
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_16July/GluGluToHHTo_WWgg_qqqq_Radion_Trees_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_16July/GluGluToHHTo_WWgg_qqqq_Radion_Trees_Hadded',
   # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_10July/HHWWgg_2017_Data_Trees_Hadded_Combined',
   # 'inputWSDir':'/eos/user/a/atishelm/ntuples/HHWWgg/HHWWgg_v2-6_Workspaces_X600_Synch_Hadded', ##-- Note: should not end with 
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_BqrkMinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_NoBqrkMinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_BqrkPtOrdered_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_PtOrderNoBqrk_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_BqrkMinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_BqrkPtOrder_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_ZZ_MinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_ZZ_PtOrder_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/combined_WWZZ_Hadded',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/combined_WWZZ_PtOrder_Hadded',
   #Procs will be inferred automatically from filenames
   #'HHWWggCatLabel':'2TotCatsCOMBINEDWithSyst', # for name of combine output files
   'HHWWggCatLabel':'2TotCatsbothcombined',

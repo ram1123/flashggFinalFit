@@ -7,10 +7,29 @@ signalScriptCfg = {
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
   #'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_15July/GluGluToHHTo_WWgg_qqqq_EFT_Workspaces_Hadded',
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_16July/GluGluToHHTo_WWgg_qqqq_Radion_Trees_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/HHWWgg_9Aug/HHWWgg_v2-6_WorkspaceRadion_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_BqrkMinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_NoBqrkMinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_BqrkPtOrdered_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August12/HHWWgg_v2-6_PtOrderNoBqrk_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_BqrkMinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_BqrkPtOrder_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_ZZ_MinMass_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_ZZ_PtOrder_RadionWorkspace_Hadded',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/combined_WWZZ_Hadded',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/combined_WWZZ_PtOrder_Hadded',
   # Important: Don't put "/" at the end of inputWSDir.
   #'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/16July/',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18July/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_NoBqrkMinMass/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_BqrkMinMass/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_BqrkPtOrdered/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/20August_NoBqrkPtOrdered/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_BqrkMinMass/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_BqrkPtOrder/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_ZZMinMass/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_ZZPtOrder/',
+  # 'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_CombinedMinMass/',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/22August_CombinedPtOrder/',
   'usrprocs':'ggF', # if you want user input production categories
   #'usrprocs':'GluGluToHHTo', # if you want user input production categories
   #Procs will be inferred automatically from filenames
