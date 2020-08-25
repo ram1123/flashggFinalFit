@@ -73,8 +73,8 @@ An explanation of the important parameters to set:
   * **batch and queue**: These are for running in batch mode, which is currently not setup for HHWWgg. For now it automatically runs locally. 
   * **analysis**: This should be set to HHWWgg to run the HHWWgg specific naming schemes. 
   * **mode**: The function to run the script on. Options: [std,fTestOnly,bkgPlotsOnly].
-  * **InSignalFitWSFile**: This is used for make background plot. When we don't have signal model then put `InSignalFitWSFile = ""`. Else, it will try to find the signal root file present in the signal directory. If RootFileName is `Signal/outdir_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq.root` then put `InSignalFitWSFile = "X550_HHWWgg_qqqq"`
-  * **massStep**: 
+  * **InSignalFitWSFile**: This is used for make background plot. When we don't have signal model then put `InSignalFitWSFile = ""`. Else, it will try to find the signal root file present in the signal directory. If RootFileName is `Signal/outdir_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq/CMS-HGG_sigfit_HHWWgg_v2-6_2017_ChannelTest_X550_HHWWgg_qqqq.root` then put `InSignalFitWSFile = "X550_HHWWgg_qqqq"`. 
+  * **massStep**: This is used for make background plot. Step in which mass should vary. Put this to higher value for quick run.
 
 After setting the python configuration file you want to use in the backgroundftest option in HHWWggFinalFitScript.sh, and setting the proper parameters in your configuration file, you can run the background ftest with:
 
@@ -89,18 +89,18 @@ If this works properly, you should see the directory Background/outdir_<extensio
 Next are the functions to run on the signal. You can begin with the example configuration `Signal/HHWWgg_Synch_Signal_Config.py`.
 
 This configuration contains the following parameters:
-  * systematics: Set to 1 to look for systematic trees in signal workspace. Set to 0 to not generate a systematics dat file.
-  * inputWSDir: Input workspace directory. This should contain all signal files you'd like to run over. For example, this could contain all resonant mass points. 
-  * useprocs: Use production modes. For HHWWgg, this needs to be set to look for certain processes, as this needs to correspond to the file names. For example, to run on Spin-0 or Spin-2 resonant files, you would set this to ggF. To run on NMSSM, this should be set to GluGluToHHTo. Again, the point is this corresponds to the input file naming convention. 
-  * cats: Categories. Same definition as Background instructions. These are the categories that will be looked for in the signal workspaces. 
-  * ext: Extension. Same definition as Background instructions. This should be the same as the extension used for the background model you want to combine with your signal models. 
-  * analysis: Set to HHWWgg to configure for HHWWgg file naming conventions.
-  * analysis_type: Used for HHWWgg. Set to either EFT, Res or NMSSM. Used to configure the names of the workspaces, used for easily looping over mass points, mass pairs or benchmarks. 
-  * FinalState: The HHWWgg final state. For now the options are: qqlnu, lnulnu or qqqq, corresponding to the Semi-Leptonic, Fully-Leptonic, and Fully-Hadronic final states. The FinalState you enter here will be looked for in file and RooDataSet names. This is meant to be used if you are running on HHWWgg signal files for a given final state. When we run our tagger on a signal final containing all final states, a "combined" option will be added here.
-  * year: Data taking year. 
-  * scales, scalesCorr, scalesGlobal, smears: Systematic trees to look for in signal workspaces. 
-  * batch and queue: Set to empty strings as HHWWgg only configured to run locally. 
-  * mode: Function to run on signal. To run with systematics, set to "std" and run HHWWggFinalFitScript.sh twice. To run without systematics, run the following steps in order: std, sigFitOnly, packageOnly, sigPlotsOnly 
+  * **systematics**: Set to 1 to look for systematic trees in signal workspace. Set to 0 to not generate a systematics dat file.
+  * **inputWSDir**: Input workspace directory. This should contain all signal files you'd like to run over. For example, this could contain all resonant mass points. 
+  * **useprocs**: Use production modes. For HHWWgg, this needs to be set to look for certain processes, as this needs to correspond to the file names. For example, to run on Spin-0 or Spin-2 resonant files, you would set this to ggF. To run on NMSSM, this should be set to GluGluToHHTo. Again, the point is this corresponds to the input file naming convention. 
+  * **cats**: Categories. Same definition as Background instructions. These are the categories that will be looked for in the signal workspaces. 
+  * **ext**: Extension. Same definition as Background instructions. This should be the same as the extension used for the background model you want to combine with your signal models. 
+  * **analysis**: Set to HHWWgg to configure for HHWWgg file naming conventions.
+  * **analysis_type**: Used for HHWWgg. Set to either EFT, Res or NMSSM. Used to configure the names of the workspaces, used for easily looping over mass points, mass pairs or benchmarks. 
+  * **FinalState**: The HHWWgg final state. For now the options are: qqlnu, lnulnu or qqqq, corresponding to the Semi-Leptonic, Fully-Leptonic, and Fully-Hadronic final states. The FinalState you enter here will be looked for in file and RooDataSet names. This is meant to be used if you are running on HHWWgg signal files for a given final state. When we run our tagger on a signal final containing all final states, a "combined" option will be added here.
+  * **year**: Data taking year. 
+  * **scales, scalesCorr, scalesGlobal, smears**: Systematic trees to look for in signal workspaces. 
+  * **batch and queue**: Set to empty strings as HHWWgg only configured to run locally. 
+  * **mode**: Function to run on signal. To run with systematics, set to "std" and run HHWWggFinalFitScript.sh twice. To run without systematics, run the following steps in order: std, sigFitOnly, packageOnly, sigPlotsOnly 
 
 After setting the parameters properly, you are ready to run the signal fit steps. 
 
@@ -108,7 +108,7 @@ To run with systematics, you should set the mode to "std", make sure the correct
 
 ```bash
 . HHWWggFinalFitScript.sh signal
-``` 
+```
 
 This should run the fTest step, providing the recommended number of gaussians to use to fit each signal category. If this runs properly, you should find a directory Signal/outdir_<entension>_<signalPoint>_<Process>. In this directory you should find sigfTest containing the gaussian sum f-test fits for rv (right vertex) and wv (wrong vertex) for each category.
 
@@ -153,51 +153,7 @@ For the moment, these computations are done in Plots/FinalResults/plot_limits.py
 . HHWWggFinalFitScript.sh plot
 ```
 
-
-
 # Known Issues
-
-## While running background
-
-For some reason there is a crash while running the background model. But, its not affecting any output.
-
-```bash
-[INFO] Current PDF and data:
-[INFO]  RooDataHist::roohist_data_mass_HHWWggTag_2[CMS_hgg_mass] = 320 bins (3866 weights)
-
- *** Break *** segmentation violation
-[INFO]  
-
-
-===========================================================
-There was a crash.
-This is the entire stack trace of all threads:
-===========================================================
-#0  0x00007f70abc7646c in waitpid () from /lib64/libc.so.6
-#1  0x00007f70abbf3f62 in do_system () from /lib64/libc.so.6
-#2  0x00007f70ae915a8b in TUnixSystem::StackTrace() () from /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libCore.so
-#3  0x00007f70ae9180cc in TUnixSystem::DispatchSignals(ESignals) () from /cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_2_13/external/slc7_amd64_gcc700/lib/libCore.so
-#4  <signal handler called>
-#5  0x00007f70ac9098a4 in RooMultiPdf::getCurrentPdf() const () from /afs/cern.ch/work/r/rasharma/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so
-#6  0x000000000044851a in main (argc=36, argv=0x7ffed7ca87f8) at /afs/cern.ch/user/r/rasharma/work/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/src/flashggFinalFit/Background/test/makeBkgPlots.cpp:866
-===========================================================
-
-
-The lines below might hint at the cause of the crash.
-You may get help by asking at the ROOT forum http://root.cern.ch/forum.
-Only if you are really convinced it is a bug in ROOT then please submit a
-report at http://root.cern.ch/bugs. Please post the ENTIRE stack trace
-from above as an attachment in addition to anything else
-that might help us fixing this issue.
-===========================================================
-#5  0x00007f70ac9098a4 in RooMultiPdf::getCurrentPdf() const () from /afs/cern.ch/work/r/rasharma/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/lib/slc7_amd64_gcc700/libHiggsAnalysisCombinedLimit.so
-#6  0x000000000044851a in main (argc=36, argv=0x7ffed7ca87f8) at /afs/cern.ch/user/r/rasharma/work/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/src/flashggFinalFit/Background/test/makeBkgPlots.cpp:866
-===========================================================
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
-
 
 ## While running the signal model
 
