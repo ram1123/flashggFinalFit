@@ -1,3 +1,22 @@
+Table of Contents
+=================
+
+   * [FLASHgg Final Fits](#flashgg-final-fits)
+      * [Contents](#contents)
+      * [Known issues](#known-issues)
+   * [HHWWgg Specific Instructions](#hhwwgg-specific-instructions)
+      * [Clone Repository](#clone-repository)
+      * [Background](#background)
+         * [f-Test](#f-test)
+      * [Signal](#signal)
+      * [Datacard](#datacard)
+      * [Combine](#combine)
+      * [Plot](#plot)
+   * [Known Issues](#known-issues-1)
+      * [While running the signal model](#while-running-the-signal-model)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
 # FLASHgg Final Fits
 The Final Fits package is a series of scripts which are used to run the final stages of the CMS Hgg analysis: signal modelling, background modelling, datacard creation and final statistical interpretation and final result plots.
 
