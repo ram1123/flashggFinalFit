@@ -463,6 +463,11 @@ int main(int argc, char *argv[]){
     else replacementProcWV = "ggF";
   }
 
+  if(analysis_ == "HHWWgg"){
+    if(FinalState_ == "qqlnu") replacementCatWV = "HHWWggTag_0";
+    else if(FinalState_ == "qqqq") replacementCatWV = "HHWWggTag_2";
+    else replacementCatWV = "HHWWggTag_3";
+  }
   
 
   // isFlashgg should now be the only option.
@@ -1285,15 +1290,14 @@ int main(int argc, char *argv[]){
     // else if (analysis_type_ == "EFT") HHWWggProc = "GluGluToHHTo";
     // else if (analysis_type_ == "NMSSM") HHWWggProc = "ggF";
 
-
-
     // packager.packageOutput(/*split*/split, /*proc*/split_[0], /*tag*/ split_[1] );
     if(analysis_ == "HHWWgg"){
       string tag = "";
       if(FinalState_ == "qqlnu") tag = "HHWWggTag_0";
       else if (FinalState_ == "qqqq") tag = "HHWWggTag_2";
+      else if (FinalState_ == "lnulnu") tag = "HHWWggTag_3";
       if(analysis_type_ == "EFT") packager.packageOutput(/*split*/split, /*proc*/"GluGluToHHTo", /*tag*/ tag ); // HHWWgg. Does this need to be done for each tag? Is one just chosen?
-      else packager.packageOutput(/*split*/split, /*proc*/"ggF", /*tag*/ "HHWWggTag_0" ); // HHWWgg
+      else packager.packageOutput(/*split*/split, /*proc*/"ggF", /*tag*/ tag ); // HHWWgg
     }
     else{
       packager.packageOutput(/*split*/split, /*proc*/split_[0], /*tag*/ split_[1] );

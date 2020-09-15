@@ -751,7 +751,7 @@ int main(int argc, char* argv[]){
 	int isFlashgg_ =1;
 	string flashggCatsStr_;
 	vector<string> flashggCats_;
-  double higgsResolution_=0.5;
+    double higgsResolution_=0.5;
 
 	po::options_description desc("Allowed options");
 	desc.add_options()
@@ -802,7 +802,11 @@ int main(int argc, char* argv[]){
   lumi_13TeV =Form("%.1f fb^{-1}",intLumi);
 	system(Form("mkdir -p %s",outDir.c_str()));
 	if (makeCrossCheckProfPlots) system(Form("mkdir -p %s/normProfs",outDir.c_str()));
+
 	if (verbose_) std::cout << "[makeBkgPlots.cpp][INFO]: bkgFileName: " << bkgFileName << std::endl;
+	// std::cout << "[makeBkgPlots] - inFile: " << inFile << std::endl;
+
+
 	TFile *inFile = TFile::Open(bkgFileName.c_str());
 	//RooWorkspace *inWS = (RooWorkspace*)inFile->Get("multipdf");
 	WSTFileWrapper * inWS = new WSTFileWrapper(bkgFileName,"multipdf");
@@ -824,12 +828,14 @@ int main(int argc, char* argv[]){
 
 	useBinnedData=1; // HHWWgg hack
 	std::cout << "[makeBkgPlots] - in source code" << std::endl;
+	std::cout << "[makeBkgPlots] - analysis: " << analysis << std::endl;
 
+	RooAbsData *data; 
 
-	RooAbsData *data = (RooDataSet*)inWS->data(Form("data_mass_%s",catname.c_str()));
+	if(useBinnedData) data = (RooDataHist*)inWS->data(Form("roohist_data_mass_%s",catname.c_str()));
+	else data = (RooDataSet*)inWS->data(Form("data_mass_%s",catname.c_str()));
+
 	if (verbose_) std::cout << "useBinnedData: " << useBinnedData << std::endl;
-	// RooAbsData *data = (RooDataSet*)inWS->data(Form("roohist_data_mass_%s",catname.c_str()));
-	if (useBinnedData) data = (RooDataHist*)inWS->data(Form("roohist_data_mass_%s",catname.c_str()));
 
 	RooAbsPdf *bpdf = 0;
 	RooMultiPdf *mpdf = 0;
@@ -839,11 +845,14 @@ int main(int argc, char* argv[]){
 		std::cout << "[INFO] Inside isMultiPdf if condition." << std::endl;
 		if (verbose_) cout << "mpdf: " << mpdf << endl;
 		if (verbose_) cout << "mcat: " << mcat << endl;
-		if(analysis == "HHWWgg") mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%d_%dTeV_bkgshape",catname.c_str(),year_,sqrts)); // get rid of 13TeV in name
-		else mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%dTeV_%d_bkgshape",catname.c_str(),sqrts,year_));
-		if(analysis == "HHWWgg") mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_%d_13TeV",catname.c_str(),year_));
-		else mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_%dTeV_%d",catname.c_str(),sqrts,year_));
 
+		//RooMultiPdf* mpdf; 
+		//RooCategory* mcat; 
+		// if(analysis == "HHWWgg") mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%dTeV_bkgshape",catname.c_str(),sqrts)); // get rid of 13TeV in name 
+		mpdf = (RooMultiPdf*)inWS->pdf(Form("CMS_hgg_%s_%d_%dTeV_bkgshape",catname.c_str(),year_,sqrts)); // changed order of year, sqrts for HHWWgg
+		// if(analysis == "HHWWgg") mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_13TeV",catname.c_str()));
+		mcat = (RooCategory*)inWS->cat(Form("pdfindex_%s_%d_%dTeV",catname.c_str(),year_,sqrts)); // changed order of year, sqrts for HHWWgg
+		
 		cout << "mpdf: " << mpdf << endl;
 		cout << "mcat: " << mcat << endl;
 		cout<< "[INFO] mpdf->getCurrentPdf():" << "\t"; mpdf->getCurrentPdf()->Print();
@@ -1032,7 +1041,7 @@ int main(int argc, char* argv[]){
 
 		TCanvas *canv = new TCanvas("c","",800,800);
   ///start extra bit for ratio plot///
-  bool doRatioPlot_=1;
+//   bool doRatioPlot_=1;
   TPad *pad1 = new TPad("pad1","pad1",0,0.25,1,1);
   TPad *pad2 = new TPad("pad2","pad2",0,0,1,0.35);
   pad1->SetBottomMargin(0.18);
