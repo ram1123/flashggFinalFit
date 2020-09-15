@@ -1410,6 +1410,8 @@ void FinalModelConstruction::getNormalization(){
      pol=pol0;
      temp->Fit(pol,"Q");
   }
+  temp->SetMinimum(0.01);
+  temp->SetMaximum(0.6);
   temp->Draw();
   temp->Fit(pol,"Q");
   TPaveText *pt = new TPaveText(.25,.9,.9,1.0,"NDC");

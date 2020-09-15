@@ -169,9 +169,10 @@ def plotUpperLimits(labels,values,resultType):
         ##
         # HHWWgg_qqlnu_factor = 2.2779 ## (1 / BR) with Electron, Muon, all Tau decays INCLUDED
         HHWWgg_qqlnu_factor = 2.3079 ## (1 / BR) with Electron, Muon, all Tau decays INCLUDED
-        HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
-        HHWWgg_WWgg_factor = 1030.7153
-
+        # HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
+        # HHWWgg_WWgg_factor = 1030.7153
+        HHWWgg_qqqq_factor = 1.0      # 
+        HHWWgg_WWgg_factor = 1.0   # 
         if (args.FinalState == "qqqq"):
             if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
             elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqqq_factor*HHWWgg_WWgg_factor
@@ -572,9 +573,18 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # HHWWgg_WWgg_factor = 2061.43 # (1 / 0.0004851), 0.0004851 is BR of HH->WWgg
     # e, mu (no tau), qq (assuming negligible b quark BR): 3.4916
     # 1030.7153
-    HHWWgg_qqlnu_factor = 3.4916 # e, mu semileptonic channels only
-    HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
-    HHWWgg_WWgg_factor = 1030.7153
+    HHWWgg_qqlnu_factor = 4.53 # e, mu semileptonic channels only
+    # HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
+    # HHWWgg_WWgg_factor = 1030.7153
+    
+    # HHWWgg_qqqq_factor = 2.046      # ZZ 1/(0.69911*0.69911)
+    # HHWWgg_WWgg_factor = 16820.49   # ZZ 1/(0.026*0.00227)
+
+    HHWWgg_qqqq_factor = 2.20      # WW 1/(0.6741*0.6741)
+    HHWWgg_WWgg_factor = 2048.97   # WW 1/(0.21*0.00227)
+
+    # HHWWgg_qqqq_factor = 1.0      # 
+    # HHWWgg_WWgg_factor = 1.0   # 
 
     if (args.FinalState == "qqqq"):
         if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
@@ -1044,6 +1054,7 @@ def main():
         elif args.EFT:
             labels.append("2017_node01_" + args.HHWWggCatLabel)
             labels.append("2017_node02_" + args.HHWWggCatLabel)
+            labels.append("2017_node03_" + args.HHWWggCatLabel)
             labels.append("2017_node04_" + args.HHWWggCatLabel)
             labels.append("2017_node05_" + args.HHWWggCatLabel)
             labels.append("2017_node06_" + args.HHWWggCatLabel)
@@ -1054,7 +1065,7 @@ def main():
             labels.append("2017_node11_" + args.HHWWggCatLabel)
             labels.append("2017_node12_" + args.HHWWggCatLabel)
             labels.append("2017_nodeSM_" + args.HHWWggCatLabel)
-            plotLabels = ["Node 1","Node 2","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
+            plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
         elif args.NMSSM:
             labels.append("MX300_MY170_" + args.HHWWggCatLabel)
             labels.append("MX1000_MY800_" + args.HHWWggCatLabel)

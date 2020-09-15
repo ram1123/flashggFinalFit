@@ -67,23 +67,25 @@ if [ $step == "plot" ]; then
     # SecondTagLabel="2TotCatsbothcombined"
     campaignOne="HHWWgg_v2-6"
     FinalState="qqqq"
-    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/test3/"
+    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/September15_EFT_WW_AllCuts/"
     # campaignOne="HHWWgg_v2-3"
     # campaignTwo="HHWWgg_v2-6"
     # SecondTagLabel="2TotCatsCOMBINEDWithoutSyst"
     # tagLabel="2TotCatsTag0WithSyst"
     # SecondTagLabel="2TotCatsTag0WithoutSyst"
-# HHWWgg_v2-6_2017_X1000_2TotCatsCOMBINEDWithSyst_HHWWgg_qqlnu.root
+    # HHWWgg_v2-6_2017_X1000_2TotCatsCOMBINEDWithSyst_HHWWgg_qqlnu.root
 
     ## qqqq Radion
-    python plot_limits.py -a  --HHWWggCatLabel $tagLabel --website ${website}  --systematics  --campaignOne $campaignOne  --yboost 1 --ymin 0.1 --ymax 1 --unit fb --FinalState ${FinalState} --resultType HH  --ymin 1e1 --ymax 1e6 --campaign HHWWgg_dummy # ratio of all points
+    # python plot_limits.py -a  --HHWWggCatLabel $tagLabel --website ${website}  --systematics  --campaignOne $campaignOne  --yboost 1 --ymin 0.1 --ymax 1 --unit fb --FinalState ${FinalState} --resultType HH  --ymin 1e1 --ymax 1e6 --campaign HHWWgg_dummy # ratio of all points
+    # python plot_limits.py -a  --HHWWggCatLabel $tagLabel --website ${website}  --systematics  --campaignOne $campaignOne  --yboost 1 --ymin 0.1 --ymax 1 --unit fb --FinalState ${FinalState} --resultType WWgg  --ymin 0.1 --ymax 1e2 --campaign HHWWgg_dummy # ratio of all points
     
     ## qqqq Radion: Grid
-    python plot_limits.py -a -g --GridLabels $tagLabel  --resultType HH --unit fb --ymin 0.1 --ymax 1 --yboost 1 --FinalState ${FinalState}  --website ${website}
+    # python plot_limits.py -a -g --GridLabels $tagLabel  --resultType HH --unit fb --ymin 0.1 --ymax 1 --yboost 1 --FinalState ${FinalState}  --website ${website}
 
     # qqqq EFT
-    # python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType WWgg --unit pb --ymin 0.001 --ymax 1e0 --yboost -0.32 # EFT
-    # python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 1.0 --ymax 1e3 --yboost -0.32 # EFT
+    # python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType WWgg --unit pb --ymin 0.001 --ymax 1e2 --yboost -0.32  --FinalState ${FinalState} --website ${website} # EFT
+    python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 0.001 --ymax 1e4 --yboost -0.32  --FinalState ${FinalState} --website ${website} # EFT
+    # python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 10.0 --ymax 1e4 --yboost -0.32  --FinalState ${FinalState} --website ${website} # EFT
     
     ##- Grid
     # python plot_limits.py -a -g --GridLabels 2TotCatsCOMBINEDWithSyst 2TotCatsCOMBINEDWithoutSyst 2TotCatsTag0WithSyst 2TotCatsTag0WithoutSyst 2TotCatsTag1WithSyst 2TotCatsTag1WithoutSyst 1TotCatWithSyst 1TotCatWithoutSyst
@@ -91,15 +93,15 @@ if [ $step == "plot" ]; then
     # python plot_limits.py -a -g --GridLabels 2TotCatsTag0WithSyst 2TotCatsTag1WithSyst 1TotCatWithSyst 2TotCatsCOMBINEDWithSyst
 
     ##- Ratio plots
-    #  python plot_limits.py -a --HHWWggCatLabel $tagLabel --systematics
-     #python plot_limits.py -a --HHWWggCatLabel $SecondTagLabel
+    # python plot_limits.py -a --HHWWggCatLabel $tagLabel --systematics
+    # python plot_limits.py -a --HHWWggCatLabel $SecondTagLabel
     # python plot_limits.py -a -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --campaignTwo $campaignTwo --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
 
-     # python plot_limits.py -SM -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
-     # python plot_limits.py -a -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --campaignTwo $campaignTwo --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
-     #python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics
-     #python plot_limits.py -SM --HHWWggCatLabel $SecondTagLabel
-     #python plot_limits.py -SM -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel # ratio of SM
+    # python plot_limits.py -SM -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
+    # python plot_limits.py -a -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel --campaignOne $campaignOne --campaignTwo $campaignTwo --yboost 1 --ymin 0.1 --ymax 1 --unit fb --resultType HH --campaign HHWWgg_dummy # ratio of all points
+    # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics
+    # python plot_limits.py -SM --HHWWggCatLabel $SecondTagLabel
+    # python plot_limits.py -SM -r --HHWWggCatLabel $tagLabel --SecondHHWWggCatLabel $SecondTagLabel # ratio of SM
 
     ##- Comparison plots
     # python plot_limits.py -AC --HHWWggCatLabel  $tagLabel --systematics --campaign HHWWgg_v2-6_2017 --resultType WWgg --unit pb --ymin 1.000001 --ymax 1 --yboost 0.09 # atlas compare

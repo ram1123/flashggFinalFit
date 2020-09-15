@@ -207,6 +207,8 @@ else:
   for fileName in ws_fileNames: ws_fullFileNames+="%s/%s,"%(inputWSDir,fileName)
   ws_fullFileNames = ws_fullFileNames[:-1]
 
+  print "ws_fileNames: ",ws_fullFileNames
+
   # Extract list of procs
   procs = ''
 
@@ -292,6 +294,7 @@ else:
       # run with batch
       else: cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s'%(f,website,procs,cats,thisExt,lumi[year],year,batch,queue,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
 
+      print "cmdLine: ",cmdLine
       finishCommand(cmdLine,useDCB,mode,printOnly)
 
   # non-HHWWgg analysis

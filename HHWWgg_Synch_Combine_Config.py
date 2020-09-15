@@ -11,14 +11,14 @@ combineScriptCfg = {
 
   # Setup
   'analysis':'HHWWgg',
-  # 'analysis_type':'EFT',
+  'analysis_type':'EFT',
   # 'analysis_type':'NMSSM',
-  'analysis_type':'Res',
+  # 'analysis_type':'Res',
   'FinalState':'qqqq', # for HHWWgg. qqlnu, lnulnu, or qqqq. Will add combined eventually.
   'mode':mode,
   # 'mode':'combine',
   'doSystematics':1, # 0: do not include systematics in datacard. 1: include systematics in datacard
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/August20/HHWWgg_v2-6_BqrkPtOrder_RadionWorkspace_Hadded',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September11_AllCut/HHWWgg_v2_6_AllCut_WW_Workspace_Hadded',
   #Procs will be inferred automatically from filenames
   #'HHWWggCatLabel':'2TotCatsCOMBINEDWithSyst', # for name of combine output files
   'HHWWggCatLabel':'2TotCatsbothcombined',
@@ -29,8 +29,8 @@ combineScriptCfg = {
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   'year':'2017',
-  # 'signalProcs':'GluGluToHHTo',
-  'signalProcs':'ggF',
+  'signalProcs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'signalProcs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
 
   # Add UE/PS systematics to datacard (only relevant if mode == datacard)
   'doUEPS':0, # should I have this on?
