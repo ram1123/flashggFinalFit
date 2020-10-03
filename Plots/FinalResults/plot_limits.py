@@ -17,6 +17,7 @@ from ROOT import TFile, TTree, TCanvas, TGraph, TMultiGraph, TGraphErrors, TLege
 import CMS_lumi, tdrstyle
 import subprocess # to execute shell command
 from array import array
+import os
 
 import argparse
 
@@ -171,8 +172,8 @@ def plotUpperLimits(labels,values,resultType):
         HHWWgg_qqlnu_factor = 2.3079 ## (1 / BR) with Electron, Muon, all Tau decays INCLUDED
         # HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
         # HHWWgg_WWgg_factor = 1030.7153
-        HHWWgg_qqqq_factor = 1.0      # 
-        HHWWgg_WWgg_factor = 1.0   # 
+        HHWWgg_qqqq_factor = 1.0      #
+        HHWWgg_WWgg_factor = 1.0   #
         if (args.FinalState == "qqqq"):
             if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
             elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqqq_factor*HHWWgg_WWgg_factor
@@ -576,15 +577,12 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     HHWWgg_qqlnu_factor = 4.53 # e, mu semileptonic channels only
     # HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
     # HHWWgg_WWgg_factor = 1030.7153
-    
+
     # HHWWgg_qqqq_factor = 2.046      # ZZ 1/(0.69911*0.69911)
-    # HHWWgg_WWgg_factor = 16820.49   # ZZ 1/(0.026*0.00227)
+    # HHWWgg_WWgg_factor = 8410.25   # ZZ 1/(0.026*0.00227)
 
     HHWWgg_qqqq_factor = 2.20      # WW 1/(0.6741*0.6741)
-    HHWWgg_WWgg_factor = 2048.97   # WW 1/(0.21*0.00227)
-
-    # HHWWgg_qqqq_factor = 1.0      # 
-    # HHWWgg_WWgg_factor = 1.0   # 
+    HHWWgg_WWgg_factor = 1024.49   # WW 1/(0.21*0.00227)
 
     if (args.FinalState == "qqqq"):
         if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
@@ -596,6 +594,41 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     xvalues = []
     for i in range(N):
         xvalues.append(i)
+    LimitOutTextFile = open("Limits.html", "w")
+    message = """<html>
+        <head>
+        <style>
+            table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            }
+            th, td {
+            padding: 15px;
+            }
+            tr:nth-child(even) {background-color: #f2f2f2;}
+        </style>
+        </head>
+        <body>
+        <table style="width:50%%">
+            <caption>Limit Summary (values in pb); HHWWgg Factor = %s</caption>
+            <tr>
+                <th> Node? </th>
+                <th> Signal Strength </th>
+                <th> Limit (pb) </th>
+                <th> Comparison with SM </th>
+            </tr>"""
+    message = message %(str(HHWWgg_factor))
+
+    stringToEdit = """
+            <tr>
+                <td>%s</td>
+                <td>%s</td>
+                <td>%s</td>
+                <td>%s</td>
+            </tr>\n"""
+
+    # </html>"""
+    LimitOutTextFile.write(message+"\n")
     for i in range(N):
         direc = args.HHWWggCatLabel
 
@@ -606,6 +639,13 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
         #print'file_name:',file_name
         limit = getLimits(file_name)
         print"====> limit:",limit
+        if (args.unit == "pb") :
+            print "signal strength = ",limit[2]*1000.0
+            signal_strength = limit[2]*1000.0
+        else:
+            print "signal strength = ",limit[2]
+            signal_strength = limit[2]
+        print "HHWWgg_factor = ",HHWWgg_factor
         yellow.SetPoint(    i,    xvalues[i], limit[4]*HHWWgg_factor ) # + 2 sigma
         green.SetPoint(     i,    xvalues[i], limit[3]*HHWWgg_factor ) # + 1 sigma
         # median_h.Fill(xvalues[i], limit[2]*HHWWgg_qqlnu_factor)
@@ -614,6 +654,9 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
         yellow.SetPoint( 2*N-1-i, xvalues[i], limit[0]*HHWWgg_factor ) # - 2 sigma
 
         median_val = limit[2]*HHWWgg_factor
+        # LimitOutTextFile.write(str(labels[i])+"\t"+str(median_val)+"\t"+str(median_val/0.031)+" x SM" "\n")
+        FullText = stringToEdit % (str(labels[i].split("_")[1]),str(signal_strength),str(median_val),str(median_val/0.031)+" x SM")
+        LimitOutTextFile.write(FullText)
         # x.append(median_h.GetXaxis().GetBinCenter(i+1))
         x.append(median_h.GetXaxis().GetBinLowEdge(i+1))
         upperTwoSigs.append(abs(limit[4]*HHWWgg_factor-median_val))
@@ -631,6 +674,8 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
 
         print"median_val:",median_val
 
+    LimitOutTextFile.write("</body>\n</html>")
+    LimitOutTextFile.close()
     median_h.Draw("a")
     gr = TGraphAsymmErrors(N,x,y,xerrorLow,xerrorHigh,lowerOneSig,upperOneSig)
     gr_yellow = TGraphAsymmErrors(N,x,y,xerrorLow,xerrorHigh,lowerTwoSigs,upperTwoSigs)
@@ -886,6 +931,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
         c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.pdf")
         c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.png")
         c.SaveAs(args.website + '/limits2/' + outFile + "UpperLimit.C")
+        os.system("cp Limits.html "+args.website+'/limits2/')
     c.Close()
 
 # RANGE of floats
@@ -944,13 +990,18 @@ def main():
         print'Creating grid of limit values'
         # ol = '/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/18July/grid'
         # ol = args.website
-        masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
+        # masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
+        masses = ["node01","node02","node03","node04","node05","node06","node07","node08","node09","node10","node11","node12"]
+        # masses = ["node02","node03","node04","node05","node06","node07","node08","node09","node10","node11","node12"]
+        # masses = ["node02","node12"]
+        # masses = ["node02","node03","node04","node05","node06","node08","node09","node10","node11"]
         # masses = [270,300,350,1100,2000]
         # masses = [260,270,300,350,1100,1200,1300,1500,2000]
         #masses = [250]
         massLabels = []
         for m in masses:
-            mLabel = "X%s"%str(m)
+            mLabel = "%s"%str(m)
+            # mLabel = "X%s"%str(m)
             massLabels.append(mLabel)
         # massLabels.append("SM")
         massLabels.append("nodeSM")
@@ -1066,6 +1117,9 @@ def main():
             labels.append("2017_node12_" + args.HHWWggCatLabel)
             labels.append("2017_nodeSM_" + args.HHWWggCatLabel)
             plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
+            # plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
+            # plotLabels = ["Node 2","Node 12"]
+            # plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 8","Node 9","Node 10","Node 11","SM"]
         elif args.NMSSM:
             labels.append("MX300_MY170_" + args.HHWWggCatLabel)
             labels.append("MX1000_MY800_" + args.HHWWggCatLabel)
