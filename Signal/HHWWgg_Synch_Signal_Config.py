@@ -7,8 +7,8 @@ signalScriptCfg = {
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
   # Important: Don't put "/" at the end of inputWSDir.
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September11_AllCut/HHWWgg_v2_6_AllCut_WW_Workspace_Hadded',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/September15_EFT_WW_AllCuts/',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_PhoPt200GeV_BTag_WW_Workspace_Hadded',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/',
   # 'usrprocs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   'usrprocs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   #Procs will be inferred automatically from filenames
@@ -28,7 +28,7 @@ signalScriptCfg = {
 
   # Use DCB in fit
   'useDCB':0,
-  
+
   #Photon shape systematics
   'scales':'HighR9EB,HighR9EE,LowR9EB,LowR9EE,Gain1EB,Gain6EB',
   'scalesCorr':'MaterialCentralBarrel,MaterialOuterBarrel,MaterialForward,FNUFEE,FNUFEB,ShowerShapeHighR9EE,ShowerShapeHighR9EB,ShowerShapeLowR9EE,ShowerShapeLowR9EB',

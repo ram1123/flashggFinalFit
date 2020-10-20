@@ -42,6 +42,8 @@ parser.add_argument("--EFT",action="store_true", default=False, help="EFT result
 parser.add_argument("--NMSSM",action="store_true", default=False, help="NMSSM results", required=False)
 parser.add_argument("--FinalState",type=str, default="", help="Which Final state; qqqq, lnuqq, lnulnu", required=True) # Ex: WWgg, HH
 parser.add_argument("--website",type=str, default="", help="path of website to send plots", required=True) # Ex: WWgg, HH
+parser.add_argument("--year",type=str, default="", help="Year. 2016, 2017, 2018 or Run2", required=True)
+parser.add_argument("--channel",type=str, default="", help="WW/ZZ", required=True)
 
 parser.add_argument("--campaignOne",type=str, default="UnLabeled", help="Campaign of first limits in ratio", required=False)
 parser.add_argument("--campaignTwo",type=str, default="UnLabeled", help="Campaign of second limits in ratio", required=False)
@@ -578,11 +580,17 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     # HHWWgg_qqqq_factor = 1.1138 # Fully hadronic channels only
     # HHWWgg_WWgg_factor = 1030.7153
 
-    # HHWWgg_qqqq_factor = 2.046      # ZZ 1/(0.69911*0.69911)
-    # HHWWgg_WWgg_factor = 8410.25   # ZZ 1/(0.026*0.00227)
+    if (args.channel == "ww"):
+        HHWWgg_qqqq_factor = 2.20      # WW 1/(0.6741*0.6741)
+        HHWWgg_WWgg_factor = 1024.49   # WW 1/(0.21*0.00227)
+    elif(args.channel == "zz"):
+        HHWWgg_qqqq_factor = 2.046      # ZZ 1/(0.69911*0.69911)
+        HHWWgg_WWgg_factor = 8410.25   # ZZ 1/(0.026*0.00227)
+    else:
+        print "channel name should be ww or zz only"
+        sys.exit()
 
-    HHWWgg_qqqq_factor = 2.20      # WW 1/(0.6741*0.6741)
-    HHWWgg_WWgg_factor = 1024.49   # WW 1/(0.21*0.00227)
+
 
     if (args.FinalState == "qqqq"):
         if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqqq_factor
@@ -591,6 +599,8 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
         if(resultType == "WWgg"): HHWWgg_factor = HHWWgg_qqlnu_factor
         elif(resultType == "HH"): HHWWgg_factor = HHWWgg_qqlnu_factor*HHWWgg_WWgg_factor
     # green_h = TH1F("")
+
+    print "=====================> HHWWgg_factor = ",HHWWgg_factor
     xvalues = []
     for i in range(N):
         xvalues.append(i)
@@ -622,21 +632,21 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
     stringToEdit = """
             <tr>
                 <td>%s</td>
-                <td>%s</td>
-                <td>%s</td>
-                <td>%s</td>
+                <td>%.2f</td>
+                <td>%.2f</td>
+                <td>%.0f x SM</td>
             </tr>\n"""
 
     # </html>"""
     LimitOutTextFile.write(message+"\n")
     for i in range(N):
         direc = args.HHWWggCatLabel
+        Year = args.year
 
-        # file_name = "%s_limits/%s_%s_HHWWgg_qqlnu.root"%(direc,campaign,labels[i])
-        file_name = "%s_limits/%s_%s_HHWWgg_qqqq.root"%(direc,campaign,labels[i])
+        file_name = "%s_limits/%s_%s_%s_HHWWgg_qqqq.root"%(direc,campaign,Year,labels[i])
+        # file_name = "/afs/cern.ch/user/r/rasharma/work/doubleHiggs/flashggFinalFitNew/CMSSW_10_2_13/src/flashggFinalFit/temp/zz/higgsCombineTest.AsymptoticLimits.mH125.root"
+
         print"====> file name:",file_name
-        # file_name = direc + "_limits/HHWWgg_v2-3_2017_" + labels[i] + "_HHWWgg_qqlnu.root"
-        #print'file_name:',file_name
         limit = getLimits(file_name)
         print"====> limit:",limit
         if (args.unit == "pb") :
@@ -655,7 +665,7 @@ def plotNonResUpperLimits(campaign,labels,resultType,plotLabels):
 
         median_val = limit[2]*HHWWgg_factor
         # LimitOutTextFile.write(str(labels[i])+"\t"+str(median_val)+"\t"+str(median_val/0.031)+" x SM" "\n")
-        FullText = stringToEdit % (str(labels[i].split("_")[1]),str(signal_strength),str(median_val),str(median_val/0.031)+" x SM")
+        FullText = stringToEdit % ((labels[i].split("_")[0]),(signal_strength),(median_val),(median_val/0.031))
         LimitOutTextFile.write(FullText)
         # x.append(median_h.GetXaxis().GetBinCenter(i+1))
         x.append(median_h.GetXaxis().GetBinLowEdge(i+1))
@@ -992,6 +1002,7 @@ def main():
         # ol = args.website
         # masses = [260,270,300,350,400,450,500,550,600,650,700,900,1000,1100,1200,1300,1500,2000]
         masses = ["node01","node02","node03","node04","node05","node06","node07","node08","node09","node10","node11","node12"]
+        # masses = ["node01","node02","node03","node04","node05","node07","node08","node09","node10","node11","node12"]
         # masses = ["node02","node03","node04","node05","node06","node07","node08","node09","node10","node11","node12"]
         # masses = ["node02","node12"]
         # masses = ["node02","node03","node04","node05","node06","node08","node09","node10","node11"]
@@ -1029,7 +1040,8 @@ def main():
                 # print'gl:',gl
                 h_grid.GetXaxis().SetBinLabel(gl_i+1,gl)
                 # file_name = gl + "_limits/HHWWgg_v2-3_2017_" + ml + "_" + gl + "_HHWWgg_qqlnu.root"
-                file_name = gl + "_limits/HHWWgg_v2-6_2017_" + ml + "_" + gl + "_HHWWgg_qqqq.root"
+                file_name = gl + "_limits/HHWWgg_v2-6_"+args.year+"_" + ml + "_" + gl + "_HHWWgg_qqqq.root"
+                # file_name = gl + "_limits/HHWWgg_v2-6_2017_" + ml + "_" + gl + "_HHWWgg_qqqq.root"
                 print "file_name: ",file_name
                 limit = getLimits(file_name)
                 m2sig, m1sig, median, p1sig, p2sig = limit[0], limit[1], limit[2], limit[3], limit[4]
@@ -1103,22 +1115,23 @@ def main():
             plotLabels = ["SM Non-Res"]
             # labels.append("SM_" + args.HHWWggCatLabel)
         elif args.EFT:
-            labels.append("2017_node01_" + args.HHWWggCatLabel)
-            labels.append("2017_node02_" + args.HHWWggCatLabel)
-            labels.append("2017_node03_" + args.HHWWggCatLabel)
-            labels.append("2017_node04_" + args.HHWWggCatLabel)
-            labels.append("2017_node05_" + args.HHWWggCatLabel)
-            labels.append("2017_node06_" + args.HHWWggCatLabel)
-            labels.append("2017_node07_" + args.HHWWggCatLabel)
-            labels.append("2017_node08_" + args.HHWWggCatLabel)
-            labels.append("2017_node09_" + args.HHWWggCatLabel)
-            labels.append("2017_node10_" + args.HHWWggCatLabel)
-            labels.append("2017_node11_" + args.HHWWggCatLabel)
-            labels.append("2017_node12_" + args.HHWWggCatLabel)
-            labels.append("2017_nodeSM_" + args.HHWWggCatLabel)
+            labels.append("node01_" + args.HHWWggCatLabel)
+            labels.append("node02_" + args.HHWWggCatLabel)
+            labels.append("node03_" + args.HHWWggCatLabel)
+            labels.append("node04_" + args.HHWWggCatLabel)
+            labels.append("node05_" + args.HHWWggCatLabel)
+            labels.append("node06_" + args.HHWWggCatLabel)
+            labels.append("node07_" + args.HHWWggCatLabel)
+            labels.append("node08_" + args.HHWWggCatLabel)
+            labels.append("node09_" + args.HHWWggCatLabel)
+            labels.append("node10_" + args.HHWWggCatLabel)
+            labels.append("node11_" + args.HHWWggCatLabel)
+            labels.append("node12_" + args.HHWWggCatLabel)
+            labels.append("nodeSM_" + args.HHWWggCatLabel)
             plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
+            # plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
             # plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
-            # plotLabels = ["Node 2","Node 12"]
+            # plotLabels = ["Node SM"]
             # plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 8","Node 9","Node 10","Node 11","SM"]
         elif args.NMSSM:
             labels.append("MX300_MY170_" + args.HHWWggCatLabel)

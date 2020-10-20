@@ -5,8 +5,9 @@ _year = '2017'
 backgroundScriptCfg = {
 
   # Setup
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September11_AllCut/HHWWgg_v2_6_Data_Workspace_Hadded_Combined',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/September15_EFT_WW_AllCuts/',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_PhoPt200GeV_BTag_2017Data_Workspace_Hadded_Combined',
+  # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_2016Data_PhoPt_flashgg5_Workspace_Hadded_Combined',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/',
 
   # When we don't have signal model then put InSignalFitWSFile = "". Else it will
   # try to find the signal root file present in the signal directory.

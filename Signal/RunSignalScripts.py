@@ -1,6 +1,7 @@
 # Script for submitting signal fitting jobs for flashggFinalFit
 
 import os, sys
+import shutil
 from optparse import OptionParser
 
 lumi = {'2016':'35.9', '2017':'41.5', '2018':'59.8'}
@@ -139,16 +140,23 @@ else:
 print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 print "Create some direcoty to keep important plots at one place."
 print "==> List the created main directory."
+
 os.system("mkdir -p dat")
-os.system("mkdir -p "+website+os.sep+"Signal")
-os.system("mkdir -p "+website+os.sep+"grid")
-os.system("mkdir -p "+website+os.sep+"limits2")
-os.system("mkdir -p "+website+os.sep+"EfficiencyAcceptance")
-os.system("cp index.php "+website+os.sep)
-os.system("cp index.php "+website+os.sep+"Signal/")
-os.system("cp index.php "+website+os.sep+"grid/")
-os.system("cp index.php "+website+os.sep+"limits2/")
-os.system("cp index.php "+website+os.sep+"EfficiencyAcceptance/")
+
+subdirectories = ["","Signal","grid","limits2","EfficiencyAcceptance","workspaces_And_Cards"]
+for directories in subdirectories:
+  os.system("mkdir -p "+(website+os.sep+directories).replace("//","/"))
+  os.system("cp index.php "+(website+os.sep+directories).replace("//","/"))
+# Delete the workspaces_And_Cards directory and recreate.
+# This is just to prevent the multiple copies of the same files.
+# As the later stage of code renames the files so if we don't delete the
+# older copies then it is going to keep the multiple copies of the file.
+if not os.path.exists(website+os.sep+"workspaces_And_Cards"):
+  os.makedirs(website+os.sep+"workspaces_And_Cards")
+else:
+  shutil.rmtree(website+os.sep+"workspaces_And_Cards")
+  os.makedirs(website+os.sep+"workspaces_And_Cards")
+os.system("cp index.php "+(website+os.sep+"workspaces_And_Cards").replace("//","/"))
 os.system("ls "+website)
 print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 

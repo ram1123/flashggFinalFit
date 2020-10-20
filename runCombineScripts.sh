@@ -52,6 +52,7 @@ echo "--analysis_type) (default $ANALYSIS_TYPE)"
 echo "--FinalState) (default $FINALSTATE)" # for HHWWgg. qqlnu, lnulnu, or qqqq
 echo "--HHWWggCatLabel) (default $HHWWGGCATLABEL)"
 echo "-i|--inputFile) "
+echo "-w|--website) "
 echo "-p|--procs) (default $PROCS)"
 echo "-f|--flashggCats) (default $CATS) "
 echo "--uepsFile) (default $UEPS) "
@@ -85,7 +86,7 @@ echo "--doSystematics) run with or without systematics (default $DOSYSTEMATICS)"
 
 
 # options may be followed by one colon to indicate they have a required argument
-if ! options=$(getopt -u -o hi:p:f: -l help,inputFile:,procs:,bs:,flashggCats:,uepsFile:,newGghScheme,doSTXS,doStage1,ext:,smears:,massList:,scales:,scalesCorr:,scalesGlobal:,,pseudoDataDat:,sigFile:,combine,combineOnly,combinePlotsOnly,signalOnly,backgroundOnly,datacardOnly,useSSF:,useDCB_1G:,continueLoop:,intLumi:,year:,unblind,isData,isFakeData,analysis:,analysis_type:,FinalState:,HHWWggCatLabel:,shortExt:,dataFile:,batch:,doSystematics:,verbose -- "$@")
+if ! options=$(getopt -u -o hi:w:p:f: -l help,inputFile:,website:,procs:,bs:,flashggCats:,uepsFile:,newGghScheme,doSTXS,doStage1,ext:,smears:,massList:,scales:,scalesCorr:,scalesGlobal:,,pseudoDataDat:,sigFile:,combine,combineOnly,combinePlotsOnly,signalOnly,backgroundOnly,datacardOnly,useSSF:,useDCB_1G:,continueLoop:,intLumi:,year:,unblind,isData,isFakeData,analysis:,analysis_type:,FinalState:,HHWWggCatLabel:,shortExt:,dataFile:,batch:,doSystematics:,verbose -- "$@")
 then
 # something went wrong, getopt will put out an error message for us
 exit 1
@@ -97,6 +98,7 @@ do
 case $1 in
 -h|--help) usage; exit 0;;
 -i|--inputFile) FILE=$2; shift ;;
+-w|--website) website=$2; shift ;;
 -p|--procs) PROCS=$2; shift ;;
 --scales) SCALES=$2; shift ;;
 --scalesCorr) SCALESCORR=$2; shift ;;
@@ -146,6 +148,7 @@ if (($VERBOSE==1)) ; then echo "[INFO] SMEARS $SMEARS" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SCALES $SCALES" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SCALESORR $SCALESCORR" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SCALESGLOBAL $SCALESGLOBAL" ;fi
+echo "[INFO] website $website"
 
 if [[ $BATCH == "IC" ]]; then
 DEFAULTQUEUE="hep.q"
@@ -330,12 +333,17 @@ echo "shorterEXT: $shorterEXT"
 
 if [ $ANALYSIS == "HHWWgg" ]; then
   # echo "cp ../../Signal/$OUTDIR/CMS-HGG_mva_13TeV_sigfit.root ./Models/${EXT}/CMS-HGG_mva_13TeV_sigfit.root"
+  # website,HHWWggmass
+  echo "website: "$website
   cp ../../Signal/$OUTDIR/CMS-HGG_mva_13TeV_sigfit.root ./Models/${EXT}/CMS-HGG_mva_13TeV_sigfit.root
+  cp ../../Signal/$OUTDIR/CMS-HGG_mva_13TeV_sigfit.root $website/workspaces_And_Cards/CMS-HGG_mva_13TeV_sigfit_$HHWWggmass.root  # send to webpage
 else
   cp ../../Signal/$OUTDIR/CMS-HGG_sigfit_${EXT}.root ./Models/${EXT}/CMS-HGG_mva_13TeV_sigfit.root
 fi
 cp ../../Background/CMS-HGG_multipdf_${EXT}${FAKE}.root ./Models/${EXT}/CMS-HGG_mva_13TeV_multipdf${FAKE}.root
+cp ../../Background/CMS-HGG_multipdf_${EXT}${FAKE}.root $website/workspaces_And_Cards/CMS-HGG_mva_13TeV_multipdf${FAKE}_$HHWWggmass.root
 cp ../../Datacard/${DatacardLocation} CMS-HGG_mva_13TeV_datacard_${EXT}.txt
+cp ../../Datacard/${DatacardLocation} $website/workspaces_And_Cards/CMS-HGG_mva_13TeV_datacard_${EXT}_$HHWWggmass.txt
 
 if [ $ANALYSIS == "HHWWgg" ]; then
   combine CMS-HGG_mva_13TeV_datacard_${EXT}.txt -m 125 -M AsymptoticLimits --run=blind

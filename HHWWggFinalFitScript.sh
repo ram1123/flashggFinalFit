@@ -58,16 +58,20 @@ if [ $step == "combine" ]; then
     # python RunCombineScripts.py combine --inputConfig HHWWgg_SM${year}_Config.py
     # python RunCombineScripts.py combine --inputConfig HHWWgg_SMRun2_Config.py
     # python RunCombineScripts.py combine --inputConfig HHWWgg_v2-7_Config.py
+    # bash RenameCombineFiles.sh
 fi
 
 #-- Plots
 if [ $step == "plot" ]; then
-    cd Plots/FinalResults/
     tagLabel="2TotCatsbothcombined"
     # SecondTagLabel="2TotCatsbothcombined"
     campaignOne="HHWWgg_v2-6"
     FinalState="qqqq"
-    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September11_PhoPt/"
+    YEAR="2017"
+    CHANNEL="ww"
+    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/"
+    bash RenameCombineFiles.sh $website $CHANNEL $YEAR
+    cd Plots/FinalResults/
     # campaignOne="HHWWgg_v2-3"
     # campaignTwo="HHWWgg_v2-6"
     # SecondTagLabel="2TotCatsCOMBINEDWithoutSyst"
@@ -80,11 +84,18 @@ if [ $step == "plot" ]; then
     # python plot_limits.py -a  --HHWWggCatLabel $tagLabel --website ${website}  --systematics  --campaignOne $campaignOne  --yboost 1 --ymin 0.1 --ymax 1 --unit fb --FinalState ${FinalState} --resultType WWgg  --ymin 0.1 --ymax 1e2 --campaign HHWWgg_dummy # ratio of all points
 
     ## qqqq Radion: Grid
-    python plot_limits.py -a -g --GridLabels $tagLabel  --resultType HH --unit fb --ymin 0.1 --ymax 1 --yboost 1 --FinalState ${FinalState}  --website ${website}
+    python plot_limits.py --channel $CHANNEL -a -g --GridLabels $tagLabel  --resultType HH --unit fb --ymin 0.1 --ymax 1 --yboost 1 --FinalState ${FinalState}  --website ${website} --year $YEAR
 
     # qqqq EFT
     ## python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType WWgg --unit pb --ymin 0.001 --ymax 1e2 --yboost -0.32  --FinalState ${FinalState} --website ${website} # EFT
-    python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 0.001 --ymax 1e4 --yboost -0.32  --FinalState ${FinalState} --website ${website} # EFT
+    if [[ $CHANNEL == "zz" ]]; then
+        echo "Inside ZZ channel"
+        python plot_limits.py --channel $CHANNEL --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 0.1 --ymax 1e5 --yboost -0.32  --FinalState ${FinalState} --year $YEAR --website ${website} # EFT
+    fi
+    if [[ $CHANNEL == "ww" ]]; then
+        echo "Inside WW channel"
+        python plot_limits.py --channel $CHANNEL --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 0.001 --ymax 1e4 --yboost -0.32  --FinalState ${FinalState} --year $YEAR --website ${website} # EFT
+    fi
     ## python plot_limits.py --EFT --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 10.0 --ymax 1e4 --yboost -0.32  --FinalState ${FinalState} --website ${website} # EFT
 
     ##- Grid
@@ -124,12 +135,12 @@ if [ $step == "plot" ]; then
 
     # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --campaign $campaignOne --resultType HH --unit fb --ymin 10 --ymax 1e6 --yboost -0.32 # standard model
     # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --year 2016 --campaign $campaignOne --resultType HH --unit pb --ymin 1.001 --ymax 100 --yboost 0.09 # standard model
-    # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --year 2017 --campaign $campaignOne --resultType HH --unit pb --ymin 1.001 --ymax 100 --yboost 0.09 # standard model
+    # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --year 2016 --campaign $campaignOne --resultType HH --unit pb --ymin 1.001 --ymax 100 --yboost 0.09 # standard model
 
     # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --year Run2 --campaign $campaignOne --resultType HH --unit pb --ymin 1.001 --ymax 100 --yboost 0.09 # standard model
     # python plot_limits.py -SM --HHWWggCatLabel $tagLabel --systematics --year Run2 --campaign $campaignOne --resultType HH --unit pb --ymin 1.001 --ymax 100 --yboost 0.09 # standard model
 
-    # python plot_limits.py -CMSC --HHWWggCatLabel  $tagLabel --systematics --campaign $campaignOne --resultType WWgg --unit fb --ymin 1.001 --ymax 700 --yboost 0.09 --year 2017 # atlas compare
+    # python plot_limits.py -CMSC --HHWWggCatLabel  $tagLabel --systematics --campaign $campaignOne --resultType WWgg --unit fb --ymin 1.001 --ymax 700 --yboost 0.09 --year 2016 # atlas compare
     # python plot_limits.py -AC --HHWWggCatLabel  $tagLabel --systematics --campaign $campaignOne --resultType HH --unit pb --ymin 1.001 --ymax 700 --yboost 0.09 --lumiRescale 2017_2016 # atlas compare
     # python plot_limits.py -CMSC --HHWWggCatLabel  $tagLabel --systematics --campaign $campaignOne --resultType HH --unit fb --ymin 10 --ymax 1e5 --yboost -0.2
     # python plot_limits.py -CMSC --HHWWggCatLabel  $tagLabel --systematics --campaign $campaignOne --resultType HH --unit fb --ymin 10 --ymax 1e5 --yboost -0.2 --lumiRescale 2017_2016

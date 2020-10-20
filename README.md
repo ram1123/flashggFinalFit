@@ -60,7 +60,8 @@ scram b -j 9
 
 # Install Flashgg Final Fit packages
 cd ..
-git clone -b HHWWgg_Dev_runII_102x git@github.com:atishelmanch/flashggFinalFit.git # to clone via SSH 
+# git clone -b HHWWgg_Dev_runII_102x git@github.com:atishelmanch/flashggFinalFit.git # to clone via SSH 
+git clone -b CurrentBranch git@github.com:ram1123/flashggFinalFit.git
 cd flashggFinalFit/
 ```
 

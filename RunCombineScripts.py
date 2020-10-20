@@ -10,6 +10,7 @@ def get_options():
 
   # Take inputs from a config file: if this is used then ignore all other options
   parser.add_option('--inputConfig', dest='inputConfig', default='', help="Name of input config file (if specified will ignore other options)")
+  parser.add_option('--website', dest='website', default='/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/11July', help="Directory storing flashgg workspaces" )
 
   # Setup
   parser.add_option('--analysis', dest='analysis', default='datacard', help="analysis option")
@@ -57,6 +58,7 @@ if opt.inputConfig != '':
     _cfg = combineScriptCfg
 
     #Extract options
+    website      = _cfg['website']
     analysis     = _cfg['analysis']
     analysis_type = _cfg['analysis_type']
     FinalState   = _cfg['FinalState']
@@ -87,6 +89,7 @@ if opt.inputConfig != '':
 
 #Else extract from option parser
 else:
+  website      = opt.website
   analysis     = opt.analysis
   analysis_type = opt.analysis_type
   FinalState   = opt.FinalState
@@ -183,6 +186,7 @@ if not os.path.exists( signalFitWSFile ):
 
 # Print info to user
 print " --> Input flashgg ws dir: %s"%inputWSDir
+print " --> Website dir: %s"%website
 print " --> Processes: %s"%procs
 print " --> Categories: %s"%cats
 print " --> Extension: %s"%ext
@@ -244,7 +248,7 @@ if mode not in ['effAcc','yields']:
         massExt = f.split('/')[-1].split('.')[0]
         thisExt = ext + '_' + massExt
         # print'shortExt:',shortExt
-        cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --analysis %s --shortExt %s --HHWWggCatLabel %s --analysis_type %s --FinalState %s'%(f,procs,cats,ext,lumi[year],year,dataFile,analysis,shortExt,HHWWggCatLabel,analysis_type,FinalState)
+        cmdLine = './runCombineScripts.sh -w %s -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --analysis %s --shortExt %s --HHWWggCatLabel %s --analysis_type %s --FinalState %s'%(website,f,procs,cats,ext,lumi[year],year,dataFile,analysis,shortExt,HHWWggCatLabel,analysis_type,FinalState)
         cmdLine += ' --combineOnly '
         print'cmdLine: ',cmdLine
         os.system( cmdLine )
