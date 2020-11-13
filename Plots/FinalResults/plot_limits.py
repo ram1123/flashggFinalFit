@@ -1115,23 +1115,25 @@ def main():
             plotLabels = ["SM Non-Res"]
             # labels.append("SM_" + args.HHWWggCatLabel)
         elif args.EFT:
-            labels.append("node01_" + args.HHWWggCatLabel)
-            labels.append("node02_" + args.HHWWggCatLabel)
-            labels.append("node03_" + args.HHWWggCatLabel)
-            labels.append("node04_" + args.HHWWggCatLabel)
-            labels.append("node05_" + args.HHWWggCatLabel)
-            labels.append("node06_" + args.HHWWggCatLabel)
-            labels.append("node07_" + args.HHWWggCatLabel)
-            labels.append("node08_" + args.HHWWggCatLabel)
-            labels.append("node09_" + args.HHWWggCatLabel)
-            labels.append("node10_" + args.HHWWggCatLabel)
-            labels.append("node11_" + args.HHWWggCatLabel)
-            labels.append("node12_" + args.HHWWggCatLabel)
-            labels.append("nodeSM_" + args.HHWWggCatLabel)
-            plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
+            # labels.append("node01_" + args.HHWWggCatLabel)
+            # labels.append("node02_" + args.HHWWggCatLabel)
+            # labels.append("node03_" + args.HHWWggCatLabel)
+            # labels.append("node04_" + args.HHWWggCatLabel)
+            # labels.append("node05_" + args.HHWWggCatLabel)
+            # labels.append("node06_" + args.HHWWggCatLabel)
+            # labels.append("node07_" + args.HHWWggCatLabel)
+            # labels.append("node08_" + args.HHWWggCatLabel)
+            # labels.append("node09_" + args.HHWWggCatLabel)
+            # labels.append("node10_" + args.HHWWggCatLabel)
+            # labels.append("node11_" + args.HHWWggCatLabel)
+            # labels.append("node12_" + args.HHWWggCatLabel)
+            # labels.append("nodeSM_" + args.HHWWggCatLabel)
+            labels.append("nodecHHH1_" + args.HHWWggCatLabel)
+            # plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
             # plotLabels = ["Node 1","Node 2","Node 3","Node 4","Node 5","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
             # plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 7","Node 8","Node 9","Node 10","Node 11","Node 12","SM"]
             # plotLabels = ["Node SM"]
+            plotLabels = ["Node cHHH1"]
             # plotLabels = ["Node 2","Node 3","Node 4","Node 5","Node 6","Node 8","Node 9","Node 10","Node 11","SM"]
         elif args.NMSSM:
             labels.append("MX300_MY170_" + args.HHWWggCatLabel)

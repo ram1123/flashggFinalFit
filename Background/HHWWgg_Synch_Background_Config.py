@@ -1,13 +1,13 @@
 # Config file: options for background fitting
 
-_year = '2017'
+_year = '2016'
 
 backgroundScriptCfg = {
 
   # Setup
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_PhoPt200GeV_BTag_2017Data_Workspace_Hadded_Combined',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November05_Rename/2016',
   # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_2016Data_PhoPt_flashgg5_Workspace_Hadded_Combined',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_v3/Test',
 
   # When we don't have signal model then put InSignalFitWSFile = "". Else it will
   # try to find the signal root file present in the signal directory.
@@ -23,7 +23,7 @@ backgroundScriptCfg = {
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-6_2017_Synch',
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
-  'year':'2017',
+  'year':'2016',
   'unblind':0,
 
   # Job submission options

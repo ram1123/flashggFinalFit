@@ -5,7 +5,7 @@ import sys
 mode = sys.argv[1] # datacard or combine
 print'mode: ',mode
 
-_year = '2017'
+_year = '2016'
 
 combineScriptCfg = {
 
@@ -18,8 +18,8 @@ combineScriptCfg = {
   'mode':mode,
   # 'mode':'combine',
   'doSystematics':1, # 0: do not include systematics in datacard. 1: include systematics in datacard
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_PhoPt200GeV_BTag_WW_Workspace_Hadded',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November05_Rename/HHWWgg_v2_6_PhoPt160GeV_2016_WW_MC_Workspace_Hadded',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_v3/Test',
   #Procs will be inferred automatically from filenames
   #'HHWWggCatLabel':'2TotCatsCOMBINEDWithSyst', # for name of combine output files
   'HHWWggCatLabel':'2TotCatsbothcombined',
@@ -29,7 +29,7 @@ combineScriptCfg = {
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
-  'year':'2017',
+  'year':'2016',
   'signalProcs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   # 'signalProcs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
 

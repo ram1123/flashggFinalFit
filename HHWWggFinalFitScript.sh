@@ -67,9 +67,9 @@ if [ $step == "plot" ]; then
     # SecondTagLabel="2TotCatsbothcombined"
     campaignOne="HHWWgg_v2-6"
     FinalState="qqqq"
-    YEAR="2017"
+    YEAR="2016"
     CHANNEL="ww"
-    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/"
+    website="/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_v3/Test"
     bash RenameCombineFiles.sh $website $CHANNEL $YEAR
     cd Plots/FinalResults/
     # campaignOne="HHWWgg_v2-3"

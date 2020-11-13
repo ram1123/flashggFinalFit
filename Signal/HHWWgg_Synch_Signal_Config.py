@@ -1,14 +1,14 @@
 # Config file: options for signal fitting
 
-_year = '2017'
+_year = '2016'
 
 signalScriptCfg = {
 
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
   # Important: Don't put "/" at the end of inputWSDir.
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_PhoPt200GeV_BTag_WW_Workspace_Hadded',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/NEW_September29_WW_PhoPt200GeV_Btag_2017/',
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November05_Rename/HHWWgg_v2_6_PhoPt160GeV_2016_WW_MC_Workspace_Hadded',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_v3/Test',
   # 'usrprocs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   'usrprocs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   #Procs will be inferred automatically from filenames
