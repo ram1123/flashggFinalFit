@@ -23,7 +23,7 @@ int Normalization_13TeV::Init(int sqrtS, string FinalState){
 
         // FinalState used for HHWWgg
         if(FinalState=="qqlnu") valBR = 0.44;
-        else if(FinalState=="qqqq") valBR = 0.454;
+        else if(FinalState=="qqqq") valBR = 1.0;
         else if(FinalState=="lnulnu") valBR = 0.107;
         else valBR = (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getBR(%f)",mH)); // H->gg
 

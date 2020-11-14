@@ -93,7 +93,7 @@ FinalModelConstruction::FinalModelConstruction( std::vector<int> massList, RooRe
 	}
   // this is used to make a graph of the Hgg Branching Ratio as a function of MH
   TGraph *brGraph = norm->GetBrGraph();
-	brSpline = graphToSpline(Form("fbr_%dTeV",sqrts_),brGraph);
+	brSpline = graphToSpline(Form("fbr_%dTeV_%s",sqrts_,year_.c_str()),brGraph);
 
   // make the XS graphs for each process
   for (unsigned int i=0; i<procs_.size(); i++){
@@ -1425,7 +1425,7 @@ void FinalModelConstruction::getNormalization(){
   tc_lc->Print(Form("%s/EfficiencyAcceptance/%s_%s_ea_fit_to_pol2_%s.pdf",website_.c_str(),proc_.c_str(),catname.c_str(),HHWWggLabel_.c_str()));
   //turn that graph into a spline!
   TGraph *eaGraph = new TGraph(pol);
-  RooSpline1D *eaSpline = graphToSpline(Form("fea_%s_%s_%dTeV",proc_.c_str(),catname.c_str(),sqrts_),eaGraph);
+  RooSpline1D *eaSpline = graphToSpline(Form("fea_%s_%s_%dTeV_%s",proc_.c_str(),catname.c_str(),sqrts_,year_.c_str()),eaGraph);
   RooSpline1D *xs = xsSplines[proc_];
   TGraph *  xsGraph = new TGraph();
   TGraph *  brGraph = new TGraph();
