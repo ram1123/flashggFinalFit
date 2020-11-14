@@ -333,7 +333,7 @@ if not skipData:
             _model = "wsig_13TeV:hggpdfsmrel_%s_13TeV_%s_%s"%(year,proc,cat)
 
         # Extract rate from lumi
-        _rate = float(lumi[year])*1000
+        _rate = float(lumi[year[0:4]])*1000
 
         # Prune NOTAG and if FWDH in process name
         if( cat == "NOTAG" )|( "FWDH" in proc ): _prune = 1

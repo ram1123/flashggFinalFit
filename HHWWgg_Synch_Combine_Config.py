@@ -29,7 +29,7 @@ combineScriptCfg = {
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
-  'year':'2016',
+  'year':'%s_WW_FH'%_year,
   'signalProcs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   # 'signalProcs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
 

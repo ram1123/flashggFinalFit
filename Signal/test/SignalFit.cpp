@@ -86,7 +86,7 @@ string lowR9cats_;
 int verbose_=0;
 int ncpu_=1;
 int sqrts_=13;
-int year_=2016;
+string year_="2016";
 //int year_=2017;
 int pdfWeights_=26;
 vector<int> cats_;
@@ -162,7 +162,7 @@ void OptionParser(int argc, char *argv[]){
 		("analysis",	po::value<string>(&analysis_)->default_value("hig-16-040"),  	"Configure replacement dataset mapping for given analysis (Mapping defined in python/replacementMap.py")
 		("analysis_type",	po::value<string>(&analysis_type_)->default_value(""),  	"Used for HHWWgg. Ex: Res, EFT, NMSSM")
 		("FinalState",	po::value<string>(&FinalState_)->default_value(""),  	"Used for HHWWgg. Ex: qqlnu, lnulnu, qqqq")
-		("year",	po::value<int>(&year_)->default_value(2016),  	"Dataset year")
+		("year",	po::value<string>(&year_)->default_value("2016"),  	"Dataset year")
       ("split", po::value<string>(&splitStr_)->default_value(""), "do just one tag,proc ")
 		("changeIntLumi",	po::value<float>(&newIntLumi_)->default_value(0),														"If you want to specify an intLumi other than the one in the file. The event weights and rooRealVar IntLumi are both changed accordingly. (Specify new intlumi in fb^{-1})")
 		("flashggCats,f", po::value<string>(&flashggCatsStr_)->default_value("UntaggedTag_0,UntaggedTag_1,UntaggedTag_2,UntaggedTag_3,UntaggedTag_4,VBFTag_0,VBFTag_1,VBFTag_2,TTHHadronicTag,TTHLeptonicTag,VHHadronicTag,VHTightTag,VHLooseTag,VHEtTag"),       "Flashgg categories if used")
@@ -1244,7 +1244,7 @@ int main(int argc, char *argv[]){
         if (verbose_>1) std::cout << "[INFO] About to do Final Model Construction with useDCBplusGaus_=" << useDCBplusGaus_ << std::endl;
         //finalModel.buildRvWvPdf("hggpdfsmrel_13TeV",nGaussiansRV,nGaussiansWV,recursive_,useDCBplusGaus_);
         //FIXME
-        finalModel.buildRvWvPdf(Form("hggpdfsmrel_%d_13TeV",year_),nGaussiansRV,nGaussiansWV,recursive_,useDCBplusGaus_);
+        finalModel.buildRvWvPdf(Form("hggpdfsmrel_%s_13TeV",year_.c_str()),nGaussiansRV,nGaussiansWV,recursive_,useDCBplusGaus_);
       }
       finalModel.getNormalization();
       //if (!skipPlots_) finalModel.plotPdf(plotDir_);

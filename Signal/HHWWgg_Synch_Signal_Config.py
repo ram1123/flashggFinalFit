@@ -21,7 +21,7 @@ signalScriptCfg = {
   'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM
   # 'analysis_type':'NMSSM', # For HHWWgg: Res, EFT or NMSSM
   'FinalState':'qqqq', # For HHWWgg. Should choose qqlnu, lnulnu, or qqqq for final state. Will look for this in expected name formats. When we combine channels, and they're defined by tags, we'll add "combined" here and naming format in file will be something like "combined" instead of qqlnu, etc.
-  'year':'%s'%_year,
+  'year':'%s_WW_FH'%_year,
   'beamspot':'3.4',
   'numberOfBins':'320',
   'massPoints':'120,125,130',

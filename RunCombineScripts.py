@@ -190,7 +190,7 @@ print " --> Website dir: %s"%website
 print " --> Processes: %s"%procs
 print " --> Categories: %s"%cats
 print " --> Extension: %s"%ext
-print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year])
+print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year[0:4]])
 print " --> Signal processes (for eff x acc): %s"%signalProcs
 if doUEPS: print " --> Calculating UE/PS systematics"
 print ""
@@ -214,7 +214,7 @@ elif mode == "yields": print " --> Making yields table..."
 
 # Construct input command
 if mode not in ['effAcc','yields']:
-  cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --dataFile %s --isData '%(ws_fullFileNames_125,procs,cats,ext,lumi[year],year,batch,dataFile)
+  cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --dataFile %s --isData '%(ws_fullFileNames_125,procs,cats,ext,lumi[year[0:4]],year,batch,dataFile)
   if mode == 'datacard':
     # for HHWWgg analysis, need to create datacard for each mass point
     if analysis == "HHWWgg":
@@ -228,7 +228,7 @@ if mode not in ['effAcc','yields']:
 
         massExt = f.split('/')[-1].split('.')[0]
         thisExt = ext + '_' + massExt
-        cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --doSystematics %s --shortExt %s --HHWWggCatLabel %s '%(f,procs,cats,thisExt,lumi[year],year,dataFile,doSystematics,shortExt,HHWWggCatLabel)
+        cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --doSystematics %s --shortExt %s --HHWWggCatLabel %s '%(f,procs,cats,thisExt,lumi[year[0:4]],year,dataFile,doSystematics,shortExt,HHWWggCatLabel)
 
         cmdLine += ' --datacardOnly --smears %s --scales %s --scalesCorr %s --scalesGlobal %s --analysis %s --verbose 1 --analysis_type %s --FinalState %s'%(smears,scales,scalesCorr,scalesGlobal,analysis,analysis_type,FinalState)
         print'cmdLine: ',cmdLine
@@ -248,7 +248,7 @@ if mode not in ['effAcc','yields']:
         massExt = f.split('/')[-1].split('.')[0]
         thisExt = ext + '_' + massExt
         # print'shortExt:',shortExt
-        cmdLine = './runCombineScripts.sh -w %s -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --analysis %s --shortExt %s --HHWWggCatLabel %s --analysis_type %s --FinalState %s'%(website,f,procs,cats,ext,lumi[year],year,dataFile,analysis,shortExt,HHWWggCatLabel,analysis_type,FinalState)
+        cmdLine = './runCombineScripts.sh -w %s -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --analysis %s --shortExt %s --HHWWggCatLabel %s --analysis_type %s --FinalState %s'%(website,f,procs,cats,ext,lumi[year[0:4]],year,dataFile,analysis,shortExt,HHWWggCatLabel,analysis_type,FinalState)
         cmdLine += ' --combineOnly '
         print'cmdLine: ',cmdLine
         os.system( cmdLine )
@@ -258,7 +258,7 @@ if mode not in ['effAcc','yields']:
 
 elif mode == 'effAcc': cmdLine = './makeStage1EffAcc.py -i %s -s Signal/outdir_%s/sigfit/effAccCheck_all.root -p %s -c %s'%(ws_fullFileNames_effAcc,ext,procs,cats)
 
-elif mode == 'yields': cmdLine = './stage1yields.py -w %s -p %s -s Signal/signumbers_%s.txt -u Background/CMS-HGG_multipdf_%s.root --intLumi %s -c %s'%(ws_fullFileNames_125,procs,ext,ext,lumi[year],cats)
+elif mode == 'yields': cmdLine = './stage1yields.py -w %s -p %s -s Signal/signumbers_%s.txt -u Background/CMS-HGG_multipdf_%s.root --intLumi %s -c %s'%(ws_fullFileNames_125,procs,ext,ext,lumi[year[0:4]],cats)
 
 if analysis != "HHWWgg":
   # Either print command to screen or run

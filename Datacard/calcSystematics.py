@@ -17,7 +17,9 @@ def addConstantSyst(sd,_syst,options):
   else:
     for year in options.years.split(","):
       sd["%s_%s"%(_syst['name'],year)] = '-'
-      sd.loc[(sd['type']=='sig')&(sd['year']==year)&(~sd['cat'].str.contains("NOTAG")), "%s_%s"%(_syst['name'],year)] = _syst['value'][year]
+      # As I replaced year from 2016 to 2016_WW_FH to I need to change
+      # year -> year[0:4] so that it can grab year only.
+      sd.loc[(sd['type']=='sig')&(sd['year']==year)&(~sd['cat'].str.contains("NOTAG")), "%s_%s"%(_syst['name'],year)] = _syst['value'][year[0:4]]
   return sd
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

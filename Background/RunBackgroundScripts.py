@@ -146,7 +146,7 @@ print " --> Processes: %s"%procs
 print " --> Categories: %s"%cats
 print " --> Extension: %s"%ext
 print " --> massStep: %s"%massStep
-print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year])
+print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year[0:4]])
 print " --> mode: %s"%mode
 print ""
 print " --> Job information:"
@@ -160,7 +160,7 @@ print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 # Construct input command
 print " --> Constructing input command..."
 
-cmdLine = "./runBackgroundScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --MASSSTEP %d --isData "%(dataFile,website,procs,cats,ext,lumi[year],year,batch,queue,massStep)
+cmdLine = "./runBackgroundScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --MASSSTEP %d --isData "%(dataFile,website,procs,cats,ext,lumi[year[0:4]],year,batch,queue,massStep)
 if signalFitWSFile != "": cmdLine += " --sigFile %s "%signalFitWSFile
 if mode == "fTestOnly": cmdLine += '--fTestOnly '
 elif mode == "bkgPlotsOnly": cmdLine += '--bkgPlotsOnly '

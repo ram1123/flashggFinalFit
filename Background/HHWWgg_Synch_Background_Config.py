@@ -23,7 +23,7 @@ backgroundScriptCfg = {
   # 'ext':'HHWWgg_v2-3_2017_2CatsSyst',
   # 'ext':'HHWWgg_v2-6_2017_Synch',
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
-  'year':'2016',
+  'year':'2016_WW_FH',
   'unblind':0,
 
   # Job submission options
@@ -33,6 +33,6 @@ backgroundScriptCfg = {
   'analysis':'HHWWgg',
 
   # Mode allows script to carry out single function
-  'mode':'std', # Options: [std,fTestOnly,bkgPlotsOnly]
+  'mode':'fTestOnly', # Options: [std,fTestOnly,bkgPlotsOnly]
 
 }

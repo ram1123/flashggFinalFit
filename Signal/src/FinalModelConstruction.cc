@@ -42,7 +42,7 @@ template<class ResultT, class SourceT, class PredicateT> typename ResultT::itera
 }
 
 // the FinalModelConstruction class takes the fits from the fitting/interpolation classes and adds the systematic nuisances and figures out the normalisation.
-FinalModelConstruction::FinalModelConstruction( std::vector<int> massList, RooRealVar *massVar, RooRealVar *MHvar, RooRealVar *intL,int mhLow, int mhHigh, string proc, string cat, bool doSecMods, string systematicsFileName, vector<int> skipMasses, int verbosity,std::vector<std::string> procList, std::vector<std::string> flashggCats , string outDir, string website, string HHWWggLabel, bool isProblemCategory ,bool isCB, int sqrts, int year, bool quadraticSigmaSum, string FinalState)	:
+FinalModelConstruction::FinalModelConstruction( std::vector<int> massList, RooRealVar *massVar, RooRealVar *MHvar, RooRealVar *intL,int mhLow, int mhHigh, string proc, string cat, bool doSecMods, string systematicsFileName, vector<int> skipMasses, int verbosity,std::vector<std::string> procList, std::vector<std::string> flashggCats , string outDir, string website, string HHWWggLabel, bool isProblemCategory ,bool isCB, int sqrts, string year, bool quadraticSigmaSum, string FinalState)	:
   mass(massVar),
   MH(MHvar),
   intLumi(intL),
@@ -807,8 +807,8 @@ void FinalModelConstruction::buildRvWvPdf(string name, int nGrv, int nGwv, bool 
   //rvPdfs = buildPdf(name,nGrv,recursive,rvSplines,Form("_rv_%dTeV",sqrts_));
   //wvPdfs = buildPdf(name,nGwv,recursive,wvSplines,Form("_wv_%dTeV",sqrts_));
   //remove name duplication for 2016+2017 combination
-  rvPdfs = buildPdf(name,nGrv,recursive,rvSplines,Form("_rv_%dTeV_%d",sqrts_,year_));
-  wvPdfs = buildPdf(name,nGwv,recursive,wvSplines,Form("_wv_%dTeV_%d",sqrts_,year_));
+  rvPdfs = buildPdf(name,nGrv,recursive,rvSplines,Form("_rv_%dTeV_%s",sqrts_,year_.c_str()));
+  wvPdfs = buildPdf(name,nGwv,recursive,wvSplines,Form("_wv_%dTeV_%s",sqrts_,year_.c_str()));
   }
 
   // sum the RV and WV pdfs
@@ -1307,7 +1307,7 @@ void FinalModelConstruction::plotPdf(string outDir){
   }
   string sim="Simulation Preliminary";
   pdfPlot->Draw();
-  lumi_sqrtS = Form("13 TeV (%d)",year_);
+  lumi_sqrtS = Form("13 TeV (%s)",year_.c_str());
   CMS_lumi( canv, 0,0, sim );
   TLatex *latex = new TLatex();
   latex->SetTextSize(0.045);

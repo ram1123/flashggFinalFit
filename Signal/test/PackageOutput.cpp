@@ -63,7 +63,7 @@ vector<string> procs_;
 string procStr_;
 string basePathStr_;
 int sqrts_=13;
-int year_=2016;
+string year_="2016";
 string FinalState_;
 //int year_=2017;
 
@@ -92,7 +92,7 @@ void OptionParser(int argc, char *argv[]){
 		("skipMasses", po::value<string>(&massesToSkip_)->default_value(""),					"Skip these mass points - used eg for the 7TeV where there's no mc at 145")
     ("mhLow,L", po::value<int>(&mhLow_)->default_value(115),                                  "Low mass point")
     ("mhHigh,H", po::value<int>(&mhHigh_)->default_value(135),                                "High mass point")
-    ("year", po::value<int>(&year_)->default_value(2016),                                "Dataset year")
+    ("year", po::value<string>(&year_)->default_value("2016"),                                "Dataset year")
 		("flashggCats,f", po::value<string>(&flashggCatsStr_)->default_value("UntaggedTag_0,UntaggedTag_1,UntaggedTag_2,UntaggedTag_3,UntaggedTag_4,VBFTag_0,VBFTag_1,VBFTag_2,TTHHadronicTag,TTHLeptonicTag,VHHadronicTag,VHTightTag,VHLooseTag,VHEtTag"),       "Flashgg categories if used")
     ("ncats,n", po::value<int>(&ncats_)->default_value(9),                                    "Number of categories")
     ("html,w", po::value<string>(&webdir_),                                                   "Make html in this directory")

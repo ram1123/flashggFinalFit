@@ -252,7 +252,7 @@ else:
   print " --> Analysis: %s"%analysis
   print " --> Analysis type: %s"%analysis_type
   print " --> HHWWgg final state: %s"%(FinalState)
-  print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year])
+  print " --> Year: %s ::: Corresponds to intLumi = %s fb^-1"%(year,lumi[year[0:4][0:4]])
   if useDCB: print " --> Using DCB in signal model"
   # print " --> HHWWgg: %s"%HHWWgg
   print ""
@@ -300,7 +300,7 @@ else:
       if batch == '': cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s --systematics %s --analysis_type %s --FinalState %s'%(f,website,procs,cats,thisExt,intLumi,year,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity,systematics,analysis_type,FinalState)
 
       # run with batch
-      else: cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s'%(f,website,procs,cats,thisExt,lumi[year],year,batch,queue,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
+      else: cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s'%(f,website,procs,cats,thisExt,lumi[year[0:4]],year,batch,queue,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
 
       print "cmdLine: ",cmdLine
       finishCommand(cmdLine,useDCB,mode,printOnly)
@@ -309,10 +309,10 @@ else:
   else:
     cmdLine = ''
     # if batch not specified, run locally
-    if batch == '': cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s '%(ws_fullFileNames,website,procs,cats,ext,lumi[year],year,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
+    if batch == '': cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s '%(ws_fullFileNames,website,procs,cats,ext,lumi[year[0:4]],year,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
 
     # run with batch
-    else: cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s'%(ws_fullFileNames,website,procs,cats,ext,lumi[year],year,batch,queue,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
+    else: cmdLine += './runSignalScripts.sh -i %s -w %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --queue %s --massList %s --bs %s --analysis %s --scales %s --scalesCorr %s --scalesGlobal %s --smears %s --useSSF 1 --verbosity %s'%(ws_fullFileNames,website,procs,cats,ext,lumi[year[0:4]],year,batch,queue,massPoints,beamspot,analysis,scales,scalesCorr,scalesGlobal,smears,verbosity)
 
     finishCommand(cmdLine,useDCB,mode,printOnly)
 

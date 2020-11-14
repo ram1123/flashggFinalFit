@@ -17,7 +17,7 @@
 using namespace std;
 using namespace RooFit;
 
-Packager::Packager(WSTFileWrapper *ws, RooWorkspace *wsSave  , vector<string> procs, int nCats, int mhLow, int mhHigh, vector<int> skipMasses, int sqrts, int year, bool skipPlots, string outDir, 
+Packager::Packager(WSTFileWrapper *ws, RooWorkspace *wsSave  , vector<string> procs, int nCats, int mhLow, int mhHigh, vector<int> skipMasses, int sqrts, string year, bool skipPlots, string outDir, 
 		   RooWorkspace *wsMerge, const vector<int>& cats, const vector<string>& flashggCats, string FinalState):
   WS(ws),
   mergeWS(wsMerge),
@@ -135,10 +135,10 @@ void Packager::packageOutput(bool split, string process , string tag){
 
 			// sum eA
       //WS->Print();
-			RooSpline1D *norm = (RooSpline1D*)/*in*/WS->function(Form("hggpdfsmrel_%d_%dTeV_%s_%s_norm",year_,sqrts_,proc->c_str(),catname.c_str()));
+			RooSpline1D *norm = (RooSpline1D*)/*in*/WS->function(Form("hggpdfsmrel_%s_%dTeV_%s_%s_norm",year_.c_str(),sqrts_,proc->c_str(),catname.c_str()));
 
 			if (!norm) {
-			if (!split_)	cerr << "[WARNING] -- ea: " << Form("hggpdfsmrel_%d_%dTeV_%s_%s_norm",year_,sqrts_,proc->c_str(),catname.c_str()) << " not found. It will be skipped (ignore this warning if just running one tag/proc)" << endl;
+			if (!split_)	cerr << "[WARNING] -- ea: " << Form("hggpdfsmrel_%s_%dTeV_%s_%s_norm",year_.c_str(),sqrts_,proc->c_str(),catname.c_str()) << " not found. It will be skipped (ignore this warning if just running one tag/proc)" << endl;
 			}
 			else {
         for (int m =120; m<131; m=m+5){
@@ -151,10 +151,10 @@ void Packager::packageOutput(bool split, string process , string tag){
 			}
 
 			// sum pdf
-			RooExtendPdf *tempPdf = (RooExtendPdf*)/*in*/WS->pdf(Form("extendhggpdfsmrel_%d_%dTeV_%s_%sThisLumi",year_,sqrts_,proc->c_str(),catname.c_str()));
+			RooExtendPdf *tempPdf = (RooExtendPdf*)/*in*/WS->pdf(Form("extendhggpdfsmrel_%s_%dTeV_%s_%sThisLumi",year_.c_str(),sqrts_,proc->c_str(),catname.c_str()));
 			if (!tempPdf) {
-			if (!split_)	cerr << "[WARNING] -- pdf: " << Form("extendhggpdfsmrel_%d_%dTeV_%s_%s",year_,sqrts_,proc->c_str(),catname.c_str()) << " not found. It will be skipped (ignore this warning if just running one tag/proc)" << endl;
-				expectedObjectsNotFound.push_back(Form("extendhggpdfsmrel_%d_%dTeV_%s_%s",year_,sqrts_,proc->c_str(),catname.c_str()));
+			if (!split_)	cerr << "[WARNING] -- pdf: " << Form("extendhggpdfsmrel_%s_%dTeV_%s_%s",year_.c_str(),sqrts_,proc->c_str(),catname.c_str()) << " not found. It will be skipped (ignore this warning if just running one tag/proc)" << endl;
+				expectedObjectsNotFound.push_back(Form("extendhggpdfsmrel_%s_%dTeV_%s_%s",year_.c_str(),sqrts_,proc->c_str(),catname.c_str()));
 				continue;
 			}
 			if( merge ) {
