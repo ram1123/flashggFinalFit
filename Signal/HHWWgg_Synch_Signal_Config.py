@@ -1,6 +1,7 @@
 # Config file: options for signal fitting
 
 _year = '2016'
+_Channel = "WW"
 
 signalScriptCfg = {
 
@@ -8,7 +9,7 @@ signalScriptCfg = {
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
   # Important: Don't put "/" at the end of inputWSDir.
   'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November05_Rename/HHWWgg_v2_6_PhoPt160GeV_2016_WW_MC_Workspace_Hadded',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_v3/Test',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_FixName/2016_%s'%_Channel,
   # 'usrprocs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   'usrprocs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   #Procs will be inferred automatically from filenames
@@ -21,7 +22,7 @@ signalScriptCfg = {
   'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM
   # 'analysis_type':'NMSSM', # For HHWWgg: Res, EFT or NMSSM
   'FinalState':'qqqq', # For HHWWgg. Should choose qqlnu, lnulnu, or qqqq for final state. Will look for this in expected name formats. When we combine channels, and they're defined by tags, we'll add "combined" here and naming format in file will be something like "combined" instead of qqlnu, etc.
-  'year':'%s_WW_FH'%_year,
+  'year':'%s_%s_FH'%(_year,_Channel),
   'beamspot':'3.4',
   'numberOfBins':'320',
   'massPoints':'120,125,130',
