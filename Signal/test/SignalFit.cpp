@@ -232,9 +232,11 @@ void OptionParser(int argc, char *argv[]){
 // used to get index of the reference dataset in the list of requried guassians.
 unsigned int getIndexOfReferenceDataset(string proc, string cat){
   int iLine =-1;
+  std::cout <<  "map_proc_.size() = " << map_proc_.size() << std::endl;
   for(unsigned int i =0 ; i < map_proc_.size() ; i++){
     string this_process = map_proc_[i];
     string this_cat = map_cat_[i];
+    std::cout << "this_process: " << this_process << ",\t this_cat: " << this_cat << std::endl;
     if (this_process.compare(proc) ==0 ){
       if ( this_cat.compare(cat)==0 ){
         iLine=i;
@@ -458,11 +460,14 @@ int main(int argc, char *argv[]){
   string replacementCatWV = replacementMap.getReplacementCatWV();
   string replacementProcWV = replacementMap.getReplacementProcWV();
 
+  std::cout << "[INFO][SignalFit.cpp#463] procStr_ = " << procStr_ << std::endl;
   if(analysis_ == "HHWWgg"){
-    if(analysis_type_ == "EFT") replacementProcWV = "GluGluToHHTo";
+    // if(analysis_type_ == "EFT" ) replacementProcWV = "GluGluToHHTo";
+    if(analysis_type_ == "EFT" ) replacementProcWV = procStr_;
     else replacementProcWV = "ggF";
   }
 
+  std::cout << "[INFO][SignalFit.cpp#463] replacementProcWV = " << replacementProcWV << std::endl;
   
 
   // isFlashgg should now be the only option.
@@ -752,7 +757,8 @@ int main(int argc, char *argv[]){
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
           string node_str = tmpV2[2];
-          HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          // HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          HHWWgg_Label = Form("WWgg_%s%s",FinalState_.c_str(),node_str.c_str());
         }
 				else if (analysis_type_ == "NMSSM"){
 					// file name format: X_signal_MX<xmass>_MY<ymass>_<interpMass>_HHWWgg_<FinalState>.root
@@ -949,7 +955,8 @@ int main(int argc, char *argv[]){
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
           string node_str = tmpV2[2];
-          HHWWggLabel = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          // HHWWggLabel = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          HHWWggLabel = Form("WWgg_%s%s",FinalState_.c_str(),node_str.c_str());
           std::cout << "[INFO] HHWWggLabel: " << HHWWggLabel << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){

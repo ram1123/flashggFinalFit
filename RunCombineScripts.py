@@ -119,6 +119,7 @@ if mode not in ['datacard','combine','combinePlots','effAcc','yields']:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Extract list of input ws filenames
 ws_fileNames = []
+print "DEBUG: inputWSDir: ",inputWSDir
 for root, dirs, files in os.walk( inputWSDir ):
   for fileName in files:
     if (analysis != "HHWWgg") and not fileName.startswith('output_'): continue # relax constraint for HHWWgg due to different naming convention
@@ -130,12 +131,14 @@ for root, dirs, files in os.walk( inputWSDir ):
 # Extract string (list) of MH=125 filenames and also 120+130 for effAcc
 ws_fullFileNames_125 = ''
 ws_fullFileNames_effAcc = ''
+print "==> analysis: ",analysis
 
 if analysis == "HHWWgg":
   # concatenate with input dir to get full list of complete file names
   ws_fullFileNames = ''
   for fileName in ws_fileNames: ws_fullFileNames+="%s/%s,"%(inputWSDir,fileName)
   ws_fullFileNames = ws_fullFileNames[:-1]
+  print "ws_fullFileNames: ",ws_fullFileNames
 
 else:
   for fileName in ws_fileNames:

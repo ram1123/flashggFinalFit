@@ -193,13 +193,16 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
 			// proc = GluGluToHHTo, 13TeV_HHWWggTag_Y already included
 			// HHWWgg_Label = WWgg_<FinalState>_nodeX
 			vector<string> tmpV;
+            std::cout << "DEBUG BKG NAME: " << filename << std::endl;
 			split(tmpV,filename,boost::is_any_of("/"));
 			unsigned int N = tmpV.size();
 			string endPath = tmpV[N-1];
 			vector<string> tmpV2;
 			split(tmpV2,endPath,boost::is_any_of("_"));
 			string node_str = tmpV2[0];
-			HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+            // HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+            node_str = "gg";
+			HHWWgg_Label = Form("WWgg_%s%s",FinalState_.c_str(),node_str.c_str());
 		}
 		else if (analysis_type_ == "NMSSM"){
 			// file name format: MX<massX>_MY<massY>_HHWWgg_<FinalState>.root

@@ -550,7 +550,9 @@ int main(int argc, char *argv[]){
 					vector<string> tmpV2;
 					split(tmpV2,endPath,boost::is_any_of("_"));
 					string node_str = tmpV2[0];
-					HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+					// HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+            		node_str = "gg";
+					HHWWgg_Label = Form("WWgg_%s%s",FinalState_.c_str(),node_str.c_str());					
 				}
 
 				else if (analysis_type_ == "NMSSM"){

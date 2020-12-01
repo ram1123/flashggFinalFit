@@ -271,11 +271,13 @@ if [ $ANALYSIS == "HHWWgg" ]; then
     HHWWggmass="$(cut -d'_' -f1 <<<$fileID)" # get text before first '_'. ex: SM, X250, X260, ...
     # HHWWggLabel1="${mass}_WWgg_qqlnugg"
     HHWWggLabel="${HHWWggmass}_HHWWgg_${FINALSTATE}"
+    echo "[INFO][runCombineScript.sh#274] HHWWggLabel = ${HHWWggLabel}"
   fi
-  OUTDIR+="_${HHWWggLabel}"
+  # OUTDIR+="_${HHWWggLabel}"
 fi
 
 echo "HHWWggmass: $HHWWggmass"
+echo "OUTDIR: $OUTDIR"
 
 if [ ! -d "Signal/$OUTDIR" ]; then
   echo "Signal/$OUTDIR doesn't exist, maybe your EXT is wrong? Exiting..."

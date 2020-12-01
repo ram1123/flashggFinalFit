@@ -277,8 +277,11 @@ if [ $SIGFITONLY == 1 ]; then
 
       # For EFT analysis, ID = node2, node9, ...
       ID="$(cut -d'_' -f1 <<<$fileID)"
-      HHWWggLabel="WWgg_${FINALSTATE}_${ID}"
-      proc="GluGluToHHTo"
+      ID="gg"
+      # HHWWggLabel="WWgg_${FINALSTATE}_${ID}"
+      HHWWggLabel="$ID_${FINALSTATE}${ID}"
+      proc="${PROCS}_WWgg"
+      echo "[INFO][runSignalScripts.sh#285] debug: proc: ${proc}, ${PROCS}_WWgg"
 
     elif [[ $ANALYSIS_TYPE == "NMSSM" ]];
     then
