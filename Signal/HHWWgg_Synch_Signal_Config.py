@@ -8,13 +8,13 @@ signalScriptCfg = {
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
   # Important: Don't put "/" at the end of inputWSDir.
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November23/HHWWgg_v2_6_PhoPt160GeV_CMSSW105X_2017_SingleHiggs_Bkg_workspace_old_Hadded_4',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_FixName/2017_SingleHiggs4_%s'%_Channel,
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November25/SingleHiggsHadded_2',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_FixName/2017_SingleHiggsNew_2_%s'%_Channel,
   # 'usrprocs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  # 'usrprocs':'ggh_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  # 'usrprocs':'tth_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  # 'usrprocs':'vbf_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  'usrprocs':'wzh_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'usrprocs':'gghX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'usrprocs':'vbfX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  'usrprocs':'wzhX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'usrprocs':'tthX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   #Procs will be inferred automatically from filenames
   'cats':'HHWWggTag_2',
   # 'ext':'HHWWgg_v2-3_%s_2CatsSyst'%_year,
@@ -24,7 +24,7 @@ signalScriptCfg = {
   # 'analysis_type':'Res', # For HHWWgg: Res, EFT or NMSSM
   'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM
   # 'analysis_type':'NMSSM', # For HHWWgg: Res, EFT or NMSSM
-  'FinalState':'lnulnu', # For HHWWgg. Should choose qqlnu, lnulnu, or qqqq for final state. Will look for this in expected name formats. When we combine channels, and they're defined by tags, we'll add "combined" here and naming format in file will be something like "combined" instead of qqlnu, etc.
+  'FinalState':'qqqq', # For HHWWgg. Should choose qqlnu, lnulnu, or qqqq for final state. Will look for this in expected name formats. When we combine channels, and they're defined by tags, we'll add "combined" here and naming format in file will be something like "combined" instead of qqlnu, etc.
   'year':'%s_%s_FH'%(_year,_Channel),
   'beamspot':'3.4',
   'numberOfBins':'320',

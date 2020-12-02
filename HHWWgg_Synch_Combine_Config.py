@@ -15,22 +15,22 @@ combineScriptCfg = {
   'analysis_type':'EFT',
   # 'analysis_type':'NMSSM',
   # 'analysis_type':'Res',
-  'FinalState':'lnulnu', # for HHWWgg. qqlnu, lnulnu, or qqqq. Will add combined eventually.
+  'FinalState':'qqqq', # for HHWWgg. qqlnu, lnulnu, or qqqq. Will add combined eventually.
   'mode':mode,
   # 'mode':'combine',
   'doSystematics':1, # 0: do not include systematics in datacard. 1: include systematics in datacard
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November23/HHWWgg_v2_6_PhoPt160GeV_CMSSW105X_2017_SingleHiggs_Bkg_workspace_old_Hadded_4',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_FixName/2017_SingleHiggs4_%s'%_Channel,
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November25/SingleHiggsHadded_2',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_FixName/2017_SingleHiggsNew_2_%s'%_Channel,
   #Procs will be inferred automatically from filenames
   #'HHWWggCatLabel':'2TotCatsCOMBINEDWithSyst', # for name of combine output files
   'HHWWggCatLabel':'2TotCatsbothcombined',
   'cats':'HHWWggTag_2',
-  'ext':'HHWWgg_v2-6_%s_ChannelTest_gg_HHWWgg_lnulnu'%_year,
+  'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   'year':'%s_%s_FH'%(_year,_Channel),
-  # 'signalProcs':'ggh_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  # 'signalProcs':'tth_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  # 'signalProcs':'vbf_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
-  'signalProcs':'wzh_X125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'signalProcs':'vbfX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'signalProcs':'gghX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  'signalProcs':'wzhX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
+  # 'signalProcs':'tthX125', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   # 'signalProcs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
 
   # Add UE/PS systematics to datacard (only relevant if mode == datacard)

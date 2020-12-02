@@ -146,7 +146,7 @@ RooAbsData* WSTFileWrapper::data(std::string dataName) {
     }
   }
   if (!result) {
-    std::cout << "[WSTFileWrapper] Uh oh, never got a good RooAbsData with name " << newDataName << std::endl;
+    std::cout << "[WSTFileWrapper#L149] Uh oh, never got a good RooAbsData with name " << newDataName << std::endl;
   }
   return result;
 }
@@ -157,7 +157,7 @@ RooAbsData* WSTFileWrapper::data(std::string keyName, std::string dataName) {
   fileList[keyName]->cd();
   RooAbsData* result = (RooAbsData*)((RooWorkspace*)fileList[keyName]->Get(wsName.c_str()))->data(newDataName.c_str());
   if (!result) {
-    std::cout << "[WSTFileWrapper] Uh oh, never got a good RooAbsData with name " << newDataName << std::endl;
+    std::cout << "[WSTFileWrapper#L160] Uh oh, never got a good RooAbsData with name " << newDataName << std::endl;
   }
   return result;
 }

@@ -232,11 +232,9 @@ void OptionParser(int argc, char *argv[]){
 // used to get index of the reference dataset in the list of requried guassians.
 unsigned int getIndexOfReferenceDataset(string proc, string cat){
   int iLine =-1;
-  std::cout <<  "map_proc_.size() = " << map_proc_.size() << std::endl;
   for(unsigned int i =0 ; i < map_proc_.size() ; i++){
     string this_process = map_proc_[i];
     string this_cat = map_cat_[i];
-    std::cout << "this_process: " << this_process << ",\t this_cat: " << this_cat << std::endl;
     if (this_process.compare(proc) ==0 ){
       if ( this_cat.compare(cat)==0 ){
         iLine=i;
@@ -460,16 +458,14 @@ int main(int argc, char *argv[]){
   string replacementCatWV = replacementMap.getReplacementCatWV();
   string replacementProcWV = replacementMap.getReplacementProcWV();
 
-  std::cout << "[INFO][SignalFit.cpp#463] procStr_ = " << procStr_ << std::endl;
   if(analysis_ == "HHWWgg"){
-    // if(analysis_type_ == "EFT" ) replacementProcWV = "GluGluToHHTo";
-    if(analysis_type_ == "EFT" ) replacementProcWV = procStr_;
-    else replacementProcWV = "ggF";
+    if(analysis_type_ == "EFT") {
+        if (procs_.size()==1) replacementProcWV = procs_[0];
+    } else replacementProcWV = "ggF";
   }
-
-  std::cout << "[INFO][SignalFit.cpp#463] replacementProcWV = " << replacementProcWV << std::endl;
+  if (verbose_) std::cout << "[INFO: SignalFit.cpp#L466] procs_ = " << procs_[0] << std::endl;
+  if (verbose_) std::cout << "[INFO: SignalFit.cpp#L467] replacementProcWV = " << replacementProcWV << std::endl;
   
-
   // isFlashgg should now be the only option.
 	if (isFlashgg_){
     nCats_= flashggCats_.size();
@@ -756,9 +752,10 @@ int main(int argc, char *argv[]){
           string endPath = tmpV[N-1];
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
-          string node_str = tmpV2[2];
-          // HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
-          HHWWgg_Label = Form("WWgg_%s%s",FinalState_.c_str(),node_str.c_str());
+          string node_str = tmpV2[0];
+          HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if (verbose_)std::cout << "node_str     = " << node_str << std::endl;
+          if (verbose_)std::cout << "HHWWgg_Label = " << HHWWgg_Label << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){
 					// file name format: X_signal_MX<xmass>_MY<ymass>_<interpMass>_HHWWgg_<FinalState>.root
@@ -778,15 +775,24 @@ int main(int argc, char *argv[]){
 // GluGluToHHTo_node2_WWgg_<FinalState>gg_13TeV_HHWWggTag_0_120 // looking for
 
       }
+      if (verbose_) std::cout << "proc         = " << proc.c_str()         << std::endl;
+      if (verbose_) std::cout << "HHWWgg_Label = " << HHWWgg_Label.c_str() << std::endl;
+      if (verbose_) std::cout << "cat          = " << cat.c_str()          << std::endl;
+      string NewProc = proc;
+      string NewHHWWgg_Label = HHWWgg_Label;
+      NewProc.replace(proc.find("125"),3,std::to_string(mh));
+      NewHHWWgg_Label.replace(NewHHWWgg_Label.find("125"),14,std::to_string(mh));
+      if (verbose_) std::cout << "NewProc         = " << NewProc         << std::endl;
+      if (verbose_) std::cout << "NewHHWWgg_Label = " << NewHHWWgg_Label << std::endl;
 
-        if (verbose_)std::cout << "[INFO] Opening dataset called "<< Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str()) << " in in WS " << inWS << std::endl;
+        if (verbose_) std::cout << "[INFO] Opening dataset called "<< Form("%s_%s_13TeV_%s",NewProc.c_str(),NewHHWWgg_Label.c_str(),cat.c_str()) << " in in WS " << inWS << std::endl;
         // RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("%d%s",mh,proc.c_str()), Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str())));
         RooDataSet *data0;
         if(analysis_ == "HHWWgg"){
           RooDataSet *data00;
           // if(analysis_type_ == "NMSSM") (RooDataSet*)inWS->data(Form("NMSSM_%s_13TeV_%s",HHWWgg_Label.c_str(),flashggCats_[cat].c_str())); // HHWWgg NMSSM form
           if(analysis_type_ == "NMSSM") data00 = reduceDataset((RooDataSet*)inWS->data(Form("NMSSM_%s_13TeV_%s_%d",HHWWgg_Label.c_str(),cat.c_str(),mh)));
-          else data00 = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)));
+          else data00 = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s",NewProc.c_str(),NewHHWWgg_Label.c_str(),cat.c_str())));
 
           // RooDataSet *data00   = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)));
           data0 = data00;
@@ -954,10 +960,9 @@ int main(int argc, char *argv[]){
           string endPath = tmpV[N-1];
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
-          string node_str = tmpV2[2];
-          // HHWWggLabel = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
-          HHWWggLabel = Form("WWgg_%s%s",FinalState_.c_str(),node_str.c_str());
-          std::cout << "[INFO] HHWWggLabel: " << HHWWggLabel << std::endl;
+          string node_str = tmpV2[0];
+          HHWWggLabel = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if(verbose_) std::cout << "[INFO: SignalFit.cpp#L965] HHWWggLabel: " << HHWWggLabel << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){
 					// file name format: MX<massX>_MY<massY>_HHWWgg_<FinalState>.root
@@ -1003,7 +1008,7 @@ int main(int argc, char *argv[]){
          data0Ref00   = rvwvDataset(
                         intLumiReweigh(
                           reduceDataset(
-                          (RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",replancementProc.c_str(),HHWWggLabel.c_str(),replancementCat.c_str(),mh))
+                          (RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s",(replancementProc.replace(replancementProc.find("125"),3,std::to_string(mh))).c_str(),(HHWWggLabel.replace(HHWWggLabel.find("125"),14,std::to_string(mh))).c_str(),replancementCat.c_str(),mh))
                          )
                        ), "WV"
                       );

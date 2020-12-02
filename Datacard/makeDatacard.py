@@ -297,8 +297,7 @@ if not skipData:
           elif opt.analysis_type == "EFT":
             HHWWgg_node = opt.inputWSDir.split('/')[-1].split('_')[0]
             _inputWSFile = opt.inputWSDir
-            # _nominalDataName = "%s_WWgg_%s_%s_13TeV_%s"%(_proc_s0,opt.FinalState,HHWWgg_node,cat)
-            _nominalDataName = "%s_WWgg_%s%s_13TeV_%s"%(_proc_s0,opt.FinalState,HHWWgg_node,cat)
+            _nominalDataName = "%s_WWgg_%s_%s_13TeV_%s"%(_proc_s0,opt.FinalState,HHWWgg_node,cat)
             print "inputWSDir: ",opt.inputWSDir
             print "HHWWgg_node: ",HHWWgg_node
             print "_inputWSFile: ",_inputWSFile

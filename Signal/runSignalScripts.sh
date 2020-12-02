@@ -277,11 +277,8 @@ if [ $SIGFITONLY == 1 ]; then
 
       # For EFT analysis, ID = node2, node9, ...
       ID="$(cut -d'_' -f1 <<<$fileID)"
-      ID="gg"
-      # HHWWggLabel="WWgg_${FINALSTATE}_${ID}"
-      HHWWggLabel="$ID_${FINALSTATE}${ID}"
-      proc="${PROCS}_WWgg"
-      echo "[INFO][runSignalScripts.sh#285] debug: proc: ${proc}, ${PROCS}_WWgg"
+      HHWWggLabel="WWgg_${FINALSTATE}_${ID}"
+      proc="GluGluToHHTo"
 
     elif [[ $ANALYSIS_TYPE == "NMSSM" ]];
     then
@@ -308,26 +305,26 @@ if [ $SIGFITONLY == 1 ]; then
     fi
 
     # python DirecShiftHiggsDatasets.py $fileDir $mass $HHWWggLabel # create 120 and 130 points
-    echo "COMMAND: python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE"
-    python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE # create 120 and 130 points
-    sigFiles=""
-    for m in 120 125 130
-    do
-      sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_${FINALSTATE}.root,"
+    # echo "COMMAND: python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE"
+    # python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE # create 120 and 130 points
+    # sigFiles=""
+    # for m in 120 125 130
+    # do
+    #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_${FINALSTATE}.root,"
 
-      # if [[ $ANALYSIS_TYPE == "Res" ]]; then
-      #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_<FinalState>.root,"
-      # elif [[ $ANALYSIS_TYPE == "EFT" ]];
-      # then
-      #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_<FinalState>.root,"
-      # elif [[ $ANALYSIS_TYPE == "NMSSM" ]];
-      # then
-      #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_<FinalState>.root,"
-      # fi
+    #   # if [[ $ANALYSIS_TYPE == "Res" ]]; then
+    #   #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_<FinalState>.root,"
+    #   # elif [[ $ANALYSIS_TYPE == "EFT" ]];
+    #   # then
+    #   #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_<FinalState>.root,"
+    #   # elif [[ $ANALYSIS_TYPE == "NMSSM" ]];
+    #   # then
+    #   #   sigFiles+="${fileDir}_interpolation/X_signal_${ID}_${m}_HHWWgg_<FinalState>.root,"
+    #   # fi
 
-    done
-    sigFiles=${sigFiles: : -1} # remove extra ","
-    FILE=$sigFiles
+    # done
+    # sigFiles=${sigFiles: : -1} # remove extra ","
+    # FILE=$sigFiles
   fi
 
   if [[ $BATCH == "" ]]; then

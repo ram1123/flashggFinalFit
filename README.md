@@ -17,6 +17,15 @@ Table of Contents
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
+# Summary
+
+- This code is changed to run for signal higgs backgrounds.
+- It requires single root file in a directory for each single Higgs backgrounds.
+- Root file names should be like: `wzhX125_VHToGG.root`
+   - where, `wzhX125` should be used as the proc in the configruation file.
+   - The RooDataHist should be of form `wzhX130_WWgg_qqqq_wzhX130_13TeV_HHWWggTag_2`
+   - Note that the string `wzhX125` should match in the root file name and in the RooDataHist.
+
 # FLASHgg Final Fits
 The Final Fits package is a series of scripts which are used to run the final stages of the CMS Hgg analysis: signal modelling, background modelling, datacard creation and final statistical interpretation and final result plots.
 

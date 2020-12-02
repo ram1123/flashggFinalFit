@@ -293,6 +293,8 @@ else:
 
       massExt = f.split('/')[-1].split('.')[0]
       thisExt = ext + '_' + massExt
+      print "[INFO: RunSignalScripts.py#L296] massExt: ",massExt
+      print "[INFO: RunSignalScripts.py#L297] thisExt: ",thisExt
 
       intLumi = 1 # HHWWgg. Set luminosity in datacard
 

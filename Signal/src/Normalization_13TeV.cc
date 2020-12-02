@@ -324,13 +324,13 @@ TGraph * Normalization_13TeV::GetSigmaGraph(TString process)
   } else if ( process == "THW" ){
           XSectionMap = &XSectionMap_THW;
   // Stage 0
-  } else if ( process == "ggh" || process=="GG2H" || process == "ggh_X125") {
+  } else if ( process == "ggh" || process=="GG2H" || process == "gghX125") {
     XSectionMap = &XSectionMap_ggh;
-  } else if ( process == "vbf" || process=="VBF" || process == "vbf_X125" ) {
+  } else if ( process == "vbf" || process=="VBF" || process == "vbfX125" ) {
     XSectionMap = &XSectionMap_vbf;
   } else if ( process == "tth" || process=="TTH" || process=="tth_X125") {
     XSectionMap = &XSectionMap_tth;
-  } else if ( process == "wh" || process == "wzh_X125") {
+  } else if ( process == "wh" || process == "wzhX125") {
     XSectionMap = &XSectionMap_wh;
   } else if ( process == "zh") {
     XSectionMap = &XSectionMap_zh;
@@ -564,13 +564,13 @@ double Normalization_13TeV::GetXsection(double mass, TString HistName) {
   } else if ( HistName.Contains("THW") ){
           XSectionMap = &XSectionMap_THW;
   // Stage 0
-  } else if ( HistName.Contains("ggh") || HistName.Contains("GG2H") || HistName.Contains("ggh_X125") ) {
+  } else if ( HistName.Contains("ggh") || HistName.Contains("GG2H") || HistName.Contains("gghX125") ) {
     XSectionMap = &XSectionMap_ggh;
-  } else if ( HistName.Contains("vbf") || HistName.Contains("VBF") || HistName.Contains("vbf_X125") ) {
+  } else if ( HistName.Contains("vbf") || HistName.Contains("VBF") || HistName.Contains("vbfX125") ) {
     XSectionMap = &XSectionMap_vbf;
   } else if ( HistName.Contains("tth") || HistName.Contains("TTH") || HistName.Contains("tth_X125") ) {
     XSectionMap = &XSectionMap_tth;
-  } else if ( HistName.Contains("wh") || HistName.Contains("wzh_X125") ) {
+  } else if ( HistName.Contains("wh") || HistName.Contains("wzhX125") ) {
     XSectionMap = &XSectionMap_wh;
   } else if ( HistName.Contains("zh") ) {
     XSectionMap = &XSectionMap_zh;

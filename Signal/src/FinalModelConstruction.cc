@@ -1414,7 +1414,7 @@ void FinalModelConstruction::getNormalization(){
   // temp->SetMaximum(0.6);
   temp->Draw();
   temp->Fit(pol,"Q");
-  TPaveText *pt = new TPaveText(.15,.9,.45,1.0,"NDC");
+  TPaveText *pt = new TPaveText(.25,.9,.55,1.0,"NDC");
   pt->SetTextSize(0.045);
   // pt->AddText(Form("%s %s eff*acc",proc_.c_str(),cat_.c_str()));
   pt->AddText("eff*acc");
