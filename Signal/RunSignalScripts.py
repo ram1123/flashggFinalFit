@@ -204,12 +204,12 @@ else:
   # Extract list of input ws filenames
   ws_fileNames = []
   for root, dirs, files in os.walk( inputWSDir ):
-    # print'files = ',files
+    if (verbosity): print 'files = ',files
     for fileName in files:
-      if not fileName.startswith('output_') and analysis != 'HHWWgg': continue
+      if not fileName.startswith('output_') and (analysis != 'HHZZgg' and analysis != 'HHWWgg'): continue
       if not fileName.endswith('.root'): continue
       ws_fileNames.append( fileName )
-      # print'fileName: ',fileName
+      if (verbosity): print 'fileName: ',fileName
   # concatenate with input dir to get full list of complete file names
   ws_fullFileNames = ''
   for fileName in ws_fileNames: ws_fullFileNames+="%s/%s,"%(inputWSDir,fileName)
@@ -279,7 +279,7 @@ else:
   # origext = ext
 
   # if analysis is HHWWgg, need to run process for each mass point...this will need to be updated when we add a second category
-  if analysis == 'HHWWgg':
+  if analysis == 'HHWWgg' or analysis == 'HHZZgg':
     # print'ws_fullFileNames: ',ws_fullFileNames
     filesList = ws_fullFileNames.split(',')
     for f in filesList:

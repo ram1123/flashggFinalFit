@@ -158,12 +158,16 @@ double getMyNLL(RooRealVar *var, RooAbsPdf *pdf, RooDataHist *data){
 }
 
 void fTest(string analysis_, string filename, string outdir_, vector<string> procs, string procString_, int nBins, float rangeLow, float rangeHigh, string website_, string datfilename_){
-
-	WSTFileWrapper *inWS
-    = new WSTFileWrapper(filename,"tagsDumper/cms_hgg_13TeV");
-  if(verbose_) std::cout << "[INFO] Opened files OK!" << std::endl;
+    if(verbose_) std::cout << "INFO: signalFTest.cpp#L161] analysis_: "      << analysis_    << std::endl;
+    if(verbose_) std::cout << "INFO: signalFTest.cpp#L162] filename: "       << filename     << std::endl;
+    if(verbose_) std::cout << "INFO: signalFTest.cpp#L163] outdir_: "        << outdir_      << std::endl;
+    if(verbose_) std::cout << "INFO: signalFTest.cpp#L164] procString_: "    << procString_  << std::endl;
+    if(verbose_) std::cout << "INFO: signalFTest.cpp#L164] website_: "       << website_     << std::endl;
+    if(verbose_) std::cout << "INFO: signalFTest.cpp#L164] datfilename_: "   << datfilename_ << std::endl;
+	WSTFileWrapper *inWS = new WSTFileWrapper(filename,"tagsDumper/cms_hgg_13TeV");
+    if(verbose_) std::cout << "[INFO] Opened files OK!" << std::endl;
 	RooRealVar *mass = (RooRealVar*)inWS->var("CMS_hgg_mass");
-  if(verbose_) std::cout << "[INFO] Got mass variable " << mass << std::endl;
+    if(verbose_) std::cout << "[INFO] Got mass variable " << mass << std::endl;
 
 	string HHWWgg_Label = ""; // ex: X250_WWgg_<FinalState>gg, GluGluToHHTo_WWgg_<FinalState>_node2
 
@@ -171,11 +175,12 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
   	// string outdir_Original = outdir_;
 
 	// if HHWWgg, customize outdir for each mass point
-	if(analysis_ == "HHWWgg"){
+	if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
 
 		// get Res, EFT, or NMSSM flag
 
 	// 	// Get HHWWgg label from file name
+        std::cout << "[INFO: signalFTest.cpp#L183] Inside analysis_ if condition..." << std::endl;
 		if(analysis_type_ == "Res"){
 			vector<string> tmpV;
 			split(tmpV,filename,boost::is_any_of("/"));
@@ -199,7 +204,7 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
 			vector<string> tmpV2;
 			split(tmpV2,endPath,boost::is_any_of("_"));
 			string node_str = tmpV2[0];
-			HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+			HHWWgg_Label = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
 		}
 		else if (analysis_type_ == "NMSSM"){
 			// file name format: MX<massX>_MY<massY>_HHWWgg_<FinalState>.root
@@ -223,6 +228,7 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
 	// 	outdir_.append(HHWWgg_Label);
 	}
 
+    std::cout << "[INFO: signalFTest.cpp#L231]: HHWWgg_Label: " << HHWWgg_Label << std::endl;
 	system(Form("mkdir -p %s/fTest",outdir_.c_str()));
 
 	mass->setBins(nBins);
@@ -301,6 +307,7 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
   if(verbose_) std::cout << "[INFO] on cat " << flashggCats_[cat] <<  " start looping through procs  " << procs.size() << " to get datasets " <<std::endl;
     // now main loop through processes...
 		for (unsigned int p=0; p<procs.size(); p++){
+            std::cout << "[INFO: signalFTest.cpp#L310] procs[" << p << "] = " << procs[p] << std::endl;
 
       // get desired proc
 			string proc = procs[p];
@@ -320,7 +327,7 @@ void fTest(string analysis_, string filename, string outdir_, vector<string> pro
       // access dataset and immediately reduce it!
 			if (isFlashgg_){
 				RooDataSet *data0;
-				if(analysis_ == "HHWWgg"){
+				if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
 
 					if(verbose_) {
 						std::cout << "HHWWgg label: " << HHWWgg_Label << endl;
@@ -853,7 +860,6 @@ int main(int argc, char *argv[]){
 	split(procs,procString_,boost::is_any_of(","));
 	split(flashggCats_,flashggCatsStr_,boost::is_any_of(","));
 	split(considerOnly_,considerOnlyStr_,boost::is_any_of(","));
-
   // automatically determine nCats from flashggCats input
 	if (isFlashgg_){
 		ncats_ =flashggCats_.size();
@@ -869,7 +875,6 @@ int main(int argc, char *argv[]){
 	for (unsigned int j =0; j <considerOnly_.size() ; j++){
 			std::cout << " [INFO] considering only " << considerOnly_[j]<<std::endl;
 	}
-
 	fTest(analysis_,filename_,outdir_,procs,procString_,nBins,rangeLow,rangeHigh,website_,datfilename_);
 
   // open input files using WS wrapper.

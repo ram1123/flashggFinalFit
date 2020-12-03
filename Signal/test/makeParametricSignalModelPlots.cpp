@@ -566,7 +566,7 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   // catLabel_humanReadable.ReplaceAll("TTHHadronicTag","TTH Hadronic Tag");
   // catLabel_humanReadable.ReplaceAll("all","All Categories");
   string hhwwggMass;
-  if (analysis_ == "HHWWgg"){
+  if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg" ){
     // website_ = "/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/Signal/";
     website_ = website_ + "/Signal/";
     process = "HH#rightarrowWW#gamma#gamma";
@@ -665,7 +665,7 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   canv->Print(Form("%s.pdf",savename.c_str()));
   canv->Print(Form("%s.png",savename.c_str()));
   std::cout << "[Inside makeParametricSignalModelPlots.cpp] website path: " << website_ << std::endl;
-  if (analysis_ == "HHWWgg"){
+  if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg" ){
     canv->Print(Form("%s%s.pdf",website_.c_str(),savename_2.c_str()));
     canv->Print(Form("%s%s.png",website_.c_str(),savename_2.c_str()));
   }
@@ -763,7 +763,7 @@ int main(int argc, char *argv[]){
     sigEffs.insert(pair<string,double>(dataIt->first,(thisSigRange.second-thisSigRange.first)/2.));
     fwhms.insert(pair<string,double>(dataIt->first,thisFWHMRange[1]-thisFWHMRange[0]));
     if (doCrossCheck_) performClosure(mass,pdfs[dataIt->first],dataIt->second,Form("%s/closure_%s.pdf",outfilename_.c_str(),dataIt->first.c_str()),m_hyp_-10.,m_hyp_+10.,thisSigRange.first,thisSigRange.second);
-    if (analysis_ != "HHWWgg") Plot(mass,dataIt->second,pdfs[dataIt->first],thisSigRange,thisFWHMRange,dataIt->first,Form("%s/%s",outfilename_.c_str(),dataIt->first.c_str()),analysis_,analysis_type_,FinalState_); // not sure how these are different from granular plots
+    if (analysis_ != "HHWWgg" || analysis_ != "HHZZgg") Plot(mass,dataIt->second,pdfs[dataIt->first],thisSigRange,thisFWHMRange,dataIt->first,Form("%s/%s",outfilename_.c_str(),dataIt->first.c_str()),analysis_,analysis_type_,FinalState_); // not sure how these are different from granular plots
   }
 
   for (map<string,RooDataSet*>::iterator dataIt=dataSetsGranular.begin(); dataIt!=dataSetsGranular.end(); dataIt++){

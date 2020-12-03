@@ -220,14 +220,22 @@ void OptionParser(int argc, char *argv[]){
 		for (vector<int>::iterator it=massList_.begin(); it!=massList_.end(); it++) cout << *it << " ";
 		cout << endl;
 	}
+    std::cout << "[INFO: SignalFit.cpp#L223] debug..." << std::endl;
+    // std::cout << "procs_            = " << procs_ << std::endl;
+    std::cout << "procStr_          = " << procStr_ << std::endl;
+    std::cout << "flashggCatsStr_   = " << flashggCatsStr_ << std::endl;
+    std::cout << "filenameStr_      = " << filenameStr_ << std::endl;
+    std::cout << "splitStr_         = " << splitStr_ << std::endl;
 
   // split options which are given as lists
   split(procs_,procStr_,boost::is_any_of(","));
 	split(flashggCats_,flashggCatsStr_,boost::is_any_of(","));
 	split(filename_,filenameStr_,boost::is_any_of(","));
   split(split_,splitStr_,boost::is_any_of(",")); // proc,cat
+    std::cout << "[INFO: SignalFit.cpp#L230] debug..." << std::endl;
 
 }
+
 
 // used to get index of the reference dataset in the list of requried guassians.
 unsigned int getIndexOfReferenceDataset(string proc, string cat){
@@ -442,23 +450,31 @@ bool skipMass(int mh){
 //main code
 int main(int argc, char *argv[]){
 
+    std::cout << "[INFO:SignalFit.cpp#L453] debug..." << std::endl;
 	gROOT->SetBatch();
 
 	OptionParser(argc,argv);
+    std::cout << "[INFO:SignalFit.cpp#L457] debug..." << std::endl;
 
 	TStopwatch sw;
 	sw.Start();
+  std::cout << "[INFO:SignalFit.cpp#L461] debug..." << std::endl;
 
   // reference details for low stats cats
   // updated: uses replacementMap class to read mapping from Signal/python/replacementMap.py
   //          takes analysis as input, which is a new option for SignalFit.cpp
   ReplacementMap replacementMap( analysis_ );
+  std::cout << "[INFO:SignalFit.cpp#L467] debug..." << std::endl;
   std::map<string,string> replacementCatRVMap = replacementMap.getReplacementCatRVMap();
+  std::cout << "[INFO:SignalFit.cpp#L469] debug..." << std::endl;
   std::map<string,string> replacementProcRVMap = replacementMap.getReplacementProcRVMap();
+  std::cout << "[INFO:SignalFit.cpp#L471] debug..." << std::endl;
   string replacementCatWV = replacementMap.getReplacementCatWV();
+  std::cout << "[INFO:SignalFit.cpp#L473] debug..." << std::endl;
   string replacementProcWV = replacementMap.getReplacementProcWV();
 
-  if(analysis_ == "HHWWgg"){
+  std::cout << "[INFO:SignalFit.cpp#L476] debug..." << std::endl;
+  if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
     if(analysis_type_ == "EFT") replacementProcWV = "GluGluToHHTo";
     else replacementProcWV = "ggF";
   }
@@ -472,12 +488,15 @@ int main(int argc, char *argv[]){
     std::cout << "[ERROR] script is only compatible with flashgg! exit(1)." << std::endl;
     exit(1);
   }
+  std::cout << "[INFO:SignalFit.cpp#L491] debug..." << std::endl;
 
   if (useDCBplusGaus_){
     std::cout << "[INFO] Using functional form: Double Crystal Ball + 1 Gaussian (same mean)" << std::endl;
   } else {
     std::cout << "[INFO] Using functional form: Sum of N Gaussians " << std::endl;
   }
+
+  std::cout << "[INFO:SignalFit.cpp#L499] debug..." << std::endl;
 
   if (useSSF_){
     std::cout << "[INFO] Using fitting strategy: Simultaneous Signal Fitting (Simultaneous fit of all mass points, where functional form parameters are themselves functions of MH) " << std::endl;
@@ -722,7 +741,7 @@ int main(int argc, char *argv[]){
 
 
 
-      if(analysis_ == "HHWWgg"){
+      if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
 
         // Get HHWWgg label from file name
         if(analysis_type_ == "Res"){
@@ -752,7 +771,10 @@ int main(int argc, char *argv[]){
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
           string node_str = tmpV2[2];
-          HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if (analysis_ == "HHWWgg") HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if (analysis_ == "HHZZgg") HHWWgg_Label = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          HHWWgg_Label = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if (verbose_) std::cout << "[INFO: SignalFit.cpp#L777] HHWWgg_Label = " << HHWWgg_Label << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){
 					// file name format: X_signal_MX<xmass>_MY<ymass>_<interpMass>_HHWWgg_<FinalState>.root
@@ -773,14 +795,16 @@ int main(int argc, char *argv[]){
 
       }
 
-        if (verbose_)std::cout << "[INFO] Opening dataset called "<< Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str()) << " in in WS " << inWS << std::endl;
+        if (verbose_)std::cout << "[INFO: SignalFit.cpp#L797] Opening dataset called "<< Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str()) << " in in WS " << inWS << std::endl;
         // RooDataSet *data0   = reduceDataset((RooDataSet*)inWS->data(Form("%d%s",mh,proc.c_str()), Form("%s_%d_13TeV_%s",proc.c_str(),mh,cat.c_str())));
         RooDataSet *data0;
-        if(analysis_ == "HHWWgg"){
+        if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
           RooDataSet *data00;
           // if(analysis_type_ == "NMSSM") (RooDataSet*)inWS->data(Form("NMSSM_%s_13TeV_%s",HHWWgg_Label.c_str(),flashggCats_[cat].c_str())); // HHWWgg NMSSM form
+          std::cout << "[INFO: SignalFit.cpp#L803] debug..." << std::endl;
           if(analysis_type_ == "NMSSM") data00 = reduceDataset((RooDataSet*)inWS->data(Form("NMSSM_%s_13TeV_%s_%d",HHWWgg_Label.c_str(),cat.c_str(),mh)));
           else data00 = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)));
+          std::cout << "[INFO: SignalFit.cpp#L806] debug..." << std::endl;
 
           // RooDataSet *data00   = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)));
           data0 = data00;
@@ -830,7 +854,7 @@ int main(int argc, char *argv[]){
 					if(beamSpotReweigh_){
 
         RooDataSet *data0;
-        if(analysis_ == "HHWWgg"){
+        if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
           RooDataSet *data00;
           if(analysis_type_ == "NMSSM") data00 = reduceDataset((RooDataSet*)inWS->data(Form("NMSSM_%s_13TeV_%s_%d",HHWWgg_Label.c_str(),cat.c_str(),mh)));
           else data00 = reduceDataset((RooDataSet*)inWS->data(Form("%s_%s_13TeV_%s_%d",proc.c_str(),HHWWgg_Label.c_str(),cat.c_str(),mh)));
@@ -913,7 +937,7 @@ int main(int argc, char *argv[]){
 
         //  RooDataSet *data0Ref;
 
-        if(analysis_ == "HHWWgg"){
+        if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
           // string HHWWggLabel = "";
           HHWWggLabel = "";
 
@@ -935,7 +959,8 @@ int main(int argc, char *argv[]){
           split(tmpV2,endPath,boost::is_any_of("_"));
           string mass_str = tmpV2[2];
     			// HHWWggLabel = Form("%s_HHWWgg_qqlnu",mass_str.c_str());
-          HHWWggLabel = Form("%s_HHWWgg_%s",mass_str.c_str(),FinalState_.c_str());
+          if (analysis_ == "HHWWgg") HHWWggLabel = Form("%s_HHWWgg_%s",mass_str.c_str(),FinalState_.c_str());
+          if (analysis_ == "HHZZgg") HHWWggLabel = Form("%s_HHZZgg_%s",mass_str.c_str(),FinalState_.c_str());
         }
         else if (analysis_type_ == "EFT"){
           // File name format: nodeX_HHWWgg_<FinalState>
@@ -949,7 +974,7 @@ int main(int argc, char *argv[]){
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
           string node_str = tmpV2[2];
-          HHWWggLabel = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          HHWWggLabel = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
           std::cout << "[INFO] HHWWggLabel: " << HHWWggLabel << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){
@@ -1288,7 +1313,7 @@ int main(int argc, char *argv[]){
 
 
     // packager.packageOutput(/*split*/split, /*proc*/split_[0], /*tag*/ split_[1] );
-    if(analysis_ == "HHWWgg"){
+    if(analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
       string tag = "";
       if(FinalState_ == "qqlnu") tag = "HHWWggTag_0";
       else if (FinalState_ == "qqqq") tag = "HHWWggTag_2";

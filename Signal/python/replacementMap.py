@@ -11,7 +11,8 @@ replacementProcWV = {
   "stage1_1":"GG2H_0J_PTH_GT10",
   "stage1_2":"GG2H_0J_PTH_GT10",
   # "HHWWgg":"ggF",
-  "HHWWgg":"GluGluToHHTo"
+  "HHWWgg":"GluGluToHHTo",
+  "HHZZgg":"GluGluToHHTo"
 }
 # Replacement cat for WV fit:
 replacementCatWV = {
@@ -19,7 +20,8 @@ replacementCatWV = {
   "stage1":"RECO_0J_Tag1",
   "stage1_1":"RECO_0J_PTH_GT10_Tag1",
   "stage1_2":"RECO_0J_PTH_GT10_Tag1",
-  "HHWWgg":"HHWWggTag_2"
+  "HHWWgg":"HHWWggTag_2",
+  "HHZZgg":"HHWWggTag_2"
   # "HHWWgg":"HHWWggTag_1"
   # "HHWWgg_qqlnu" : "HHWWggTag_0",
   # "HHWWgg_qqqq" : "HHWWggTag_2"
@@ -54,7 +56,9 @@ replacementProcRVMap = {
   "HHWWgg":[
     "HHWWggTag_0:HHWWggTag_0"
   ],
-
+  "HHZZgg":[
+    "HHWWggTag_0:HHWWggTag_0"
+  ],
   # STXS stage 1 categorisation (HIG-18-029)
   "stage1":[
     "RECO_0J_Tag0:GG2H_0J",
@@ -208,7 +212,9 @@ replacementCatRVMap = {
   "HHWWgg":[
     "HHWWggTag_0:HHWWggTag_0"
   ],
-
+  "HHZZgg":[
+    "HHWWggTag_0:HHWWggTag_0"
+  ],
   # STXS stage 1 categorisation (HIG-18-029)
   "stage1":[
     "RECO_0J_Tag0:RECO_0J_Tag0",

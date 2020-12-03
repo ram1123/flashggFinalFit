@@ -515,11 +515,11 @@ int main(int argc, char *argv[]){
 	if(isFlashgg_){ nCats_ = flashggCats_.size();}
 	for (int cat=0; cat<nCats_; cat++){
 		for (vector<string>::iterator proc=procs_.begin(); proc!=procs_.end(); proc++){
-			cout << "[INFO] Processing "<< *proc << " - cat " << cat << endl;
+			cout << "[INFO: calcPhotonSystConsts.cpp#L518] Processing "<< *proc << " - cat " << cat << endl;
 			RooWorkspace* theWS;
 			string HHWWgg_Label = "";
 
-			if (analysis_ == "HHWWgg"){
+			if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg"){
 
 				// inWS_
 				// RooWorkspace* theWS_ = inWS_->getSpecificWorkspace("cms_hgg_13TeV");
@@ -550,7 +550,7 @@ int main(int argc, char *argv[]){
 					vector<string> tmpV2;
 					split(tmpV2,endPath,boost::is_any_of("_"));
 					string node_str = tmpV2[0];
-					HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+					HHWWgg_Label = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
 				}
 
 				else if (analysis_type_ == "NMSSM"){
@@ -608,7 +608,7 @@ int main(int argc, char *argv[]){
 						string flashggCat = flashggCats_[cat];
 						//hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
 						// hists= getHistograms(theWS, Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
-						if (analysis_ == "HHWWgg") {
+						if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg") {
 							if(analysis_type_ == "NMSSM") hists= getHistograms(theWS, Form("NMSSM_%s_13TeV_%s",HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
 							else hists= getHistograms(theWS, Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCScale%s",phoCat->c_str()));
 
@@ -659,7 +659,7 @@ int main(int argc, char *argv[]){
 						//hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str()));
 						// hists= getHistograms(theWS, Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str()));
 						// if (analysis_ == "HHWWgg") hists= getHistograms(theWS, Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str()));
-						if (analysis_ == "HHWWgg") {
+						if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg") {
 							if(analysis_type_ == "NMSSM") hists= getHistograms(theWS, Form("NMSSM_%s_13TeV_%s",HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str()));
 							else hists= getHistograms(theWS, Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("MCSmear%s",phoCat->c_str()));
 						}
@@ -709,7 +709,7 @@ int main(int argc, char *argv[]){
 						//vector<TH1F*> hists= getHistograms(inFiles,Form("%s_%d_13TeV_%s",proc->c_str(),mh_,flashggCat.c_str()),Form("%s",phoCat->c_str()));
 
 						// if (analysis_ == "HHWWgg") hists= getHistograms(theWS, Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("%s",phoCat->c_str()));
-						if (analysis_ == "HHWWgg") {
+						if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg") {
 							if(analysis_type_ == "NMSSM") hists= getHistograms(theWS, Form("NMSSM_%s_13TeV_%s",HHWWgg_Label.c_str(),flashggCat.c_str()),Form("%s",phoCat->c_str()));
 							else hists= getHistograms(theWS, Form("%s_%s_13TeV_%s",proc->c_str(),HHWWgg_Label.c_str(),flashggCat.c_str()),Form("%s",phoCat->c_str()));
 						}

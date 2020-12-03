@@ -1,15 +1,15 @@
 # Config file: options for signal fitting
 
-_year = '2016'
-_Channel = "WW"
+_year = '2017'
+_Channel = "ZZ"
 
 signalScriptCfg = {
 
   # Setup
   'systematics':1, # (0): Use empty systematics dat file. (1): Use generated systematics dat file
   # Important: Don't put "/" at the end of inputWSDir.
-  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November05_Rename/HHWWgg_v2_6_PhoPt160GeV_2016_WW_MC_Workspace_Hadded',
-  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_FixName/2016_%s'%_Channel,
+  'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/CMSSW106X/Dec3/HHZZgg_Z7_minWHJets_ZZ_Workspace_Hadded',
+  'website':'/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit_CMSSW106X/Dec3/%s_%s'%(_Channel,_year),
   # 'usrprocs':'ggF', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   'usrprocs':'GluGluToHHTo', # "ggF" for Radion, FOR EFT "GluGluToHHTo"
   #Procs will be inferred automatically from filenames
@@ -17,7 +17,7 @@ signalScriptCfg = {
   # 'ext':'HHWWgg_v2-3_%s_2CatsSyst'%_year,
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   # 'analysis':'stage1_2', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
-  'analysis':'HHWWgg', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
+  'analysis':'HHZZgg', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   # 'analysis_type':'Res', # For HHWWgg: Res, EFT or NMSSM
   'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM
   # 'analysis_type':'NMSSM', # For HHWWgg: Res, EFT or NMSSM

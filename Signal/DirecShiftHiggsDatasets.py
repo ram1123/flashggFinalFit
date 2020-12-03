@@ -34,7 +34,7 @@ higgs_mass = 125
 
 ws_name = 'tagsDumper/cms_hgg_13TeV'
 
-temp_ws = TFile("%s/%s_HHWWgg_%s.root"%(inDir,str(ID),finalState)).Get(ws_name)
+temp_ws = TFile("%s/%s_HHZZgg_%s.root"%(inDir,str(ID),finalState)).Get(ws_name)
 
 # Res: ID_HHWWgg_<finalState>.root
 # EFT: nodeX_HHWWgg_<finalState>.root
