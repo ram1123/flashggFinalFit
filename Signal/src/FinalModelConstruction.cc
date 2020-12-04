@@ -93,7 +93,7 @@ FinalModelConstruction::FinalModelConstruction( std::vector<int> massList, RooRe
 	}
   // this is used to make a graph of the Hgg Branching Ratio as a function of MH
   TGraph *brGraph = norm->GetBrGraph();
-	brSpline = graphToSpline(Form("fbr_%dTeV_%s",sqrts_,year_.c_str()),brGraph);
+	brSpline = graphToSpline(Form("fbr_%s_%dTeV_%s",procs_[0].c_str(),sqrts_,year_.c_str()),brGraph);
 
   // make the XS graphs for each process
   for (unsigned int i=0; i<procs_.size(); i++){
