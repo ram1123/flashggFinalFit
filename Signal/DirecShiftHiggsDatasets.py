@@ -22,6 +22,7 @@ cats_ = sys.argv[4]
 analysis_type = sys.argv[5] # Res, EFT, NMSSM
 proc = sys.argv[6]
 finalState = sys.argv[7] # qqlnu, lnulnu, qqqq
+analysis = sys.argv[8] # qqlnu, lnulnu, qqqq
 
 cats = cats_.split(",") # turn to list
 
@@ -34,7 +35,7 @@ higgs_mass = 125
 
 ws_name = 'tagsDumper/cms_hgg_13TeV'
 
-temp_ws = TFile("%s/%s_HHZZgg_%s.root"%(inDir,str(ID),finalState)).Get(ws_name)
+temp_ws = TFile("%s/%s_%s_%s.root"%(inDir,str(ID),analysis,finalState)).Get(ws_name)
 
 # Res: ID_HHWWgg_<finalState>.root
 # EFT: nodeX_HHWWgg_<finalState>.root

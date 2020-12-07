@@ -773,7 +773,6 @@ int main(int argc, char *argv[]){
           string node_str = tmpV2[2];
           if (analysis_ == "HHWWgg") HHWWgg_Label = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
           if (analysis_ == "HHZZgg") HHWWgg_Label = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
-          HHWWgg_Label = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
           if (verbose_) std::cout << "[INFO: SignalFit.cpp#L777] HHWWgg_Label = " << HHWWgg_Label << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){
@@ -974,7 +973,8 @@ int main(int argc, char *argv[]){
           vector<string> tmpV2;
           split(tmpV2,endPath,boost::is_any_of("_"));
           string node_str = tmpV2[2];
-          HHWWggLabel = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if(analysis_ == "HHWWgg") HHWWggLabel = Form("WWgg_%s_%s",FinalState_.c_str(),node_str.c_str());
+          if(analysis_ == "HHZZgg") HHWWggLabel = Form("ZZgg_%s_%s",FinalState_.c_str(),node_str.c_str());
           std::cout << "[INFO] HHWWggLabel: " << HHWWggLabel << std::endl;
         }
 				else if (analysis_type_ == "NMSSM"){

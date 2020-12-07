@@ -278,7 +278,12 @@ if [ $SIGFITONLY == 1 ]; then
 
       # For EFT analysis, ID = node2, node9, ...
       ID="$(cut -d'_' -f1 <<<$fileID)"
-      HHWWggLabel="ZZgg_${FINALSTATE}_${ID}"
+      if [[ $ANALYSIS == "HHWWgg" ]]; then
+        HHWWggLabel="WWgg_${FINALSTATE}_${ID}"
+      fi
+      if [[ $ANALYSIS == "HHZZgg" ]]; then
+        HHWWggLabel="ZZgg_${FINALSTATE}_${ID}"
+      fi
       proc="GluGluToHHTo"
 
     elif [[ $ANALYSIS_TYPE == "NMSSM" ]];
@@ -306,8 +311,8 @@ if [ $SIGFITONLY == 1 ]; then
     fi
 
     # python DirecShiftHiggsDatasets.py $fileDir $mass $HHWWggLabel # create 120 and 130 points
-    echo "COMMAND: python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE"
-    python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE # create 120 and 130 points
+    echo "COMMAND: python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE  $ANALYSIS"
+    python DirecShiftHiggsDatasets.py $fileDir $ID $HHWWggLabel $CATS $ANALYSIS_TYPE $proc $FINALSTATE  $ANALYSIS # create 120 and 130 points
     sigFiles=""
     for m in 120 125 130
     do
