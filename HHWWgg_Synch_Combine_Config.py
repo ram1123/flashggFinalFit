@@ -11,7 +11,7 @@ _Channel = "ZZ"
 combineScriptCfg = {
 
   # Setup
-  'analysis':'HHZZgg',
+  'analysis':'HH%sgg'%_Channel,
   'analysis_type':'EFT',
   # 'analysis_type':'NMSSM',
   # 'analysis_type':'Res',

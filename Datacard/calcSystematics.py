@@ -49,11 +49,11 @@ def factoryType(d,s):
       sys.exit(1)
   
   # Else: check if RooDataHist exist
-  # print'ws.data:',ws.data
+  print'ws.data:',ws.data
   dataHistUp = "%s_%sUp01sigma"%(r0.nominalDataName,s['name'])
   dataHistDown = "%s_%sDown01sigma"%(r0.nominalDataName,s['name'])
-  # print'looking for Up:',dataHistUp
-  # print'looking for Down:',dataHistDown
+  print'looking for Up:',dataHistUp
+  print'looking for Down:',dataHistDown
   if(ws.data(dataHistUp)!=None)&(ws.data(dataHistDown)!=None): return "a_h"
   
   print " --> [ERROR] systematic %s: cannot extract type in factoryType function. Doesn't match requirement for (anti)-symmetric weights or anti-symmetric histograms. Leaving..."

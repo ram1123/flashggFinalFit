@@ -228,7 +228,7 @@ if mode not in ['effAcc','yields']:
 
         massExt = f.split('/')[-1].split('.')[0]
         thisExt = ext + '_' + massExt
-        cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --doSystematics %s --shortExt %s --HHWWggCatLabel %s '%(f,procs,cats,thisExt,lumi[year[0:4]],year,dataFile,doSystematics,shortExt,HHWWggCatLabel)
+        cmdLine = './runCombineScripts.sh -w %s -i %s -p %s -f %s --ext %s --intLumi %s --year %s --dataFile %s --isData --doSystematics %s --shortExt %s --HHWWggCatLabel %s '%(website,f,procs,cats,thisExt,lumi[year[0:4]],year,dataFile,doSystematics,shortExt,HHWWggCatLabel)
 
         cmdLine += ' --datacardOnly --smears %s --scales %s --scalesCorr %s --scalesGlobal %s --analysis %s --verbose 1 --analysis_type %s --FinalState %s'%(smears,scales,scalesCorr,scalesGlobal,analysis,analysis_type,FinalState)
         print'cmdLine: ',cmdLine

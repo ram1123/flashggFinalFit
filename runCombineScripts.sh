@@ -143,12 +143,12 @@ case $1 in
 esac
 shift
 done
-echo "[INFO] MASSLIST is $MASSLIST"
+if (($VERBOSE==1)) ; then echo "[INFO] MASSLIST is $MASSLIST" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SMEARS $SMEARS" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SCALES $SCALES" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SCALESORR $SCALESCORR" ;fi
 if (($VERBOSE==1)) ; then echo "[INFO] SCALESGLOBAL $SCALESGLOBAL" ;fi
-echo "[INFO] website $website"
+if (($VERBOSE==1)) ; then echo "[INFO] website $website" ;fi
 
 if [[ $BATCH == "IC" ]]; then
 DEFAULTQUEUE="hep.q"

@@ -6,6 +6,7 @@ _Channel = "ZZ"
 
 backgroundScriptCfg = {
 
+  'analysis':'HH%sgg'%_Channel,
   # Setup
   'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/November05_Rename/2017',
   # 'inputWSDir':'/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/September29/HHWWgg_v2_6_2016Data_PhoPt_flashgg5_Workspace_Hadded_Combined',
@@ -32,7 +33,6 @@ backgroundScriptCfg = {
   'batch':'HTCONDOR',
   'queue':'espresso',
 
-  'analysis':'HHWWgg',
 
   # Mode allows script to carry out single function
   'mode':'fTestOnly', # Options: [std,fTestOnly,bkgPlotsOnly]

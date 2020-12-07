@@ -17,7 +17,7 @@ signalScriptCfg = {
   # 'ext':'HHWWgg_v2-3_%s_2CatsSyst'%_year,
   'ext':'HHWWgg_v2-6_%s_ChannelTest'%_year,
   # 'analysis':'stage1_2', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
-  'analysis':'HHZZgg', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
+  'analysis':'HH%sgg'%_Channel, # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   # 'analysis_type':'Res', # For HHWWgg: Res, EFT or NMSSM
   'analysis_type':'EFT', # For HHWWgg: Res, EFT or NMSSM
   # 'analysis_type':'NMSSM', # For HHWWgg: Res, EFT or NMSSM
