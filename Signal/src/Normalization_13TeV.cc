@@ -565,6 +565,7 @@ double Normalization_13TeV::GetXsection(double mass, TString HistName) {
           XSectionMap = &XSectionMap_THW;
   // Stage 0
   } else if ( HistName.Contains("ggh") || HistName.Contains("GG2H") || HistName.Contains("gghX125") ) {
+    std::cout << "[INFO: Normalization_13TeV.cc#L568] debug..." << std::endl;
     XSectionMap = &XSectionMap_ggh;
   } else if ( HistName.Contains("vbf") || HistName.Contains("VBF") || HistName.Contains("vbfX125") ) {
     XSectionMap = &XSectionMap_vbf;

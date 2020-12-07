@@ -1,6 +1,10 @@
 # Editors temp files
 *.swp
 *~
+*.aux
+*.nav
+*.snm
+*.toc
 
 # SCRAM business
 __init__.py
