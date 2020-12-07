@@ -182,7 +182,7 @@ cd Datacard
 echo "Analysis: $ANALYSIS"
 echo "analysis_type: $ANALYSIS_TYPE"
 echo "FinalState: $FINALSTATE"
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
 
     # echo "./makeDatacard.py -i $FILE  -o Datacard_13TeV_${EXT}.txt -p $PROCS -c $CATS --photonCatScales $SCALES --photonCatSmears $SMEARS --isMultiPdf --mass 125 --intLumi $INTLUMI --year $YEAR --uepsfilename $UEPS --newGghScheme --analysis HHWWgg "
     # ./makeDatacard.py -i $FILE  -o Datacard_13TeV_${EXT}.txt -p $PROCS -c $CATS --photonCatScales $SCALES --photonCatSmears $SMEARS --isMultiPdf --mass 125 --intLumi $INTLUMI --year $YEAR --uepsfilename $UEPS --newGghScheme --analysis HHWWgg
@@ -256,7 +256,7 @@ if [ $ISDATA == 0 ]; then
 FAKE="_FAKE"
 fi
 
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
   fileDir="${FILE%/*}" # get directory
   fileEnd="${FILE##*/}"
   fileID=${fileEnd::-5} # remove .root
@@ -270,7 +270,12 @@ if [ $ANALYSIS == "HHWWgg" ]; then
   else
     HHWWggmass="$(cut -d'_' -f1 <<<$fileID)" # get text before first '_'. ex: SM, X250, X260, ...
     # HHWWggLabel1="${mass}_WWgg_qqlnugg"
-    HHWWggLabel="${HHWWggmass}_HHWWgg_${FINALSTATE}"
+    if [[ $ANALYSIS == "HHWWgg" ]]; then
+      HHWWggLabel="${HHWWggmass}_HHWWgg_${FINALSTATE}"
+    fi
+    if [[ $ANALYSIS == "HHZZgg" ]]; then
+      HHWWggLabel="${HHWWggmass}_HHZZgg_${FINALSTATE}"
+    fi
   fi
   OUTDIR+="_${HHWWggLabel}"
 fi
@@ -290,7 +295,7 @@ fi
 datacardDirec="${SHORTEXT}_${HHWWGGCATLABEL}_datacards"
 
 DatacardName="Datacard_13TeV_${EXT}_cleaned.txt"
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
   DatacardName="Datacard_13TeV_${EXT}_${HHWWggLabel}_cleaned.txt"
 fi
 
@@ -298,7 +303,7 @@ DatacardLocation="${datacardDirec}/${DatacardName}"
 
 cd Plots/FinalResults
 # ls ../../Signal/$OUTDIR/CMS-HGG_*sigfit*oot  > tmp.txt
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
   # ls ../../Signal/$OUTDIR/CMS-HGG_*sigfit*oot  > tmp.txt
   ls ../../Signal/$OUTDIR/CMS-HGG_mva_13TeV_sigfit.root  > tmp.txt
 else
@@ -331,7 +336,7 @@ shorterEXT=${EXT%_*}
 # echo ${foo##*:}
 echo "shorterEXT: $shorterEXT"
 
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
   # echo "cp ../../Signal/$OUTDIR/CMS-HGG_mva_13TeV_sigfit.root ./Models/${EXT}/CMS-HGG_mva_13TeV_sigfit.root"
   # website,HHWWggmass
   echo "website: "$website
@@ -345,7 +350,7 @@ cp ../../Background/CMS-HGG_multipdf_${EXT}${FAKE}.root $website/workspaces_And_
 cp ../../Datacard/${DatacardLocation} CMS-HGG_mva_13TeV_datacard_${EXT}.txt
 cp ../../Datacard/${DatacardLocation} $website/workspaces_And_Cards/CMS-HGG_mva_13TeV_datacard_${EXT}_$HHWWggmass.txt
 
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
   combine CMS-HGG_mva_13TeV_datacard_${EXT}.txt -m 125 -M AsymptoticLimits --run=blind
 
   mv higgsCombineTest.AsymptoticLimits.mH125.root ${HHWWGGCATLABEL}_limits/${shorterEXT}_${HHWWggmass}_${HHWWGGCATLABEL}_HHWWgg_${FINALSTATE}.root
@@ -425,7 +430,7 @@ sed -i -e "s/\!INTLUMI\!/$INTLUMI/g" combineHarvesterOptions_${EXT}${FAKE}.dat
 
 # if HHWWgg add local runLocal
 runLocalOption=""
-if [ $ANALYSIS == "HHWWgg" ]; then
+if [[ $ANALYSIS == "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
   runLocalOption=" --runLocal "
 fi
 

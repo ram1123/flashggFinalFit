@@ -176,7 +176,7 @@ if opt.loadDataFrame != '':
     leave()
 
 # Customize theory systematics for HHWWgg
-if(opt.analysis=="HHWWgg"):
+if(opt.analysis=="HHWWgg" or opt.analysis=="HHZZgg"):
   theory_systematics = []
   # remove MvaShift for now because found problem in flashgg
   experimental_systematics = [
@@ -203,7 +203,7 @@ if not skipData:
 
   # At the moment HHWWgg workflow is different, so customizing for it
 
-  if(opt.analysis=="HHWWgg"):
+  if(opt.analysis=="HHWWgg" or opt.analysis=="HHZZgg"):
     print'[year splitting] - doing nothing for HHWWgg'
     # ws_fileNames = []
     # ws_fileNames.append(opt.inputWSDir) # if HHWWgg, one file (for now. later will have 2016, 2017, 2018)
@@ -227,7 +227,7 @@ if not skipData:
       ws_fileNames = []
       for root, dirs, files in os.walk( inputWSDir ):
         for fileName in files:
-          if not fileName.startswith('output_') and (opt.analysis!="HHWWgg"): continue
+          if not fileName.startswith('output_') and (opt.analysis!="HHWWgg" and opt.analysis!="HHZZgg"): continue
           if not fileName.endswith('.root'): continue
           ws_fileNames.append( fileName )
       # Concatenate with input dir to get full list of complete file names
@@ -267,7 +267,7 @@ if not skipData:
     for cat in cats_sig.split(","):
       for proc in opt.procs.split(","):
         # Mapping to STXS definition here
-        if(opt.analysis=="HHWWgg"):
+        if(opt.analysis=="HHWWgg" or opt.analysis=="HHZZgg"):
           _proc = proc
           _proc_s0 = proc
         else:
@@ -285,7 +285,7 @@ if not skipData:
 
         print "_cat: ",_cat
         # Input flashgg ws
-        if(opt.analysis=="HHWWgg"):
+        if(opt.analysis=="HHWWgg" or opt.analysis=="HHZZgg"):
 
           if opt.analysis_type == "Res":
             HHWWgg_Mass = opt.inputWSDir.split('/')[-1].split('_')[0]
@@ -297,7 +297,8 @@ if not skipData:
           elif opt.analysis_type == "EFT":
             HHWWgg_node = opt.inputWSDir.split('/')[-1].split('_')[0]
             _inputWSFile = opt.inputWSDir
-            _nominalDataName = "%s_WWgg_%s_%s_13TeV_%s"%(_proc_s0,opt.FinalState,HHWWgg_node,cat)
+            if (opt.analysis=="HHWWgg"): _nominalDataName = "%s_WWgg_%s_%s_13TeV_%s"%(_proc_s0,opt.FinalState,HHWWgg_node,cat)
+            if (opt.analysis=="HHZZgg"): _nominalDataName = "%s_ZZgg_%s_%s_13TeV_%s"%(_proc_s0,opt.FinalState,HHWWgg_node,cat)
           elif opt.analysis_type == "NMSSM":
             # HHWWgg_massPair = opt.inputWSDir.split('/')[-1].split('_')[0]
             mx = opt.inputWSDir.split('/')[-1].split('_')[0]
@@ -315,14 +316,14 @@ if not skipData:
         # Input model ws
         if cat == "NOTAG": _modelWSFile, _model = '-', '-'
         else:
-          if opt.analysis == "HHWWgg":
+          if opt.analysis == "HHWWgg" or opt.analysis=="HHZZgg":
 
 
 
             HHWWgg_Mass = opt.inputWSDir.split('/')[-1].split('_')[0]
             # _modelWSFile = "./%s/%s/CMS-HGG_sigfit_mva_%s_HHWWgg_qqlnu.root"%(opt.modelWSDir,opt.ext,HHWWgg_Mass)
             _modelWSFile = "./%s/%s/CMS-HGG_mva_13TeV_sigfit.root"%(opt.modelWSDir,opt.ext)
-            _model = "wsig_13TeV:hggpdfsmrel_13TeV_%s_%s"%(proc,cat)
+            _model = "wsig_13TeV:hggpdfsmrel_%s_13TeV_%s_%s"%(year,proc,cat)
             # _model = "wsig_13TeV:hggpdfsmrel_%s_13TeV_%s_%s"%(year,proc,cat)   # for signal need year
             #
             #
@@ -340,7 +341,7 @@ if not skipData:
         else: _prune = 0
 
         # Add signal process to dataFrame:
-        print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc,_cat)
+        print " --> [VERBOSE: makeDatacard.py#L344] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc,_cat)
         data.loc[len(data)] = [year,'sig',_proc,_proc_s0,_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model,_rate,_prune]
 
   if not opt.skipBkg:
@@ -358,8 +359,8 @@ if not skipData:
           _cat = cat
           _model_bkg = "multipdf:CMS_hgg_%s_13TeV_bkgshape"%_cat
           _model_data = "multipdf:roohist_data_mass_%s"%_cat
-          print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_bkg,_cat)
-          print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_data,_cat)
+          print " --> [VERBOSE: makeDatacard.py#L362] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_bkg,_cat)
+          print " --> [VERBOSE: makeDatacard.py#L363] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_data,_cat)
           data.loc[len(data)] = ["merged",'bkg',_proc_bkg,'-',_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model_bkg,1.,0]
           data.loc[len(data)] = ["merged",'data',_proc_data,'-',_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model_data,-1,0]
         else:
@@ -368,8 +369,8 @@ if not skipData:
             _cat = "%s_%s"%(cat,year)
             _model_bkg = "multipdf:CMS_hgg_%s_13TeV_bkgshape"%_cat
             _model_data = "multipdf:roohist_data_mass_%s"%_cat
-            print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_bkg,_cat)
-            print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_data,_cat)
+            print " --> [VERBOSE: makeDatacard.py#L372] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_bkg,_cat)
+            print " --> [VERBOSE: makeDatacard.py#L373] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_data,_cat)
             data.loc[len(data)] = [year,'bkg',_proc_bkg,'-',_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model_bkg,1.,0]
             data.loc[len(data)] = [year,'data',_proc_data,'-',_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model_data,-1,0]
     # Fully separate: i.e. processed separately in FinalFits
@@ -382,7 +383,7 @@ if not skipData:
           # FIXME: change year tag to after sqrts to suit current models
           _cat = "%s_%s"%(cat,year)
           _catStripYear = cat
-          if(opt.analysis=="HHWWgg"): _modelWSFile = "./%s/%s/CMS-HGG_mva_13TeV_multipdf.root"%(opt.modelWSDir,opt.ext)
+          if(opt.analysis=="HHWWgg" or opt.analysis=="HHZZgg"): _modelWSFile = "./%s/%s/CMS-HGG_mva_13TeV_multipdf.root"%(opt.modelWSDir,opt.ext)
           else: _modelWSFile = "./%s/background_%s/CMS-HGG_mva_13TeV_multipdf.root"%(opt.modelWSDir,year)
 
 
@@ -391,8 +392,8 @@ if not skipData:
           _model_bkg = "multipdf:CMS_hgg_%s_13TeV_bkgshape"%_cat
           #_model_bkg = "multipdf:CMS_hgg_%s_13TeV_%s_bkgshape"%(_catStripYear,year)
           _model_data = "multipdf:roohist_data_mass_%s"%_catStripYear
-          print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_bkg,_cat)
-          print " --> [VERBOSE] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_data,_cat)
+          print " --> [VERBOSE: makeDatacard.py#L395] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_bkg,_cat)
+          print " --> [VERBOSE: makeDatacard.py#L396] Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc_data,_cat)
           data.loc[len(data)] = [year,'bkg',_proc_bkg,'-',_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model_bkg,1.,0]
           data.loc[len(data)] = [year,'data',_proc_data,'-',_cat,_inputWSFile,_nominalDataName,_modelWSFile,_model_data,-1,0]
 
@@ -475,14 +476,14 @@ if not skipData:
   if opt.doSystematics:
 
     # Experimental:
-    print " --> [VERBOSE] Adding experimental systematics variations to dataFrame"
+    print " --> [VERBOSE: makeDatacard.py#L479] Adding experimental systematics variations to dataFrame"
     # Add constant systematics to dataFrame
     for s in experimental_systematics:
       if s['type'] == 'constant': data = addConstantSyst(data,s,opt)
     data = experimentalSystFactory(data, experimental_systematics, experimentalFactoryType, opt )
 
     # Theory:
-    print " --> [VERBOSE] Adding theory systematics variations to dataFrame"
+    print " --> [VERBOSE: makeDatacard.py#L486] Adding theory systematics variations to dataFrame"
     # Add constant systematics to dataFrame
     # if(opt.analysis!="HHWWgg"):
     for s in theory_systematics:
@@ -492,7 +493,7 @@ if not skipData:
       data = theorySystFactory(data, theory_systematics, theoryFactoryType, opt, stxsMergeScheme=stxsBinMergingScheme )
       data, theory_systematics = groupSystematics(data, theory_systematics, opt, prefix="scaleWeight", groupings=[[1,2],[3,6],[4,8]], stxsMergeScheme=stxsBinMergingScheme)
     else:
-      if(opt.analysis!="HHWWgg"):
+      if(opt.analysis!="HHWWgg" and opt.analysis!="HHZZgg"):
         data = theorySystFactory(data, theory_systematics, theoryFactoryType, opt)
         data, theory_systematics = groupSystematics(data, theory_systematics, opt, prefix="scaleWeight", groupings=[[1,2],[3,6],[4,8]])
 

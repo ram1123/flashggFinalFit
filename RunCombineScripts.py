@@ -121,7 +121,7 @@ if mode not in ['datacard','combine','combinePlots','effAcc','yields']:
 ws_fileNames = []
 for root, dirs, files in os.walk( inputWSDir ):
   for fileName in files:
-    if (analysis != "HHWWgg") and not fileName.startswith('output_'): continue # relax constraint for HHWWgg due to different naming convention
+    if (analysis != "HHWWgg" and analysis != "HHZZgg") and not fileName.startswith('output_'): continue # relax constraint for HHWWgg due to different naming convention
     if not fileName.endswith('.root'): continue
     ws_fileNames.append( fileName )
 
@@ -131,7 +131,7 @@ for root, dirs, files in os.walk( inputWSDir ):
 ws_fullFileNames_125 = ''
 ws_fullFileNames_effAcc = ''
 
-if analysis == "HHWWgg":
+if (analysis == "HHWWgg" or analysis == "HHZZgg"):
   # concatenate with input dir to get full list of complete file names
   ws_fullFileNames = ''
   for fileName in ws_fileNames: ws_fullFileNames+="%s/%s,"%(inputWSDir,fileName)
@@ -162,7 +162,7 @@ if doUEPS:
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING SIGNAL SCRIPTS (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
   print sys.exit(1)
 
-if analysis == "HHWWgg": procs = signalProcs
+if (analysis == "HHWWgg" or analysis == "HHZZgg"): procs = signalProcs
 
 else:
   # Extract list of procs
@@ -217,7 +217,7 @@ if mode not in ['effAcc','yields']:
   cmdLine = './runCombineScripts.sh -i %s -p %s -f %s --ext %s --intLumi %s --year %s --batch %s --dataFile %s --isData '%(ws_fullFileNames_125,procs,cats,ext,lumi[year[0:4]],year,batch,dataFile)
   if mode == 'datacard':
     # for HHWWgg analysis, need to create datacard for each mass point
-    if analysis == "HHWWgg":
+    if (analysis == "HHWWgg" or analysis == "HHZZgg"):
       filesList = ws_fullFileNames.split(',')
       for f in filesList:
         print
@@ -238,7 +238,7 @@ if mode not in ['effAcc','yields']:
     if doUEPS:
       cmdLine += ' --uepsFile '+uepsFileNames
   elif mode == 'combine':
-    if analysis == "HHWWgg":
+    if (analysis == "HHWWgg" or analysis == "HHZZgg"):
       filesList = ws_fullFileNames.split(',')
       for f in filesList:
         print
@@ -260,7 +260,7 @@ elif mode == 'effAcc': cmdLine = './makeStage1EffAcc.py -i %s -s Signal/outdir_%
 
 elif mode == 'yields': cmdLine = './stage1yields.py -w %s -p %s -s Signal/signumbers_%s.txt -u Background/CMS-HGG_multipdf_%s.root --intLumi %s -c %s'%(ws_fullFileNames_125,procs,ext,ext,lumi[year[0:4]],cats)
 
-if analysis != "HHWWgg":
+if (analysis != "HHWWgg" and analysis != "HHZZgg"):
   # Either print command to screen or run
   if printOnly: print "\n%s"%cmdLine
   else: os.system( cmdLine )

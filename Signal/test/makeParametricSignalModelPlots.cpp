@@ -568,7 +568,15 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
   string hhwwggMass;
   if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg" ){
     // website_ = "/eos/user/r/rasharma/www/doubleHiggs/HHWWgg/fggfinalfit/Signal/";
-    website_ = website_ + "/Signal/";
+    // TString haystack = TString(website_);
+    // TString needle = TString("Signal");
+    // if (haystack.Contains(needle))
+    if (TString(website_).Contains(TString("Signal")))
+    {
+      std::cout << "website_ = " << website_ << std::endl;
+    } else {
+      website_ = website_ + "/Signal/";
+    }
     process = "HH#rightarrowWW#gamma#gamma";
     // Can add stat or stat + sys with systematics flag
 
@@ -664,7 +672,7 @@ void Plot(RooRealVar *mass, RooDataSet *data, RooAbsPdf *pdf, pair<double,double
 
   canv->Print(Form("%s.pdf",savename.c_str()));
   canv->Print(Form("%s.png",savename.c_str()));
-  std::cout << "[Inside makeParametricSignalModelPlots.cpp] website path: " << website_ << std::endl;
+  std::cout << "[Inside makeParametricSignalModelPlots.cpp#L667] website path: " << website_ << std::endl;
   if (analysis_ == "HHWWgg" || analysis_ == "HHZZgg" ){
     canv->Print(Form("%s%s.pdf",website_.c_str(),savename_2.c_str()));
     canv->Print(Form("%s%s.png",website_.c_str(),savename_2.c_str()));
