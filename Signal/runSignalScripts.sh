@@ -350,7 +350,7 @@ if [ $SIGFITONLY == 1 ]; then
     echo "PEND $PEND"
 
     # Don't want this for HHWWgg because need to submit job for each mass point
-    if [[ $ANALYSIS != "HHWWgg" || $ANALYSIS != "HHZZgg" ]]; then
+    if [[ $ANALYSIS != "HHWWgg" && $ANALYSIS != "HHZZgg" ]]; then
       while (( $PEND > 0 )) ; do
         PEND=`ls -l $OUTDIR/sigfit/SignalFitJobs/sub* | grep -v "\.run" | grep -v "\.done" | grep -v "\.fail" | grep -v "\.err" | grep -v "\.log" | grep -v "\.out" | grep -v "\.sub" | wc -l`
         RUN=`ls -l $OUTDIR/sigfit/SignalFitJobs/sub* | grep "\.run" | wc -l`
@@ -472,7 +472,7 @@ if [ $SIGPLOTSONLY == 1 ]; then
     ./bin/makeParametricSignalModelPlots -i ${inFile} -w ${WEBSITE} -o $OUTDIR/sigplots -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS --analysis_type $ANALYSIS_TYPE --FinalState $FINALSTATE # Need to not output to .txt file in order to debug
     # ./bin/makeParametricSignalModelPlots -i ${inFile}  -o $OUTDIR/sigplots -p $PROCS -f $CATS --analysis $ANALYSIS --year $YEAR --systematics $SYSTEMATICS > signumbers_${EXT}.txt
 
-    if [[ $ANALYSIS != "HHWWgg" || $ANALYSIS == "HHZZgg" ]]; then
+    if [[ $ANALYSIS != "HHWWgg" && $ANALYSIS == "HHZZgg" ]]; then
       # should add HHWWgg feature here :)
       ./makeSlides.sh $OUTDIR
       mv fullslides.pdf $OUTDIR/fullslides_${EXT}.pdf
