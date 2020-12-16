@@ -1358,20 +1358,24 @@ void FinalModelConstruction::getNormalization(){
     RooDataSet *data = stdDatasets[mh];
 	double effAcc =0.;
 	if (intLumi) {
-    // calcu eA as sumEntries / totalxs * totalbr * intL
-    float sumEntries = data->sumEntries();
-    if (sumEntries <0 ) {
-    sumEntries =0; //negative eff*acc makes no sense...
-    fitToConstant=1;
+        // calcu eA as sumEntries / totalxs * totalbr * intL
+        float sumEntries = data->sumEntries();
+        if (sumEntries <0 ) {
+        sumEntries =0; //negative eff*acc makes no sense...
+        fitToConstant=1;
+        }
+        effAcc = (sumEntries/(intLumi->getVal()*norm->GetXsection(mh,procLowerCase_)*norm->GetBR(mh)));
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) mass:           " << mh << std::endl;
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) sumEntries:     " << sumEntries << std::endl;
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) intLumi:        " << intLumi->getVal() << std::endl;
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) procLowerCase_: " << procLowerCase_ << std::endl;
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) Corss-Section:  " << norm->GetXsection(mh,"ggh") << std::endl;
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) Branching Ratio:" << norm->GetBR(mh)<< std::endl;
+        if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) effAcc:         " << effAcc << std::endl;
+	} else {
+        std::cout << "[ERROR] IntLumi rooRealVar is not in this workspace. exit." << std::endl;
+        return ;
     }
-    effAcc = (sumEntries/(intLumi->getVal()*norm->GetXsection(mh,procLowerCase_)*norm->GetBR(mh)));
-		if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) intLumi " << intLumi->getVal() <<", effAcc " << effAcc << std::endl;
-		if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) data " << *data << std::endl;
-		if(verbosity_)std::cout << "[INFO] (FinalModelConstruction) sumEntries " << sumEntries <<", norm->GetXsection(mh,procLowerCase_) " << norm->GetXsection(mh,procLowerCase_) << " norm->GetBR(mh) " << norm->GetBR(mh)<< std::endl;
-		} else {
-		  std::cout << "[ERROR] IntLumi rooRealVar is not in this workspace. exit." << std::endl;
-		return ;
-		}
     if( (proc_=="testBBH" || proc_=="testTHQ" || proc_=="testTHW") ){
       temp->SetPoint(0,mh,effAcc);
       fitToConstant=1;

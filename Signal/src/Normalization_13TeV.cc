@@ -369,14 +369,31 @@ TGraph * Normalization_13TeV::GetSigmaGraph(TString process)
 
 TGraph * Normalization_13TeV::GetBrGraph()
 {
+  for (double mH=120;mH<=130.;mH+=0.5) { // Do we need this up to 250 ?
+    double valBR    =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getBR(%f)",mH));
+    BranchingRatioMap[mH] = valBR;
+  }
   TGraph * gr = new TGraph();
+  // if (process.Contains("gghX125") || process.Contains("vbfX125") || process.Contains("tthX125") || process.Contains("wzhX125")){
+    // BranchingRatioMap = BranchingRatioMapggF;
+  // }
+
   for (std::map<double, double>::const_iterator iter = BranchingRatioMap.begin();  iter != BranchingRatioMap.end(); ++iter) {
       gr->SetPoint(gr->GetN(),iter->first, iter->second );
+      std::cout << "[INFO: Normalization_13TeV.cc#383] (iter->first, iter->second): (" << iter->first << ", " <<  iter->second << ")" << std::endl;
   }
   return gr;
 }
 
 double Normalization_13TeV::GetBR(double mass) {
+
+    for (double mH=120;mH<=130.;mH+=0.5){ // Do we need this up to 250 ?
+      double valBR    =  (double)TPython::Eval(Form("buildSMHiggsSignalXSBR.getBR(%f)",mH));
+      BranchingRatioMap[mH] = valBR;
+    }
+  // if (process.Contains("gghX125") || process.Contains("vbfX125") || process.Contains("tthX125") || process.Contains("wzhX125")){
+      // BranchingRatioMap = BranchingRatioMapggF;
+    // }
 
     for (std::map<double, double>::const_iterator iter = BranchingRatioMap.begin();  iter != BranchingRatioMap.end(); ++iter) {
         if (abs(mass-iter->first)<0.001) return iter->second;
@@ -565,7 +582,6 @@ double Normalization_13TeV::GetXsection(double mass, TString HistName) {
           XSectionMap = &XSectionMap_THW;
   // Stage 0
   } else if ( HistName.Contains("ggh") || HistName.Contains("GG2H") || HistName.Contains("gghX125") ) {
-    std::cout << "[INFO: Normalization_13TeV.cc#L568] debug..." << std::endl;
     XSectionMap = &XSectionMap_ggh;
   } else if ( HistName.Contains("vbf") || HistName.Contains("VBF") || HistName.Contains("vbfX125") ) {
     XSectionMap = &XSectionMap_vbf;
