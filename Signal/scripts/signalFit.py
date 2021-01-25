@@ -47,7 +47,8 @@ def get_options():
   parser.add_option('--skipVertexScenarioSplit', dest='skipVertexScenarioSplit', default=False, action="store_true", help="Skip vertex scenario split")
   parser.add_option('--skipZeroes', dest='skipZeroes', default=False, action="store_true", help="Skip proc x cat is numEntries = 0., or sumEntries < 0.")
   # For systematics
-  parser.add_option('--skipSystematics', dest='skipSystematics', default=False, action="store_true", help="Skip shape systematics in signal model")
+  # parser.add_option('--skipSystematics', dest='skipSystematics', default=False, action="store_true", help="Skip shape systematics in signal model")
+  parser.add_option('--skipSystematics', dest='skipSystematics', default=True, action="store_true", help="Skip shape systematics in signal model")
   parser.add_option('--useDiagonalProcForSyst', dest='useDiagonalProcForSyst', default=False, action="store_true", help="Use diagonal process for systematics (requires diagonal mapping produced by getDiagProc script)")
   parser.add_option("--scales", dest='scales', default='', help="Photon shape systematics: scales")
   parser.add_option("--scalesCorr", dest='scalesCorr', default='', help='Photon shape systematics: scalesCorr')
@@ -161,6 +162,7 @@ nominalDatasets = od()
 datasetRVForFit = od()
 for mp in opt.massPoints.split(","):
   if ( opt.analysis == 'HHWWgg' ):
+    #  WSFileName = glob.glob("%s/Shifted*M%s*%s_%s_%s.root"%(opt.inputWSDir,mp,procRVFit,opt.HHWWggLabel,opt.cat))[0]
      WSFileName = glob.glob("%s/Shifted*M%s*%s_%s_%s.root"%(opt.inputWSDir,mp,procRVFit,opt.HHWWggLabel,opt.cat))[0]
   else:
      print "%s/output*M%s*%s_%s.root"%(opt.inputWSDir,mp,procRVFit,opt.cat)

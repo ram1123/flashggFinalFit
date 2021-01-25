@@ -3,7 +3,8 @@
 trees2wsCfg = {
 
   # Name of RooDirectory storing input tree
-  'inputTreeDir':'tagsDumper/trees',
+  # 'inputTreeDir':'tagsDumper/trees',
+  'inputTreeDir':'',
 
   # Variables to be added to dataframe: use wildcard * for common strings
   'mainVars':["CMS_hgg_mass","weight","dZ","centralObjectWeight","genMhh","LooseMvaSFUp01sigma","LooseMvaSFDown01sigma","PreselSFUp01sigma","PreselSFDown01sigma","electronVetoSFUp01sigma","electronVetoSFDown01sigma","TriggerWeightUp01sigma","TriggerWeightDown01sigma","FracRVWeightUp01sigma","FracRVWeightDown01sigma","MuonIDWeightUp01sigma","MuonIDWeightDown01sigma","ElectronIDWeightUp01sigma","ElectronIDWeightDown01sigma","ElectronRecoWeightUp01sigma","ElectronRecoWeightDown01sigma","MuonIsoWeightUp01sigma","MuonIsoWeightDown01sigma","JetBTagCutWeightUp01sigma","JetBTagCutWeightDown01sigma","JetBTagReshapeWeightUp01sigma","JetBTagReshapeWeightDown01sigma","prefireWeightUp01sigma","prefireWeightDown01sigma","scaleWeights","pdfWeights","alphaSWeights","puweight","lumi"], # Var for the nominal RooDataSets
@@ -26,5 +27,6 @@ trees2wsCfg = {
 
   # Analysis categories: python list of cats or use 'auto' to extract from input tree
   'cats':'auto'
+  # 'cats':["HHWWggTag_0","HHWWggTag_1","HHWWggTag_2","HHWWggTag_3"]
 
 }
