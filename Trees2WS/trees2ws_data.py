@@ -11,6 +11,7 @@ def get_options():
   parser.add_option('--inputConfig',dest='inputConfig', default="", help='Input config: specify list of variables/analysis categories')
   parser.add_option('--inputTreeFile',dest='inputTreeFile', default=None, help='Input tree file')
   parser.add_option('--outputWSDir',dest='outputWSDir', default=None, help='Output dir (default is same as input dir)')
+  parser.add_option('--UniqueName', dest='UniqueName', default="", help="Unique name for output directories - used in HHWWgg workflow")
   return parser.parse_args()
 (opt,args) = get_options()
 
@@ -103,9 +104,11 @@ f = ROOT.TFile(opt.inputTreeFile)
 
 # Open output ROOT file and initiate workspace to store RooDataSets
 if opt.outputWSDir is not None: outputWSDir = opt.outputWSDir+"/ws"
-else: outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws"
+# else: outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws"
+else: outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_Data_%s"%(opt.UniqueName)
 if not os.path.exists(outputWSDir): os.system("mkdir %s"%outputWSDir)
-outputWSFile = outputWSDir+"/"+opt.inputTreeFile.split("/")[-1]
+# outputWSFile = outputWSDir+"/"+opt.inputTreeFile.split("/")[-1]
+outputWSFile = "%s/Data_%s.root"%(outputWSDir, opt.UniqueName) ## HHWWgg 
 print " --> Creating output workspace: (%s)"%outputWSFile
 fout = ROOT.TFile(outputWSFile,"RECREATE")
 foutdir = fout.mkdir(inputWSName__.split("/")[0])

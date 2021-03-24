@@ -35,7 +35,7 @@ int splitStringToVect(const string & srcStr, vector<string> & destVect, const st
 void DataSelections_Run(){
 TString InputFile = "INPUTFILE";
 TFile *output;
-TString outputFile = "Data_13TeV_YEAR.root";
+TString outputFile = "Data_13TeV_YEAR_UNIQUEFCN.root";
 TFile MC_file(InputFile);
 output = new TFile(outputFile, "RECREATE");
 output->mkdir("tagsDumper/trees");

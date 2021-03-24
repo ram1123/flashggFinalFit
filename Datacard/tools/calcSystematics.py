@@ -86,7 +86,7 @@ def factoryType(d, s):
     for ir, r in d[d['type'] == 'sig'].iterrows():
         f = ROOT.TFile(r.inputWSFile)
         ws = f.Get(inputWSName__)
-        print inputWSName__
+        # print inputWSName__
         print r.inputWSFile
         dataHistUp = "%s_%sUp01sigma" % (r.nominalDataName, s['name'])
         dataHistDown = "%s_%sDown01sigma" % (r.nominalDataName, s['name'])
@@ -485,6 +485,13 @@ def theorySystFactory(d, systs, ftype, options, stxsMergeScheme=None, _removal=F
 
 
 def compareYield(row, factoryType, sname, mode='default', mname=None):
+
+    # print("---Compare Yields---")
+    # print("row:",row)
+    # print("factoryType:",factoryType)
+    # print("sname:",sname)
+    # print("mode:",mode)
+    # print("mname:",mname)
 
     # Catch: if any yields in denominators are zero: return 1
     if row['nominal_yield'] == 0:

@@ -38,8 +38,9 @@ void Selections_Run(){
   // TString NewCatName = "NEW_Cat_NAME";
   TString input_node = "NODE";
   TString InputFile = "INPUTFILE";
+  TString UniqueFcnName = "UNIQUEFCN";
   TFile *output;
-  TString outputFile = "./" + Process + "_node_" + input_node  + "_" + year + ".root";
+  TString outputFile = "./" + Process + "_node_" + input_node  + "_" + year + "_" + UniqueFcnName + ".root";
   TFile MC_file(InputFile);
   output = new TFile(outputFile, "RECREATE");
   output->mkdir("tagsDumper/trees");

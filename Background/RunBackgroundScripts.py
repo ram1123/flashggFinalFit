@@ -22,7 +22,7 @@ def get_options():
 print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 def leave():
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-  sys.exit(1)
+  # sys.exit(1) ##-- Removing because submitting HHWWgg scripts via condor jobs and want to perform steps sequentially without exiting shell session inbetween
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Extract options from config file
@@ -64,7 +64,7 @@ else:
 if options['mode'] not in ['fTestParallel']:
   print " --> [ERROR] mode %s is not allowed. The only current supported mode is: [fTestParallel]. Leaving..."%options['mode']
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-  sys.exit(1)
+  # sys.exit(1) ##-- Removing because submitting HHWWgg scripts via condor jobs and want to perform steps sequentially without exiting shell session inbetween
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # If cat == auto: extract list of categories from datafile
