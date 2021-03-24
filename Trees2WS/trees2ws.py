@@ -115,8 +115,9 @@ if opt.year == '2018': systematics.append("JetHEM")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # UPROOT file
 f = uproot.open(opt.inputTreeFile)
-print inputTreeDir
-if inputTreeDir == '': listOfTreeNames == f.keys()
+print"f:",f
+print "inputTreeDir:",inputTreeDir
+if inputTreeDir == '': listOfTreeNames = f.keys() ##-- '==' is incorrect. Should be '=' 
 else: listOfTreeNames = f[inputTreeDir].keys()
 # If cats = 'auto' then determine from list of trees
 if cats == 'auto':
