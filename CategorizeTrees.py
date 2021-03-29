@@ -91,11 +91,12 @@ def get_options():
     parser.add_option("--nBoundaries",type='string',dest="nBoundaries",default='')
     parser.add_option("--year",type='string',dest="year",default='')
     parser.add_option("--oD",type='string',dest="out_dir",default='')
-    parser.add_option("--v",type='string',dest='var',default='evalDNN_HH') ##-- evalDNN_HH by default for multiclassifier
+    parser.add_option("--v",type='string',dest='var',default='DNN_evaluation') ##-- DNN_evaluation by default for multiclassifier
     parser.add_option("--f",type='string',dest='forceContainString',default='')
     parser.add_option("--node",type='string',dest='node',default='NONE')
     parser.add_option("--part",type='string',dest='part',default='1')
     parser.add_option("--syst",type='string',dest='syst',default='1')
+    parser.add_option("--ch",type='string',dest='channel',default='FH')
     return parser.parse_args()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -150,6 +151,15 @@ def ShortMCTreeName(MCfileName_):
 
     return ShortTreeDict[MCfileName_]    
 
+def ShortMCTreeNameFullyHad(MCfileName_):
+    ShortTreeDict = {
+        "GluGluHToGG_M125_TuneCP5_13TeV.root": "ggh_125",
+        "VBFHToGG_M125_13TeV.root": "vbf_125",
+        "VHToGG_M125_13TeV.root": "wzh_125"
+    }
+
+    return ShortTreeDict[MCfileName_]   
+
 def GetMCTreeName(MCfileName_):
     TreeDict = {
         "GluGluHToGG_HHWWggTag_0_MoreVars_odd.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
@@ -194,6 +204,14 @@ def GetMCTreeName(MCfileName_):
 
     return TreeDict[MCfileName_]
 
+def GetMCTreeNameFullyHad(MCfileName_):
+    TreeDict = {
+        "GluGluHToGG_M125_TuneCP5_13TeV.root": "output_tree",                
+        "VBFHToGG_M125_13TeV.root": "output_tree",
+        "VHToGG_M125_13TeV.root": "output_tree"    
+    }
+    return TreeDict[MCfileName_]    
+
 def GetMCLabel(MCfileName_):
     NameDict = {
         "GluGluHToGG_HHWWggTag_0_MoreVars_odd.root" : "GluGluHToGG",
@@ -237,11 +255,21 @@ def GetMCLabel(MCfileName_):
 
     }
 
-    return NameDict[MCfileName_]    
+    return NameDict[MCfileName_]   
+
+def GetMCLabelFullyHad(MCfileName_):
+    NameDict = {           
+        "GluGluHToGG_M125_TuneCP5_13TeV.root": "GluGluHToGG",    
+        "VBFHToGG_M125_13TeV.root": "VBFHToGG",
+        "VHToGG_M125_13TeV.root": "VHToGG"                       
+    }
+
+    return NameDict[MCfileName_]        
 
 (opt,args) = get_options()
 
 nTupleDirec = opt.inp_dir
+channel = opt.channel
 
 input_files = GetFiles(nTupleDirec)
 print("input_files:",input_files)
@@ -398,7 +426,7 @@ else:
 for num,f in enumerate(input_files):
     # print 'input file: ',f
     if((opt.forceContainString != "") and (opt.forceContainString not in f)):
-        # print"Skipping file:",f,"because it doesn't contain:",opt.forceContainString
+        print"Skipping file:",f,"because it doesn't contain:",opt.forceContainString
         continue 
     tfile = ROOT.TFile("%s%s"%(opt.inp_dir,f))
     print 'input file: ',f
@@ -409,15 +437,22 @@ for num,f in enumerate(input_files):
         for sys_i,syst in enumerate(systLabels):
             print "Systematic: ",syst 
             systLabel = "%s_v1"%(syst)
-            if (opt.year == '2016'):
+            if (opt.year == '2016' and channel == "SL"):
                 if(systLabel == "_v1"): treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_v1"%(opt.node)
                 else: treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_%s"%(opt.node,systLabel)    
 
-            elif (opt.year == '2017'):
+            elif (opt.year == '2017' and channel == "SL"):
                 if(systLabel == "_v1"): treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_v1"%(opt.node)
                 else: treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_%s"%(opt.node,systLabel)
+
+            elif (opt.year == '2017' and channel == "FH"): 
+                # if(systLabel == "_v1"): treename = "GluGluToHHTo2G4Q_node_%s_13TeV_HHWWggTag_1"%(opt.node)
+                if(systLabel == "_v1"): treename = "output_tree"
+                else: treename = "output_tree"
+                print "[DEBUG#451]: treename: ",treename
+                # else: treename = "GluGluToHHTo2G4Q_node_%s_13TeV_HHWWggTag_1_%s"%(opt.node,systLabel)
             
-            elif (opt.year == '2018'):
+            elif (opt.year == '2018' and channel == "SL"):
                 if(systLabel == "_v1"): treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_v1"%(opt.node)
                 else: treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_%s"%(opt.node,systLabel)                
             treelist.append(treename)
@@ -429,20 +464,30 @@ for num,f in enumerate(input_files):
                 #MCTreeName = GetMCTreeName(f)
                 #if(systLabel == "_v1"): treename = "%s"%(MCTreeName)
                 #else: treename = "%s_%s"%(MCTreeName,systLabel)
-            if (opt.year == '2018' or opt.year == '2016' or opt.year == '2017'):
+            if ((opt.year == '2018' or opt.year == '2016' or opt.year == '2017') and channel == "SL"):
                 MCTreeName = GetMCTreeName(f)
                 if(systLabel == "_v1"): treename = "%s"%(MCTreeName)
                 else: 
                     treename = "%s_%s"%(MCTreeName,systLabel)    
-                    treename = treename.replace("HHWWggTag_0_v1","HHWWggTag_0")            
+                    treename = treename.replace("HHWWggTag_0_v1","HHWWggTag_0")  
+            if ((opt.year == '2018' or opt.year == '2016' or opt.year == '2017') and channel == "FH"):
+                print "[DEBUG] Inside FH tree condition..."
+                MCTreeName = GetMCTreeNameFullyHad(f)
+                if(systLabel == "_v1"): treename = "%s"%(MCTreeName)
+                else: 
+                    treename = "%s_%s"%(MCTreeName,systLabel)    
+                    treename = treename.replace("HHWWggTag_1","HHWWggTag_1")                                
             print "treename",treename 
             treelist.append(treename)
     else:
         treename = "Data_13TeV_HHWWggTag_0_v1"
+        if channel == "FH": treename = "output_tree"
         treelist.append(treename)
 
     if(opt.option == "SingleHiggs"): 
-        MCLabel = GetMCLabel(f)
+        MCLabel = ""
+        if channel=="SL": MCLabel = GetMCLabel(f)
+        if channel=="FH": MCLabel = GetMCLabelFullyHad(f)
         print"MCLabel:",MCLabel
         outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,MCLabel,opt.year,opt.part)
     elif(opt.option == "Signal"):
@@ -469,12 +514,19 @@ for num,f in enumerate(input_files):
             #ntuple.SetBranchStatus("alphaSWeights",0)
             #ntuple.SetBranchStatus("scaleWeights",0)
             """
+            print "Cut: ",(common_cut+'&&'+cut_list[icat])
             CategorizedTree = ntuple.CopyTree(common_cut+'&&'+cut_list[icat])
             if (tree_i == 0):
                 if(opt.option == 'Signal'): treename_tmp = 'GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_SL_%s'%(opt.node,str(icat))
                 elif(opt.option=='SingleHiggs'):
-                    Label = ShortMCTreeName(f)
-                    treename_tmp = "%s_13TeV_HHWWggTag_SL_%s"%(Label,str(icat))
+                    Label = ""
+                    treename_tmp = ""
+                    if channel=="SL": 
+                        Label = ShortMCTreeName(f)
+                        treename_tmp = "%s_13TeV_HHWWggTag_SL_%s"%(Label,str(icat))
+                    if channel=="FH": 
+                        Label = ShortMCTreeNameFullyHad(f)
+                        treename_tmp = "%s_13TeV_HHWWggTag_FH_%s"%(Label,str(icat))
                 else: treename_tmp = "Data_13TeV_HHWWggTag_SL_%s"%(str(icat))
                 
             else: 
