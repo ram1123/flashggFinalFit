@@ -4,9 +4,10 @@ source ./setup.sh
 ############################################
 SingleHiggs=("tth" "wzh" "vbf" "ggh")
 # Names=("SingleHiggs_ttHJetToGG_2017_CategorizedTrees" "SingleHiggs_VHToGG_2017_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_CategorizedTrees")
+Names=("SingleHiggs_ttHJetToGG_2017_all_CategorizedTrees" "SingleHiggs_VHToGG_2017_all_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_all_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_all_CategorizedTrees")
 # Names=("ttHJetToGG" "VHToGG" "VBFHToGG" "GluGluHToGG")
-Names=("ttHJetToGG_M125" "VHToGG_M125" "VBFHToGG_M125" "GluGluHToGG_M125")
-years=("2016")
+# Names=("ttHJetToGG_M125" "VHToGG_M125" "VBFHToGG_M125" "GluGluHToGG_M125")
+years=("2017")
 for year in ${years[@]}
 do
   for (( i = 0 ; i < 4 ; i++ ))
@@ -14,18 +15,18 @@ do
     Name=${Names[$i]}
     procs=${SingleHiggs[$i]}
     # year='2017'
-    ext='FL'
-    cat='HHWWggTag_FL_0' #output cat name, it will be used in subsequence step
-    InputTreeCats='HHWWggTag_2' #input cat name in the tree
+    ext='SL'
+    cat='HHWWggTag_SLDNN_0,HHWWggTag_SLDNN_1,HHWWggTag_SLDNN_2,HHWWggTag_SLDNN_3' #output cat name, it will be used in subsequence step
+    InputTreeCats='HHWWggTag_SL_0,HHWWggTag_SL_1,HHWWggTag_SL_2,HHWWggTag_SL_3' #input cat name in the tree
     catNames=(${cat//,/ })
     mass='125'
     # TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2017/Single_H_2017_Hadded/"
-    TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2016/Single_H_hadded/"
-    # TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2018/Single_H_2018_hadded/"
-    InputWorkspace="/eos/user/c/chuw/HHWWggWorkspace/FL_withPt_over_Mass_dipho_pt91/" #where you place output workspace
-    doSelections="1"
-    Selections='((Leading_Photon_pt/CMS_hgg_mass) > 1/3. \&\& (Subleading_Photon_pt/CMS_hgg_mass) > 1/4. ) \&\& dipho_pt > 91' # Seletions you want to applied.
-    Replace="HHWWggTag_FL_0"
+    # TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2017/Single_H_2017_Hadded/"
+    TreePath="/eos/user/c/chuw/HHWWgg_ntuple/2017/SL_DNN_Categorized_LOSignals_noPtOverM-Training/"
+    InputWorkspace="/eos/user/c/chuw/HHWWggWorkspace/SL/"
+    doSelections="0"
+    Selections='dipho_pt > 91' # Seletions you want to applied.
+    Replace="HHWWggTag_SLDNN_0"
     ############################################
     #  Tree selectors#
     #
@@ -80,6 +81,7 @@ cp HHWWgg_config.py HHWWgg_config_run.py
 fi
 sed -i "s#2017#${year}#g" HHWWgg_config_run.py
 sed -i "s#auto#${cat}#g" HHWWgg_config_run.py
+echo "python trees2ws.py --inputConfig HHWWgg_config_run.py --inputTreeFile ./${Name}_${cat}_${year}.root --inputMass ${mass} --productionMode ${procs}  --year ${year} --doSystematics"
 rm -rf ws*
 python trees2ws.py --inputConfig HHWWgg_config_run.py --inputTreeFile ./${Name}_${year}.root --inputMass ${mass} --productionMode ${procs}  --year ${year} --doSystematics
 rm HHWWgg_config_run.py
@@ -89,10 +91,15 @@ cp ws_${procs}/${Name}_${year}_${procs}.root $InputWorkspace/Signal/Input/${year
 cp ws_${procs}/${Name}_${year}_${procs}.root $InputWorkspace/Signal/Input/${year}/output_M125_${procs}_${catName}.root
 done
 rm ${Name}_${year}.root
+#########################################
+#shift dataset
+#########################################
+cd ../Signal/
+# python ./scripts/shiftHiggsDatasets_single_higgs.py --inputDir ./Input/${year}/ --procs ${procs} --cats ${cat}
+
 #######################################
 # Run ftest
 ######################################
-cd ../Signal
 echo "Run FTest"
 cp HHWWgg_single_higgs.py HHWWgg_config_Run.py
 sed -i "s#NODE#node_${node}#g" HHWWgg_config_Run.py

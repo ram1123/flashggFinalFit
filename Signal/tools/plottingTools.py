@@ -433,15 +433,24 @@ def plotSignalModel(_hists,_opt,_outdir=".",Label="cHHH1",offset=0.02):
   orginal_Data=_hists['data'].Integral()
   orginal_pdf=_hists['pdf'].Integral()
   Scale=orginal_Data
-  print orginal_Data
-  if ( "SL" in Label):
+  if ( "SL" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
     Scale=31.049*0.441*0.000970198
-  elif ( "FL" in Label):
-    Scale=31.049*0.01071*0.000970198
-  elif ( "FH" in Label):
-    Scale=31.049*0.5483*0.000970198
+  elif ( "FL" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
+    Scale=31.049*0.1071*0.000970198
+  elif ( "FH" in Label and "ZZ" not in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
+    Scale=31.049*0.4544*0.000970198
+  elif ( "ZZ" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
+    Scale=31.049*0.4888*0.000119992
+  #  elif ( "tth" in Label):
+    #  Scale=31.049*0.4888*0.000119992
+  #  elif ( "vbf" in Label):
+    #  Scale=31.049*0.4888*0.000119992
+  #  elif ( "ggh" in Label):
+    #  Scale=31.049*0.4888*0.000119992
+  #  elif ( "wzh" in Label):
+    #  Scale=31.049*0.4888*0.000119992
   else:
-    Scale=orginal_Data
+    Scale=1
   _hists['data'].Scale(Scale)
   _hists['pdf'].Scale(Scale)
   h_axes.SetMaximum(_hists['data'].GetMaximum()*1.2)
@@ -539,12 +548,20 @@ def plotSignalModel(_hists,_opt,_outdir=".",Label="cHHH1",offset=0.02):
       _hists['pdf_%s'%year].SetLineWidth(2)
       _hists['pdf_%s'%year].Scale(Scale)
       print "Pdf year Max:",year,"  ",_hists['pdf_%s'%year].GetMaximum()
+      _hists['data_%s'%year].SetLineColor( colorMap[year] )  
+      _hists['data_%s'%year].SetLineStyle(2)
+      _hists['data_%s'%year].SetLineWidth(2)
+      #  _hists['data_%s'%year].Scale(Scale)
+      print "Data year Inte:",year,"  ",_hists['data_%s'%year].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140)))
       _hists['pdf_%s'%year].Draw("Same Hist C")
   # Set style: data
   _hists['data'].SetMarkerStyle(25)
   _hists['data'].SetMarkerColor(1)
   _hists['data'].SetLineColor(1)
   _hists['data'].SetLineWidth(2)
+  _hists['data_2016'].Scale(Scale)
+  _hists['data_2017'].Scale(Scale)
+  _hists['data_2018'].Scale(Scale)
   print _hists['data'].Integral()
   _hists['data'].Draw("Same PE")
   
@@ -556,7 +573,25 @@ def plotSignalModel(_hists,_opt,_outdir=".",Label="cHHH1",offset=0.02):
   lat0.SetTextSize(0.045)
   lat0.DrawLatex(0.15,0.93,"#bf{CMS} #it{%s}"%_opt.label)
   lat0.DrawLatex(0.77,0.93,"%s TeV"%(sqrts__.split("TeV")[0]))
-  lat0.DrawLatex(0.16+offset,0.83,"HH#rightarrowWW#gamma#gamma") #WWgg
+  if ( "SL" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
+    lat0.DrawLatex(0.16+offset,0.83,"HH#rightarrowWW#gamma#gamma#rightarrow2ql#nu#gamma#gamma") #WWgg
+  elif ( "FL" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
+    print "FL in label"
+    lat0.DrawLatex(0.16+offset,0.83,"HH#rightarrowWW#gamma#gamma#rightarrowl#nul#nu#gamma#gamma") #WWgg
+  elif ( "FH" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label and "ZZ" not in Label):
+    lat0.DrawLatex(0.16+offset,0.83,"HH#rightarrowWW#gamma#gamma#rightarrow4q#gamma#gamma") #WWgg
+  elif ( "ZZ" in Label and "tth" not in Label and "vbf" not in Label and "wzh" not in Label and "ggh" not in Label ):
+    lat0.DrawLatex(0.16+offset,0.83,"HH#rightarrowZZ#gamma#gamma#rightarrow4q#gamma#gamma") #WWgg
+  elif ( "tth" in Label):
+    lat0.DrawLatex(0.16+offset,0.83,"ttHJetToGG") #WWgg
+  elif ( "wzh" in Label):
+    lat0.DrawLatex(0.16+offset,0.83,"VHToGG") #WWgg
+  elif ( "ggh" in Label):
+    lat0.DrawLatex(0.16+offset,0.83,"GluGluHToGG") #WWgg
+  elif ( "vbf" in Label):
+    lat0.DrawLatex(0.16+offset,0.83,"VBFHToGG") #WWgg
+  else:
+    lat0.DrawLatex(0.16+offset,0.83,"H#rightarrow#gamma#gamma") #WWgg
 
   # Load translations
   translateCats = {} if _opt.translateCats is None else LoadTranslations(_opt.translateCats)
@@ -566,7 +601,7 @@ def plotSignalModel(_hists,_opt,_outdir=".",Label="cHHH1",offset=0.02):
   lat1.SetTextFont(42)
   lat1.SetTextAlign(33)
   lat1.SetNDC(1)
-  lat1.SetTextSize(0.035)
+  lat1.SetTextSize(0.03)
   if _opt.procs == 'all': procStr, procExt = "", ""
   elif len(_opt.procs.split(","))>1: procStr, procExt = "Multiple processes", "_multipleProcs"
   else: procStr, procExt = Translate(_opt.procs,translateProcs), "_%s"%_opt.procs
@@ -574,16 +609,54 @@ def plotSignalModel(_hists,_opt,_outdir=".",Label="cHHH1",offset=0.02):
   if len(_opt.years.split(","))>1: yearStr, yearExt = "", ""
   else: yearStr, yearExt = _opt.years, "_%s"%_opt.years
 
-  if _opt.cats == 'all': catStr, catExt = "All categories", "all"
+  if _opt.cats == 'all' and "SL" in Label: 
+      catStr, catExt = "SL all categories", "all"
+  elif _opt.cats == 'all' and "FL" in Label:
+      catStr, catExt = "FL category", "all"
+  elif _opt.cats == 'all' and "FH" in Label:
+      catStr, catExt = "FH category", "all"
+  elif _opt.cats == 'all' and "ZZ" in Label:
+      catStr, catExt = "FH category", "all"
   elif _opt.cats == 'wall': catStr, catExt = "#splitline{All Categories}{S/(S+B) weighted}", "wall"
   elif len(_opt.cats.split(","))>1: procStr, procExt = "Multiple categories", "multipleCats"
   else: catStr, catExt = Translate(_opt.cats,translateCats), _opt.cats
  
   lat1.DrawLatex(0.85,0.86,"%s"%catStr)
+  lat1.DrawLatex(0.85,0.725,"Weighted events :")
+  lat1.DrawLatex(0.85,0.69,"Run2 : %.4f"%_hists['data'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140))))
+  lat1.DrawLatex(0.85,0.655,"2016 : %.4f"%_hists['data_2016'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140))))
+  lat1.DrawLatex(0.85,0.620,"2017 : %.4f"%_hists['data_2017'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140))))
+  lat1.DrawLatex(0.85,0.585,"2018 : %.4f"%_hists['data_2018'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140))))
   lat1.DrawLatex(0.83,0.8,"%s %s"%(procStr,yearStr))
-
+  #  fileName = "Yields-Table_%s.tex"%Label
+  #  file = open(fileName,"w")
+  #  file.write("\\begin{table}[H]\n")
+  #  file.write("\t\\begin{center}\n")
+  #  file.write("\t\t\\begin{tabular}{c|c|c|c|c}\n")
+  #  file.write("\t\t\tMC Sample & Run2 Unweighted & 2016 Weighted & 2017 Weighted & 2018 Weighted \\\ \\hline \n")
+  #  for i, name in enumerate(names):
+  name = Label 
+  name=name.replace("_","\_")
+  unweighted_val =1
+  Run2Weighted_val = _hists['data'].Integral()
+  Weighted_val_2016 = _hists['data_2016'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140)))
+  Weighted_val_2017 = _hists['data_2017'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140)))
+  Weighted_val_2018 = _hists['data_2018'].Integral((_hists['data'].FindBin(105)),(_hists['data'].FindBin(140)))
+  #  file.write("\t\t\t\t\t %s & %s & %s & %s & %s \\\ \n"%(name,round(Run2Weighted_val,5),round(Weighted_val_2016,5),round(Weighted_val_2017,5),round(Weighted_val_2017,5)))
+  #  file.write("\t\t\end{tabular}\n")
+  #  file.write("\t\caption{ weighted  MC yields}\n")
+  #  file.write("\t\\end{center}\n")
+  #  file.write("\end{table}\n")
+  #  file.close()
+  #  if ( _opt.cats == "all"):
+      #  output = ROOT.TFile(Label+'_Run2_AllCats.root',"RECREATE")
+  #  else:
+      #  output = ROOT.TFile(Label+'Run2_'+_opt.cats+".root","RECREATE")
+  #  output.mkdir("wsig_13TeV")
+  #  _hists['pdf'].SetName("Run2_%s_%s"%(Label,_opt.cats))
+  #  _hists['pdf'].Write()
+  #  output.Close()
   canv.Update()
-
   # Save canvas
   canv.SaveAs("%s/smodel_%s%s%s.pdf"%(_outdir,catExt,procExt,yearExt))
   canv.SaveAs("%s/smodel_%s%s%s.png"%(_outdir,catExt,procExt,yearExt))
