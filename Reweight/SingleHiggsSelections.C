@@ -31,22 +31,25 @@
 #include "TKey.h"
 #include "RooCategory.h"
 
-
+int splitStringToVect(const string & srcStr, vector<string> & destVect, const string & strFlag);
 void SingleHiggsSelections_Run(){
 TString Name = "NAME";
 TString year = "YEAR";
 TString Procs = "PROCS";
-TString cat = "CAT";
 TString InputFile = "INPUTPATH" + Name + ".root";
+TString UniqueName = "UNIQUEPATH";
 TFile *output;
-TString outputFile = "./" + Name  + "_" + cat + "_" + year +".root";
+TString outputFile = "./" + Name + "_" + year + "_" + UniqueName + ".root";
 TFile MC_file(InputFile);
 output = new TFile(outputFile, "RECREATE");
 output->mkdir("tagsDumper/trees");
+output->cd("tagsDumper/trees");
 TTree* fChain;
 // vector<string> cats{"HHWWggTag_0","HHWWggTag_1","HHWWggTag_2","HHWWggTag_3"};
 // vector<string> cats{"HHWWggTag_3","HHWWggTag_2"};
-vector<string> cats{"CAT"};
+vector<string> cats;
+string cats_string="CAT";
+splitStringToVect(cats_string, cats, ",");
 // vector<string> systematics{""};
 vector<string> systematics{"","FNUFEB","FNUFEE","JECAbsolute2017","JECAbsolute","JECBBEC12017",
 "JECBBEC1","JECEC22017","JECEC2","JECFlavorQCD","JECHF2017","JECHF","JECRelativeBal",
@@ -59,9 +62,15 @@ vector<string> systematics{"","FNUFEB","FNUFEE","JECAbsolute2017","JECAbsolute",
 "metJecUncertainty","metJerUncertainty","metPhoUncertainty","metUncUncertainty"};
 vector<string> shifts{"Up","Down"};
 TString TreeName;
-for (auto i = cats.begin(); i != cats.end(); i++){//cats loop
-TString cat=(*i).c_str();
+vector<string>NewCatName;
+string NewCatString="NEW_Cat_NAME";
+splitStringToVect(NewCatString, NewCatName, ",");
+
+for (int i = 0; i < cats.size(); i++){//cats loop
+TString cat=cats[i];
 TString catName="tagsDumper/trees/"+ Procs + "_125_13TeV_" + cat;
+TString newCatName=Procs + "_125_13TeV_" + NewCatName[i];
+TString newTreeName;
 for (auto j = systematics.begin(); j != systematics.end(); j++){//sys loop`
 
 TString sys=(*j).c_str();
@@ -70,18 +79,20 @@ TString shift=(*k).c_str();
 if ( sys == "" )
 {
   TreeName=catName;
+  newTreeName=newCatName;
 }
 else
 { 
   TreeName=catName + "_" + sys + shift + "01sigma";
+  newTreeName=newCatName + "_" + sys + shift + "01sigma";
 }
 cout<<TreeName<<endl;
 MC_file.GetObject(TreeName,fChain);
-   output->cd("tagsDumper/trees");
    TTree *newtree = fChain->CopyTree("SELECTIONS");
    int Nevents=newtree->GetEntries();
    int nevents=fChain->GetEntries();
    cout<<"Original number of events:"<<nevents<<" selected number of events:"<<Nevents<<endl;
+   newtree->SetName(newTreeName);
   newtree->Write("",TObject::kOverwrite);
   if( sys == ""){
   break;
@@ -93,5 +104,27 @@ MC_file.GetObject(TreeName,fChain);
 }//sys loop
 }//cats loop
 output->Close();
+}
+
+int splitStringToVect(const string & srcStr, vector<string> & destVect, const string & strFlag)
+{
+    int pos = srcStr.find(strFlag, 0);
+    int startPos = 0;
+    int splitN = pos;
+    string lineText(strFlag);
+
+    while (pos > -1)
+    {
+        lineText = srcStr.substr(startPos, splitN);
+        startPos = pos + 1;
+        pos = srcStr.find(strFlag, pos + 1);
+        splitN = pos - startPos;
+        destVect.push_back(lineText);
+    }
+
+    lineText = srcStr.substr(startPos, srcStr.length() - startPos);
+    destVect.push_back(lineText);
+
+    return destVect.size();
 }
 

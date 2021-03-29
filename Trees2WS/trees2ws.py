@@ -21,6 +21,7 @@ def get_options():
   parser.add_option('--doNNLOPS',dest='doNNLOPS', default=False, action="store_true", help='Add NNLOPS weight variable: NNLOPSweight')
   parser.add_option('--doSystematics',dest='doSystematics', default=False, action="store_true", help='Add systematics datasets to output WS')
   parser.add_option('--doSTXSSplitting',dest='doSTXSSplitting', default=False, action="store_true", help='Split output WS per STXS bin')
+  parser.add_option('--UniqueName', dest='UniqueName', default="", help="Unique name for output directories - used in HHWWgg workflow")
   return parser.parse_args()
 (opt,args) = get_options()
 
@@ -127,7 +128,8 @@ if cats == 'auto':
     elif "ERROR" in tn: continue
     c = tn.split("_%s_"%sqrts__)[-1].split(";")[0]
     cats.append(c)
-
+else:
+    cats=cats.split(",")
 if opt.doNOTAG:
   # Check if NOTAG tree exists
   for tn in listOfTreeNames:
@@ -252,11 +254,12 @@ for stxsId in data[stxsVar].unique():
     if opt.doSystematics: sdf = sdata
 
     # Define output workspace file
-    outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_%s"%opt.productionMode
+    outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_%s_%s"%(opt.productionMode, opt.UniqueName)
     #  outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_%s"%dataToProc(opt.productionMode)
     if not os.path.exists(outputWSDir): os.system("mkdir %s"%outputWSDir)
     #  outputWSFile = outputWSDir+"/"+re.sub(".root","_%s.root"%dataToProc(opt.productionMode),opt.inputTreeFile.split("/")[-1])
-    outputWSFile = outputWSDir+"/"+re.sub(".root","_%s.root"%opt.productionMode,opt.inputTreeFile.split("/")[-1])
+    # outputWSFile = outputWSDir+"/"+re.sub(".root","_%s.root"%opt.productionMode,opt.inputTreeFile.split("/")[-1]) ##-- adjusting for HHWWgg 
+    outputWSFile = "%s/%s.root"%(outputWSDir, opt.UniqueName)
     print " --> Creating output workspace: (%s)"%outputWSFile
     
   # Open file and initiate workspace

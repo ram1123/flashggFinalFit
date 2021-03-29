@@ -31,22 +31,33 @@
 #include "TKey.h"
 #include "RooCategory.h"
 
-
+int splitStringToVect(const string & srcStr, vector<string> & destVect, const string & strFlag);
 void DataSelections_Run(){
 TString InputFile = "INPUTFILE";
 TFile *output;
-TString outputFile = "Data_13TeV_CAT_YEAR.root";
+TString outputFile = "Data_13TeV_YEAR_UNIQUEFCN.root";
 TFile MC_file(InputFile);
 output = new TFile(outputFile, "RECREATE");
 output->mkdir("tagsDumper/trees");
+output->cd("tagsDumper/trees");
+vector<string> cats;
+string cats_string="CAT";
+splitStringToVect(cats_string, cats, ",");
+vector<string>NewCatNames;
+string NewCatString="NEW_Cat_NAME";
+splitStringToVect(NewCatString, NewCatNames, ",");
+for (int i = 0; i < cats.size(); i++){
+
+TString cat=cats[i];
 TTree* fChain;
 TString TreeName;
-TString catName="tagsDumper/trees/Data_13TeV_CAT";
+TString catName="tagsDumper/trees/Data_13TeV_" + cat;
+TString NewCatName = NewCatNames[i];
+TString newTreeName="Data_13TeV_" + NewCatName;
 TreeName=catName;
 cout<<TreeName<<endl;
 MC_file.GetObject(TreeName,fChain);
-   output->cd("tagsDumper/trees");
-   TTree *newtree = fChain->CopyTree("SELECTIONS");
+TTree *newtree = fChain->CopyTree("SELECTIONS");
    // int nevents=fChain->GetEntries();
   // for (int i = 0; i< nevents; i=i+1){
       // fChain->GetEntry(i);
@@ -54,7 +65,30 @@ MC_file.GetObject(TreeName,fChain);
       // newtree->Fill();
       // }
   // }
-  newtree->Write("",TObject::kOverwrite);
+newtree->SetName(newTreeName);
+newtree->Write("",TObject::kOverwrite);
+}
 output->Close();
 }
 
+int splitStringToVect(const string & srcStr, vector<string> & destVect, const string & strFlag)
+{
+    int pos = srcStr.find(strFlag, 0);
+    int startPos = 0;
+    int splitN = pos;
+    string lineText(strFlag);
+
+    while (pos > -1)
+    {
+        lineText = srcStr.substr(startPos, splitN);
+        startPos = pos + 1;
+        pos = srcStr.find(strFlag, pos + 1);
+        splitN = pos - startPos;
+        destVect.push_back(lineText);
+    }
+
+    lineText = srcStr.substr(startPos, srcStr.length() - startPos);
+    destVect.push_back(lineText);
+
+    return destVect.size();
+}

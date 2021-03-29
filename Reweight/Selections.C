@@ -30,23 +30,28 @@
 #include "TArrow.h"
 #include "TKey.h"
 #include "RooCategory.h"
-
+int splitStringToVect(const string & srcStr, vector<string> & destVect, const string & strFlag);
 
 void Selections_Run(){
   TString Process = "PROCS";
   TString year = "YEAR";
+  // TString NewCatName = "NEW_Cat_NAME";
   TString input_node = "NODE";
-  TString InputFile = "INPUTPATH" + Process + "_node_" + input_node + "_" + year + ".root";
+  TString InputFile = "INPUTFILE";
+  TString UniqueFcnName = "UNIQUEFCN";
   TFile *output;
-  TString outputFile = "./" + Process + "_node_" + input_node  + "_" + year + ".root";
+  TString outputFile = "./" + Process + "_node_" + input_node  + "_" + year + "_" + UniqueFcnName + ".root";
   TFile MC_file(InputFile);
   output = new TFile(outputFile, "RECREATE");
   output->mkdir("tagsDumper/trees");
+  output->cd("tagsDumper/trees");
   TTree* fChain;
-  // vector<string> cats{"HHWWggTag_0","HHWWggTag_2","HHWWggTag_2","HHWWggTag_3"};
-  // vector<string> cats{"HHWWggTag_3","HHWWggTag_2"};
-  vector<string> cats{"CAT"};
-  // vector<string> systematics{""};
+  string cats_string="CAT";
+  vector<string> cats;
+  splitStringToVect(cats_string, cats, ",");
+  vector<string>NewCatName; 
+  string NewCatString="NEW_Cat_NAME";
+  splitStringToVect(NewCatString, NewCatName, ",");
   vector<string> systematics{"","FNUFEB","FNUFEE","JECAbsolute2017","JECAbsolute","JECBBEC12017",
     "JECBBEC1","JECEC22017","JECEC2","JECFlavorQCD","JECHF2017","JECHF","JECRelativeBal",
     "JECRelativeSample2017","JEC","JER","MCScaleGain1EB","MCScaleGain6EB","MCScaleHighR9EB",
@@ -58,9 +63,13 @@ void Selections_Run(){
     "metJecUncertainty","metJerUncertainty","metPhoUncertainty","metUncUncertainty"};
   vector<string> shifts{"Up","Down"};
   TString TreeName;
-  for (auto i = cats.begin(); i != cats.end(); i++){//cats loop
-    TString cat=(*i).c_str();
+  TString newTreeName;
+  // for (auto i = cats.begin(); i != cats.end(); i++){//cats loop
+  for (int i = 0; i < cats.size(); i++){//cats loop
+    // TString cat=(*i).c_str();
+    TString cat=cats[i];
     TString catName="tagsDumper/trees/" + Process + "_node_" + input_node + "_13TeV_" + cat;
+    TString newCatName=Process + "_node_" + input_node + "_13TeV_" + NewCatName[i];
     for (auto j = systematics.begin(); j != systematics.end(); j++){//sys loop`
 
       TString sys=(*j).c_str();
@@ -69,14 +78,15 @@ void Selections_Run(){
         if ( sys == "" )
         {
           TreeName=catName;
+          newTreeName=newCatName;
         }
         else
         { 
           TreeName=catName + "_" + sys + shift + "01sigma";
+          newTreeName=newCatName + "_" + sys + shift + "01sigma";
         }
-        cout<<TreeName<<endl;
+        cout<<"old name:"<<TreeName<<" ,new name:"<<newTreeName<<endl;
         MC_file.GetObject(TreeName,fChain);
-        output->cd("tagsDumper/trees");
         TTree *newtree = fChain->CopyTree("SELECTIONS");
         // int nevents=fChain->GetEntries();
         // for (int i = 0; i< nevents; i=i+1){
@@ -85,16 +95,38 @@ void Selections_Run(){
             // newtree->Fill();
           // }
         // }
+        newtree->SetName(newTreeName);
         newtree->Write("",TObject::kOverwrite);
+        cout<<"write over"<<endl;
         if( sys == ""){
           break;
         }
       }// up and down shift 
-      if( cat == "HHWWggTag_3"){
-        break;
-      }
+      // if( cat == "HHWWggTag_3"){
+        // break;
+      // }
     }//sys loop
   }//cats loop
   output->Close();
 }
+int splitStringToVect(const string & srcStr, vector<string> & destVect, const string & strFlag)
+{
+    int pos = srcStr.find(strFlag, 0);
+    int startPos = 0;
+    int splitN = pos;
+    string lineText(strFlag);
 
+    while (pos > -1)
+    {
+        lineText = srcStr.substr(startPos, splitN);
+        startPos = pos + 1;
+        pos = srcStr.find(strFlag, pos + 1);
+        splitN = pos - startPos;
+        destVect.push_back(lineText);
+    }
+
+    lineText = srcStr.substr(startPos, srcStr.length() - startPos);
+    destVect.push_back(lineText); 
+
+    return destVect.size();
+}

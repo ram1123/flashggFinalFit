@@ -10,7 +10,6 @@ import glob
 import pickle
 from collections import OrderedDict
 from collections import OrderedDict as od
-from systematics import theory_systematics, experimental_systematics, signal_shape_systematics
 
 def get_options():
   parser = OptionParser()
@@ -36,7 +35,21 @@ def get_options():
 
 def leave():
   print " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HGG DATACARD MAKER RUN II (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
-  exit(1)
+  # exit(1) ##-- removing for sequential HHWWgg condor steps (steps all in single job so don't want to exit after one step)
+
+print("opt.years:",opt.years)
+if(opt.years == "2016"): 
+  print("opt.years:",opt.years)
+  from systematics_2016 import theory_systematics, experimental_systematics, signal_shape_systematics
+elif(opt.years == "2017"): 
+  print("opt.years:",opt.years)
+  from systematics_2017 import theory_systematics, experimental_systematics, signal_shape_systematics
+elif(opt.years == "2018"): 
+  print("opt.years:",opt.years)
+  from systematics_2018 import theory_systematics, experimental_systematics, signal_shape_systematics
+else:
+  print("Full Run 2")
+  from systematics import theory_systematics, experimental_systematics, signal_shape_systematics
 
 STXSMergingScheme, STXSScaleCorrelationScheme = None, None
 if opt.doSTXSMerging: from tools.STXS_tools import STXSMergingScheme
@@ -89,7 +102,6 @@ if opt.doSystematics:
   for s in theory_systematics:
     if s['type'] == 'constant': data = addConstantSyst(data,s,opt)
   # Theory factory: group scale weights after calculation in relevant grouping scheme
-  print data, theory_systematics, theoryFactoryType, opt, STXSMergingScheme
   data = theorySystFactory(data, theory_systematics, theoryFactoryType, opt, stxsMergeScheme=STXSMergingScheme)
   data, theory_systematics = groupSystematics(data, theory_systematics, opt, prefix="scaleWeight", groupings=[[1,2],[3,6],[4,8]], stxsMergeScheme=STXSMergingScheme)
   data, theory_systematics = groupSystematics(data, theory_systematics, opt, prefix="alphaSWeight", groupings=[[0,1]], stxsMergeScheme=STXSMergingScheme)
