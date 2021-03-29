@@ -27,6 +27,7 @@ def get_options():
   parser.add_option("--translateProcs", dest="translateProcs", default=None, help="JSON to store proc translations")
   parser.add_option("--label", dest="label", default='Simulation Preliminary', help="CMS Sub-label")
   parser.add_option("--doFWHM", dest="doFWHM", default=False, action='store_true', help="Do FWHM")
+  parser.add_option("--HHWWggSingleHiggsScale", dest = "HHWWggSingleHiggsScale", action = "store_true", help = "Apply scale factor of 2 to single higgs processes in HHWWgg analysis, in case half events are used for training and half for evaluation")
   return parser.parse_args()
 (opt,args) = get_options()
 
@@ -70,7 +71,7 @@ hists['data'] = xvar.createHistogram("h_data", ROOT.RooFit.Binning(opt.nBins))
 hists['data_2016'] = xvar.createHistogram("h_data", ROOT.RooFit.Binning(opt.nBins))
 hists['data_2017'] = xvar.createHistogram("h_data", ROOT.RooFit.Binning(opt.nBins))
 hists['data_2018'] = xvar.createHistogram("h_data", ROOT.RooFit.Binning(opt.nBins))
-print opt.nBins
+# print opt.nBins
 hists['temp'] = xvar.createHistogram("temp", ROOT.RooFit.Binning(opt.nBins))
 # Loop over files
 for cat,f in inputFiles.iteritems():
@@ -106,23 +107,26 @@ for cat,f in inputFiles.iteritems():
   for k, norm in norms.iteritems():
     proc, year = k.split("__")
     w.var("IntLumi").setVal(lumiScaleFactor*lumiMap[year])
-    print lumiScaleFactor*lumiMap[year]
+    # print lumiScaleFactor*lumiMap[year]
     catNorm += norm.getVal()
 
   # Iterate over norms and extract data sets + pdfs
+  # print("norms:",norms)
   for k, norm in norms.iteritems():
     proc, year = k.split("__")
     _id = "%s_%s_%s_%s"%(proc,year,cat,sqrts__)
+    # print("_id:",_id)
     w.var("IntLumi").setVal(lumiScaleFactor*lumiMap[year])
 
     # Prune
     nval = norm.getVal()
-    if nval < opt.threshold*catNorm: continue # Prune processes which contribute less that threshold of signal mod
+
+    # if nval < opt.threshold*catNorm: continue # Prune processes which contribute less that threshold of signal mod
 
     # Make empty copy of dataset
     d = w.data("sig_mass_m%s_%s"%(opt.mass,_id))
     d_rwgt = d.emptyClone(_id)
-    
+    # print("d_rwgt:",d_rwgt)
     # Calc norm factor
     if d.sumEntries() == 0: nf = 0
     else: nf = nval/d.sumEntries()
@@ -140,24 +144,34 @@ for cat,f in inputFiles.iteritems():
     hpdfs[_id].Scale(wcat*float(opt.nBins)/80) # FIXME: hardcoded 320
 
   # Fill total histograms: data, per-year pdfs and pdfs
+  # print("data_rwgt:",data_rwgt)
+  # print("HHWWggLabel:",opt.HHWWggLabel)
   for _id,d in data_rwgt.iteritems(): 
-      print "Check:",_id,"  ",d
+      # print "Check:",_id,"  ",d
       d.fillHistogram(hists['temp'],alist)
-      print "inte befor:",hists['data'].Integral()
-      if("2017" in _id and "SL_cHHH1" in opt.HHWWggLabel):
-        print "DO NOT APPLY SCALE FACTOR"
-        if ("HHWWggTag_SLDNN_0" in _id):
-            print "tag0"
-            hists['temp'].Scale(1.993)
-        elif ("HHWWggTag_SLDNN_1" in _id):
-            print "tag1"
-            hists['temp'].Scale(1.984)
-        elif ( "HHWWggTag_SLDNN_2" in _id ):
-            print "tag2"
-            hists['temp'].Scale(2.007)
-        else: 
-            print "tag3"
-            hists['temp'].Scale(1.979)
+      # print "inte befor:",hists['data'].Integral()
+
+      halfHiggsTrainings = ["SL_ggh", "SL_vbf", "SL_tth", "SL_wzh"]
+
+      if( (opt.HHWWggLabel in halfHiggsTrainings) and (opt.HHWWggSingleHiggsScale)):
+        print("SCALING PLOT OF SIGNAL BY FACTOR 2 ----- Should only be done if evaluating fits on half of original events")
+        hists['temp'].Scale(2.)
+
+      # if("2017" in _id and "SL_cHHH1" in opt.HHWWggLabel):
+      #   print "DO NOT APPLY SCALE FACTOR"
+      #   if ("HHWWggTag_SLDNN_0" in _id):
+      #       print "tag0"
+      #       hists['temp'].Scale(1.993)
+      #   elif ("HHWWggTag_SLDNN_1" in _id):
+      #       print "tag1"
+      #       hists['temp'].Scale(1.984)
+      #   elif ( "HHWWggTag_SLDNN_2" in _id ):
+      #       print "tag2"
+      #       hists['temp'].Scale(2.007)
+      #   else: 
+      #       print "tag3"
+      #       hists['temp'].Scale(1.979)
+
       hists['data'].Add(hists['temp'],hists['data'])
       if ("2017" in _id ):
           hists['data_2017'].Add(hists['temp'],hists['data_2017'])
@@ -166,30 +180,40 @@ for cat,f in inputFiles.iteritems():
       elif("2016" in _id ):
           hists['data_2016'].Add(hists['temp'],hists['data_2016'])
       hists['temp'].Reset()
-      print "inte:",hists['data'].Integral()
-      print "inte16:",hists['data_2016'].Integral()
-      print "inte17:",hists['data_2017'].Integral()
-      print "inte18:",hists['data_2018'].Integral()
+      # print "inte:",hists['data'].Integral()
+      # print "inte16:",hists['data_2016'].Integral()
+      # print "inte17:",hists['data_2017'].Integral()
+      # print "inte18:",hists['data_2018'].Integral()
 
   # Sum pdf histograms
+  # print("hpdfs:",hpdfs)
   for _id,p in hpdfs.iteritems():
-    print "PDF:",_id,"  ",p
+    # print "PDF:",_id,"  ",p
     if 'pdf' not in hists: 
       hists['pdf'] = p.Clone("h_pdf")
       hists['pdf'].Reset()
+
+    halfHiggsTrainings = ["SL_ggh", "SL_vbf", "SL_tth", "SL_wzh"]
+
+    if( (opt.HHWWggLabel in halfHiggsTrainings) and (opt.HHWWggSingleHiggsScale) ):
+      print("SCALING PLOT OF SIGNAL BY FACTOR 2 ----- Should only be done if evaluating fits on half of original events")
+      p.Scale(2.)
+
     # Fill
-    if ("2017" in _id and "SL_cHHH1" in opt.HHWWggLabel):
-        if "HHWWggTag_SLDNN_0" in _id:
-            p.Scale(1.993)
-        elif "HHWWggTag_SLDNN_1" in _id:
-            p.Scale(1.984)
-        elif "HHWWggTag_SLDNN_2" in _id:
-            p.Scale(2.007)
-        else:
-            p.Scale(1.979)
+    # if ("2017" in _id and "SL_cHHH1" in opt.HHWWggLabel):
+    #     if "HHWWggTag_SLDNN_0" in _id:
+    #         p.Scale(1.993)
+    #     elif "HHWWggTag_SLDNN_1" in _id:
+    #         p.Scale(1.984)
+    #     elif "HHWWggTag_SLDNN_2" in _id:
+    #         p.Scale(2.007)
+    #     else:
+    #         p.Scale(1.979)
+
     hists['pdf'] += p
 
-  print "==========Integarl pdf:",hists['pdf'].Integral()
+  # print("hists:",hists)
+  # print "==========Integral pdf:",hists['pdf'].Integral()
   # Per-year pdf histograms
   if len(opt.years.split(",")) > 1:
     #  hists['pdf_2016']=hists['pdf'].Clone()
@@ -201,11 +225,11 @@ for cat,f in inputFiles.iteritems():
           hists['pdf_%s'%year] = hists['pdf'].Clone()
           hists['pdf_%s'%year].Scale(0)
       # Fill
-      print hists['pdf_2016'].GetMaximum()
+      # print hists['pdf_2016'].GetMaximum()
       for _id,p in hpdfs.iteritems():
           #  print "P value:",_id,p.Integral()
           if year in _id:
-              print 'pdf_%s'%year,hists['pdf_%s'%year].GetMaximum()
+              # print 'pdf_%s'%year,hists['pdf_%s'%year].GetMaximum()
               hists['pdf_%s'%year] += p
   
   

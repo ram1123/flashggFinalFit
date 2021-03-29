@@ -21,6 +21,7 @@ def get_options():
   parser.add_option('--doNNLOPS',dest='doNNLOPS', default=False, action="store_true", help='Add NNLOPS weight variable: NNLOPSweight')
   parser.add_option('--doSystematics',dest='doSystematics', default=False, action="store_true", help='Add systematics datasets to output WS')
   parser.add_option('--doSTXSSplitting',dest='doSTXSSplitting', default=False, action="store_true", help='Split output WS per STXS bin')
+  parser.add_option('--UniqueName', dest='UniqueName', default="", help="Unique name for output directories - used in HHWWgg workflow")
   return parser.parse_args()
 (opt,args) = get_options()
 
@@ -114,8 +115,9 @@ if opt.year == '2018': systematics.append("JetHEM")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # UPROOT file
 f = uproot.open(opt.inputTreeFile)
-print inputTreeDir
-if inputTreeDir == '': listOfTreeNames == f.keys()
+print"f:",f
+print "inputTreeDir:",inputTreeDir
+if inputTreeDir == '': listOfTreeNames = f.keys() ##-- '==' is incorrect. Should be '=' 
 else: listOfTreeNames = f[inputTreeDir].keys()
 # If cats = 'auto' then determine from list of trees
 if cats == 'auto':
@@ -251,11 +253,12 @@ for stxsId in data[stxsVar].unique():
     if opt.doSystematics: sdf = sdata
 
     # Define output workspace file
-    outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_%s"%opt.productionMode
+    outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_%s_%s"%(opt.productionMode, opt.UniqueName)
     #  outputWSDir = "/".join(opt.inputTreeFile.split("/")[:-1])+"/ws_%s"%dataToProc(opt.productionMode)
     if not os.path.exists(outputWSDir): os.system("mkdir %s"%outputWSDir)
     #  outputWSFile = outputWSDir+"/"+re.sub(".root","_%s.root"%dataToProc(opt.productionMode),opt.inputTreeFile.split("/")[-1])
-    outputWSFile = outputWSDir+"/"+re.sub(".root","_%s.root"%opt.productionMode,opt.inputTreeFile.split("/")[-1])
+    # outputWSFile = outputWSDir+"/"+re.sub(".root","_%s.root"%opt.productionMode,opt.inputTreeFile.split("/")[-1]) ##-- adjusting for HHWWgg 
+    outputWSFile = "%s/%s.root"%(outputWSDir, opt.UniqueName)
     print " --> Creating output workspace: (%s)"%outputWSFile
     
   # Open file and initiate workspace

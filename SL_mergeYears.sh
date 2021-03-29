@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
-node=("cHHH2p45")
+node=("cHHH1")
 singleHiggs="tth,wzh,vbf,ggh"
 echo "==================="
-ext='SL_Run2combinedData'
+
+# TrainingLabel="HHWWyyDNN_binary_noHgg_noNegWeights_BalanceYields_allBkgs_LOSignals_noPtOverM"
+TrainingLabel="HHWWyyDNN_binary_noHgg_noNegWeights_BalanceYields_allBkgs_LOSignals_noPtOverM_withKinWeight_weightSel"
+HHWWggSingleHiggsScale="0"
+phpLoc="/eos/user/a/atishelm/www/HHWWgg/DNN/index.php" ##-- Location of php file for copying to new website directories 
+
+ext="SL_Run2combinedData_${TrainingLabel}"
 procs='GluGluToHHTo2G2Qlnu'
 cat='HHWWggTag_SLDNN_0,HHWWggTag_SLDNN_1,HHWWggTag_SLDNN_2,HHWWggTag_SLDNN_3' #Final cat name 
-InputWorkspace="/eos/user/c/chuw/HHWWggWorkspace/SL/" 
-hadd_workspaceDir="/afs/cern.ch/user/c/chuw/chuw/HHWWgg/CMSSW_10_6_8/" #flashgg Dir,used hadd_workspaces
+InputWorkspace="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/Workspaces_${TrainingLabel}/"
+hadd_workspaceDir="/afs/cern.ch/work/a/atishelm/private/flashgg-10_6_8/CMSSW_10_6_8/src/flashgg/"
 catNames=(${cat//,/ })
+WorkingDirectory="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/"
+SingleYearExt="SL_${TrainingLabel}"
 
-path=`pwd`
 ########################################
 #           hadd_workspace             #
 #                                      #
@@ -24,26 +31,28 @@ cp ../${procs}_2016/allData.root Data2016.root
 cp ../${procs}_2017/allData.root Data2017.root
 cp ../${procs}_2018/allData.root Data2018.root
 hadd_workspaces allData.root Data201*
+
 ########################################
 #           BKG model                  #
 #                                      #
 ########################################
-cd $path
+cd ${WorkingDirectory}
 eval `scramv1 runtime -sh`
 source ./setup.sh
 cd ./Background
-cp HHWWgg_cofig_test.py HHWWgg_cofig_Run.py
-sed -i "s#CAT#${cat}#g" HHWWgg_cofig_Run.py
-sed -i "s#PROCS_YEAR#${ext}#g" HHWWgg_cofig_Run.py
-sed -i "s#HHWWggTest_YEAR#${ext}#g" HHWWgg_cofig_Run.py
-sed -i "s#YEAR#combined#g" HHWWgg_cofig_Run.py
-sed -i "s#PROCS#${procs}#g" HHWWgg_cofig_Run.py
-sed -i "s#INPUT#${InputWorkspace}#g" HHWWgg_cofig_Run.py
+cp HHWWgg_config_test.py HHWWgg_config_Run.py
+sed -i "s#CAT#${cat}#g" HHWWgg_config_Run.py
+sed -i "s#PROCS_YEAR#${ext}#g" HHWWgg_config_Run.py
+sed -i "s#HHWWggTest_YEAR#${ext}#g" HHWWgg_config_Run.py
+sed -i "s#YEAR#combined#g" HHWWgg_config_Run.py
+sed -i "s#PROCS#${procs}#g" HHWWgg_config_Run.py
+sed -i "s#INPUT#${InputWorkspace}#g" HHWWgg_config_Run.py
 # make clean
 make
 
-python RunBackgroundScripts.py --inputConfig HHWWgg_cofig_Run.py --mode fTestParallel
-rm HHWWgg_cofig_Run.py
+python RunBackgroundScripts.py --inputConfig HHWWgg_config_Run.py --mode fTestParallel
+rm HHWWgg_config_Run.py
+
 ########################################
 #           DATACARD                   #
 #                                      #
@@ -52,12 +61,21 @@ echo "Start generate datacard"
 cd ../Datacard
 rm Datacard*.txt
 rm -rf yields_*/
+<<<<<<< HEAD
 rm -rf ./SL_run2_${node}
 cp systematics_merged.py systematics.py
 #copy signal  and bkg model
 if [ ! -d "./SL_run2_${node}/Models/" ]; then
   mkdir -p ./SL_run2_${node}/Models/
+=======
+rm -rf ./SL_run2_${ext}
+cp systematics_merged.py systematics.py
+#copy signal  and bkg model
+if [ ! -d "./SL_run2_${ext}/Models/" ]; then
+  mkdir -p ./SL_run2_${ext}/Models/
+>>>>>>> fa0b58fab7d0f431ebea2730c0d543f75f2417bb
 fi
+
 ####################
 #
 #   Add singleHiggs procs to RunYields.py 
@@ -85,4 +103,21 @@ echo "Combine results with separate data:"
 combine SL_run2_separate_year_${node}.txt  -m 125.38 -M AsymptoticLimits --run=blind  --freezeParameters MH
 cd $path
 
+if [[ "$HHWWggSingleHiggsScale" == "1" ]]; then
 
+  ##-- Add factor of 2 to single higgs only if using half of original events to model 
+  echo "ADDING FACTOR OF TWO TO SINGLE HIGGS PROCESSES ---- Should only be done if using half of original events to model"
+  echo "FactorOfTwo   rateParam * ggh_*_hgg 2 " >> SL_run2_merged.txt
+  echo "FactorOfTwo   rateParam * vbf_*_hgg 2 " >> SL_run2_merged.txt
+  echo "FactorOfTwo   rateParam * wzh_*_hgg 2 " >> SL_run2_merged.txt
+  echo "FactorOfTwo   rateParam * tth_*_hgg 2 " >> SL_run2_merged.txt
+  echo "nuisance edit  freeze FactorOfTwo" >> SL_run2_merged.txt
+
+fi 
+
+combineCards.py HHWWgg_${procs}_node_${node}_${ext}_2016.txt HHWWgg_${procs}_node_${node}_${ext}_2017.txt HHWWgg_${procs}_node_${node}_${ext}_2018.txt > SL_run2_separate_year.txt
+echo "Combine results with merged:"
+combine SL_run2_merged.txt  -m 125.38 -M AsymptoticLimits --run='blind' --freezeParameters MH -t -1 --setParameters MH=125.38 --cminDefaultMinimizerStrategy 0  --cminFallbackAlgo Minuit2,Migrad,0:0.1 --X-rt MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+echo "Combine results with separate data:"
+combine SL_run2_separate_year.txt -m 125.38 -M AsymptoticLimits --run='blind' --freezeParameters MH -t -1 --setParameters MH=125.38 --cminDefaultMinimizerStrategy 0  --cminFallbackAlgo Minuit2,Migrad,0:0.1 --X-rt MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+cd ${WorkingDirectory}

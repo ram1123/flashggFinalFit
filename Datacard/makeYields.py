@@ -14,7 +14,7 @@ import glob
 import pickle
 import math
 from collections import OrderedDict
-from systematics import theory_systematics, experimental_systematics, signal_shape_systematics
+# from systematics import theory_systematics, experimental_systematics, signal_shape_systematics
 
 from commonObjects import *
 from commonTools import *
@@ -113,6 +113,21 @@ print " ........................................................................
 
 # Signal processes
 for year in years:
+
+    print("year:",year)
+    if(year == "2016"): 
+        print("year:",year)
+        from systematics_2016 import theory_systematics, experimental_systematics, signal_shape_systematics
+    elif(year == "2017"): 
+        print("year:",year)
+        from systematics_2017 import theory_systematics, experimental_systematics, signal_shape_systematics
+    elif(year == "2018"): 
+        print("year:",year)
+        from systematics_2018 import theory_systematics, experimental_systematics, signal_shape_systematics
+    # else:
+    #     print("Full Run 2")
+    #     from systematics import theory_systematics, experimental_systematics, signal_shape_systematics
+
     for proc in procs:
 
         # Identifier

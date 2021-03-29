@@ -2,38 +2,58 @@
 eval `scramv1 runtime -sh`
 source ./setup.sh
 ############################################
+WorkingDirectory="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/"
+
 SingleHiggs=("tth" "wzh" "vbf" "ggh")
-Names=("SingleHiggs_ttHJetToGG_2017_CategorizedTrees" "SingleHiggs_VHToGG_2017_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_CategorizedTrees")
-# Names=("ttHJetToGG" "VHToGG" "VBFHToGG" "GluGluHToGG")
-# Names=("ttHJetToGG_M125" "VHToGG_M125" "VBFHToGG_M125" "GluGluHToGG_M125")
-years=("2017")
+FullSingleHiggsNames=("ttHJetToGG" "VHToGG" "VBFHToGG" "GluGluHToGG")
+Names=("SingleHiggs_ttHJetToGG_2017_all_CategorizedTrees" "SingleHiggs_VHToGG_2017_all_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_all_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_all_CategorizedTrees")
+
+years=("2016" "2017" "2018")
+# TrainingLabel="HHWWyyDNN_binary_noHgg_noNegWeights_BalanceYields_allBkgs_LOSignals_noPtOverM"
+TrainingLabel="HHWWyyDNN_binary_noHgg_noNegWeights_BalanceYields_allBkgs_LOSignals_noPtOverM_withKinWeight_weightSel"
+
+HHWWggSingleHiggsScale="0"
+# inDir="/eos/user/b/bmarzocc/HHWWgg/January_2021_Production/${TrainingLabel}/"
+phpLoc="/eos/user/a/atishelm/www/HHWWgg/DNN/index.php" ##-- Location of php file for copying to new website directories 
+
 for year in ${years[@]}
 do
-  for (( i = 0 ; i < 4 ; i++ ))
+  
+  for (( i = 0 ; i < 4 ; i++ )) ##-- For each single higgs process 
   do
-    Name=${Names[$i]}
+    SHName=${FullSingleHiggsNames[$i]}
+    # Name=${Names[$i]}
+    Name="SingleHiggs_${SHName}_${year}_all_CategorizedTrees"
     procs=${SingleHiggs[$i]}
-    # year='2017'
-    ext='SL'
+    website="/eos/user/a/atishelm/www/HHWWgg/DNN/${TrainingLabel}/fggfinalfit/${year}/${procs}/"
+    mkdir -p ${website} 
+    cp ${phpLoc} /eos/user/a/atishelm/www/HHWWgg/DNN/${TrainingLabel}
+    cp ${phpLoc} /eos/user/a/atishelm/www/HHWWgg/DNN/${TrainingLabel}/fggfinalfit
+    cp ${phpLoc} /eos/user/a/atishelm/www/HHWWgg/DNN/${TrainingLabel}/fggfinalfit/${year}
+    cp ${phpLoc} ${website}
+    
+    ext="SL_${TrainingLabel}"
     cat='HHWWggTag_SLDNN_0,HHWWggTag_SLDNN_1,HHWWggTag_SLDNN_2,HHWWggTag_SLDNN_3' #output cat name, it will be used in subsequence step
     InputTreeCats='HHWWggTag_SL_0,HHWWggTag_SL_1,HHWWggTag_SL_2,HHWWggTag_SL_3' #input cat name in the tree
     catNames=(${cat//,/ })
     mass='125'
-    # TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2017/Single_H_2017_Hadded/"
-    TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2017/Single_H_2017_Hadded/"
-    # TreePath="/eos/user/c/chuw/HHWWgg_ntuple/2016/SL_DNN_Categorized_LOSignals_noPtOverM-Training/"
-    InputWorkspace="/eos/user/c/chuw/HHWWggWorkspace/SL/"
+
+    TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/${year}/${TrainingLabel}/Single_H/"
+    InputWorkspace="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/Workspaces_${TrainingLabel}/"
+    mkdir -p ${InputWorkspace}
     doSelections="0"
-    Selections='dipho_pt > 91' # Seletions you want to applied.
-    Replace="HHWWggTag_SLDNN_0"
+    Selections='(1.)' # Selections you want to applied.
+    # Replace="HHWWggTag_SLDNN_0"
+    Replace="HHWWggTag_SLDNN_3" 
+
     ############################################
     #  Tree selectors#
     #
     ############################################
-    cp ./Signal/tools/replacementMapHHWWgg.py ./Signal/tools/replacementMap.py
-    sed -i "s#REPLACEMET_CATWV#${Replace}#g" ./Signal/tools/replacementMap.py
+    # cp ./Signal/tools/replacementMapHHWWgg.py ./Signal/tools/replacementMap.py
+    # sed -i "s#REPLACEMET_CATWV#${Replace}#g" ./Signal/tools/replacementMap.py
     path=`pwd`
-    cd ./Reweight/
+    cd ${WorkingDirectory}/Reweight
     echo $Name $procs
     cp SingleHiggsSelections.C SingleHiggsSelections_Run.C
     sed -i "s#NEW_Cat_NAME#${cat}#g" SingleHiggsSelections_Run.C 
@@ -43,25 +63,27 @@ do
     sed -i "s#YEAR#${year}#g" SingleHiggsSelections_Run.C
     sed -i "s#2017#${year}#g" SingleHiggsSelections_Run.C
     sed -i "s#INPUTPATH#${TreePath}#g" SingleHiggsSelections_Run.C
-  if [ "$ext" = "SL" ]
+  # if [ "$ext" = "SL" ]
+  # then
+  sed -i "s#tagsDumper/trees/##g" SingleHiggsSelections_Run.C ##-- Assuming TDirectory structure 
+  # fi
+
+  if [ $doSelections -eq "1" ]
   then
-    sed -i "s#tagsDumper/trees/##g" SingleHiggsSelections_Run.C
+    echo "Selection start"
+    sed -i "s#SELECTIONS#${Selections}#g" SingleHiggsSelections_Run.C
+  else
+    echo "Do not apply any selections ,just copytree "
+    sed -i "s#SELECTIONS##g" SingleHiggsSelections_Run.C # No Selection 
   fi
-    if [ $doSelections -eq "1" ]
-    then
-      echo "Selection start"
-      sed -i "s#SELECTIONS#${Selections}#g" SingleHiggsSelections_Run.C
-    else
-      echo "Do not apply any selections ,just copytree "
-      sed -i "s#SELECTIONS##g" SingleHiggsSelections_Run.C # No Selection 
-    fi
   if [ $year -eq "2018" ]
   then
   sed -i "s#metUncUncertainty\"#metUncUncertainty\",\"JetHEM\"#g" SingleHiggsSelections_Run.C
   fi
-    root -b -q SingleHiggsSelections_Run.C
-    mv ${Name}_${year}.root  ../Trees2WS/
-    cd ../Trees2WS/
+
+  root -b -q SingleHiggsSelections_Run.C
+  mv ${Name}_${year}.root  ../Trees2WS/
+  cd ${WorkingDirectory}/Trees2WS/
 
 #########################################
 # start tree to workspace
@@ -89,10 +111,11 @@ cp ws_${procs}/${Name}_${year}_${procs}.root $InputWorkspace/Signal/Input/${year
 cp ws_${procs}/${Name}_${year}_${procs}.root $InputWorkspace/Signal/Input/${year}/output_M125_${procs}_${catName}.root
 done
 rm ${Name}_${year}.root
+
+
 #######################################
 # Run ftest
 ######################################
-echo "Run FTest"
 cd ../Signal
 cp HHWWgg_single_higgs.py HHWWgg_config_Run.py
 sed -i "s#NODE#node_${node}#g" HHWWgg_config_Run.py
@@ -108,29 +131,42 @@ python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode fTest --mod
 ######################################
 python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode calcPhotonSyst
 
-
 #######################################
 #Run signal Fit
 #######################################
 python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode signalFit --groupSignalFitJobsByCat
 for catName in ${catNames[@]}
 do
-mkdir outdir_${ext}_${procs}_${year}_single_Higgs/
-cp ${path}/Signal/outdir_${ext}_${year}_single_Higgs/signalFit/output/CMS-HGG_sigfit_${ext}_${year}_single_Higgs_${procs}_${year}_${catName}.root outdir_${ext}_${procs}_${year}_single_Higgs/CMS-HGG_sigfit_${ext}_${procs}_${year}_single_Higgs_${catName}.root
-python RunPlotter.py --procs all --years $year --cats $catName --ext ${ext}_${procs}_${year}_single_Higgs --HHWWggLabel ${ext}_${procs}
+  echo "catName: ${catName}"
+  mkdir outdir_${ext}_${procs}_${year}_single_Higgs/
+  cp ${path}/Signal/outdir_${ext}_${year}_single_Higgs/signalFit/output/CMS-HGG_sigfit_${ext}_${year}_single_Higgs_${procs}_${year}_${catName}.root outdir_${ext}_${procs}_${year}_single_Higgs/CMS-HGG_sigfit_${ext}_${procs}_${year}_single_Higgs_${catName}.root
+  echo "COMMAND:"
+  if [[ "$HHWWggSingleHiggsScale" == "1" ]]; then
+    echo "Scaling Single Higgs by 2 - Should Only do this if evaluating on half of events"
+    echo "python RunPlotter.py --procs all --years $year --cats $catName --ext ${ext}_${procs}_${year}_single_Higgs --HHWWggLabel ${ext}_${procs} --HHWWggSingleHiggsScale"
+    python RunPlotter.py --procs all --years $year --cats $catName --ext ${ext}_${procs}_${year}_single_Higgs --HHWWggLabel ${ext}_${procs} --HHWWggSingleHiggsScale
+  else
+    echo "NOT Scaling Single Higgs by 2"
+    echo "python RunPlotter.py --procs all --years $year --cats $catName --ext ${ext}_${procs}_${year}_single_Higgs --HHWWggLabel ${ext}_${procs}"
+    python RunPlotter.py --procs all --years $year --cats $catName --ext ${ext}_${procs}_${year}_single_Higgs --HHWWggLabel ${ext}_${procs}   
+  fi 
+
+  echo "COPYING PLOTS:"
+  echo "cp ${WorkingDirectory}/Signal/outdir_${ext}_${procs}_${year}_single_Higgs/Plots/*.png ${website}"
+  echo "cp ${WorkingDirectory}/Signal/outdir_${ext}_${procs}_${year}_single_Higgs/Plots/*.pdf ${website}"
+  cp ${WorkingDirectory}/Signal/outdir_${ext}_${procs}_${year}_single_Higgs/Plots/*.png ${website}
+  cp ${WorkingDirectory}/Signal/outdir_${ext}_${procs}_${year}_single_Higgs/Plots/*.pdf ${website}
 done
 
-
-
 rm HHWWgg_config_Run.py
-
 
 ########################################
 #           DATACARD                   #
 #                                      #
 ########################################
 echo "Start generate datacard(no systeamtics)"
-cd ../Datacard
+# cd ../Datacard
+cd ${WorkingDirectory}/Datacard/
 if [ ! -d "./SingleHiggs_${ext}_${year}" ]; then
   mkdir -p ./SingleHiggs_${ext}_${year}/
 fi

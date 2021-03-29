@@ -47,21 +47,24 @@ def get_options():
   parser.add_option('--skipVertexScenarioSplit', dest='skipVertexScenarioSplit', default=False, action="store_true", help="Skip vertex scenario split")
   parser.add_option('--skipZeroes', dest='skipZeroes', default=False, action="store_true", help="Skip proc x cat is numEntries = 0., or sumEntries < 0.")
   # For systematics
-  parser.add_option('--skipSystematics', dest='skipSystematics', default=False, action="store_true", help="Skip shape systematics in signal model")
+  # parser.add_option('--skipSystematics', dest='skipSystematics', default=False, action="store_true", help="Skip shape systematics in signal model")
+  parser.add_option('--skipSystematics', dest='skipSystematics', default=True, action="store_true", help="Skip shape systematics in signal model")
   parser.add_option('--useDiagonalProcForSyst', dest='useDiagonalProcForSyst', default=False, action="store_true", help="Use diagonal process for systematics (requires diagonal mapping produced by getDiagProc script)")
   parser.add_option("--scales", dest='scales', default='', help="Photon shape systematics: scales")
   parser.add_option("--scalesCorr", dest='scalesCorr', default='', help='Photon shape systematics: scalesCorr')
   parser.add_option("--scalesGlobal", dest='scalesGlobal', default='', help='Photon shape systematics: scalesGlobal')
   parser.add_option("--smears", dest='smears', default='', help='Photon shape systematics: smears')
   # Parameter values
-  parser.add_option('--replacementThreshold', dest='replacementThreshold', default=100, type='int', help="Nevent threshold to trigger replacement dataset")
+  # parser.add_option('--replacementThreshold', dest='replacementThreshold', default=100, type='int', help="Nevent threshold to trigger replacement dataset")
+  # parser.add_option('--replacementThreshold', dest='replacementThreshold', default=50, type='int', help="Nevent threshold to trigger replacement dataset")
+  parser.add_option('--replacementThreshold', dest='replacementThreshold', default=-1, type='int', help="Nevent threshold to trigger replacement dataset") ##-- HHWWgg has low unweighted stats in single higgs processes 
   parser.add_option('--beamspotWidthData', dest='beamspotWidthData', default=3.4, type='float', help="Width of beamspot in data [cm]")
   parser.add_option('--beamspotWidthMC', dest='beamspotWidthMC', default=5.14, type='float', help="Width of beamspot in MC [cm]")
   parser.add_option('--MHPolyOrder', dest='MHPolyOrder', default=1, type='int', help="Order of polynomial for MH dependence")
   parser.add_option('--nBins', dest='nBins', default=80, type='int', help="Number of bins for fit")
   # Minimizer options
   parser.add_option('--minimizerMethod', dest='minimizerMethod', default='TNC', help="(Scipy) Minimizer method")
-  parser.add_option('--minimizerTolerance', dest='minimizerTolerance', default=1e-8, type='float', help="(Scipy) Minimizer toleranve")
+  parser.add_option('--minimizerTolerance', dest='minimizerTolerance', default=1e-8, type='float', help="(Scipy) Minimizer tolerance")
   return parser.parse_args()
 (opt,args) = get_options()
 
@@ -161,6 +164,7 @@ nominalDatasets = od()
 datasetRVForFit = od()
 for mp in opt.massPoints.split(","):
   if ( opt.analysis == 'HHWWgg' ):
+    #  WSFileName = glob.glob("%s/Shifted*M%s*%s_%s_%s.root"%(opt.inputWSDir,mp,procRVFit,opt.HHWWggLabel,opt.cat))[0]
      WSFileName = glob.glob("%s/Shifted*M%s*%s_%s_%s.root"%(opt.inputWSDir,mp,procRVFit,opt.HHWWggLabel,opt.cat))[0]
   else:
      WSFileName = glob.glob("%s/Shifted*M%s*%s_%s.root"%(opt.inputWSDir,mp,procRVFit,opt.cat))[0]
@@ -183,6 +187,16 @@ if( datasetRVForFit[MHNominal].numEntries() < opt.replacementThreshold  )|( data
   nominal_numEntries = datasetRVForFit[MHNominal].numEntries()
   print rMap['procRVMap'][opt.cat]
   procReplacementFit, catReplacementFit = rMap['procRVMap'][opt.cat], rMap['catRVMap'][opt.cat]
+  
+  ##-- If HHWWgg, set replacement proc to same as one being run 
+  # if ( opt.analysis == 'HHWWgg' ):
+  #   procReplacementFit = opt.proc
+
+  if( "single_Higgs" in opt.HHWWggLabel ):
+    procReplacementFit = opt.proc
+    if(opt.proc == "wzh"):
+      catReplacementFit = "HHWWggTag_SLDNN_2"
+
   print "replace RV:",procReplacementFit, catReplacementFit
   for mp in opt.massPoints.split(","):
     if ( opt.analysis == 'HHWWgg' ):
@@ -205,10 +219,12 @@ if( datasetRVForFit[MHNominal].numEntries() < opt.replacementThreshold  )|( data
   # Check if replacement dataset has too few entries: if so throw error
   if( datasetRVForFit[MHNominal].numEntries() < opt.replacementThreshold )|( datasetRVForFit[MHNominal].sumEntries() < 0. ):
     print " --> [ERROR] replacement dataset (%s,%s) has too few entries (%g < %g)"%(procReplacementFit,catReplacementFit,datasetRVForFit[MHNominal].numEntries(),opt.replacementThreshold)
-    sys.exit(1)
+    print "SHOULD EXIT HERE"
+    # sys.exit(1) ##-- Not exiting for sequential HHWWgg condor jobs 
 
   else:
     procRVFit, catRVFit = procReplacementFit, catReplacementFit
+
     if opt.skipVertexScenarioSplit: 
       print " --> Too few entries in nominal dataset (%g < %g). Using replacement (proc,cat) = (%s,%s) for extracting shape"%(nominal_numEntries,opt.replacementThreshold,procRVFit,catRVFit)
       for mp in opt.massPoints.split(","):
