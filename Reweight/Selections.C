@@ -51,7 +51,8 @@ void Selections_Run(){
   vector<string>NewCatName; 
   string NewCatString="NEW_Cat_NAME";
   splitStringToVect(NewCatString, NewCatName, ",");
-  vector<string> systematics{"","FNUFEB","FNUFEE","JECAbsolute2017","JECAbsolute","JECBBEC12017",
+  vector<string> systematics{""};
+  /*vector<string> systematics{"","FNUFEB","FNUFEE","JECAbsolute2017","JECAbsolute","JECBBEC12017",
     "JECBBEC1","JECEC22017","JECEC2","JECFlavorQCD","JECHF2017","JECHF","JECRelativeBal",
     "JECRelativeSample2017","JEC","JER","MCScaleGain1EB","MCScaleGain6EB","MCScaleHighR9EB",
     "MCScaleHighR9EE","MCScaleLowR9EB","MCScaleLowR9EE","MCSmearHighR9EBPhi","MCSmearHighR9EBRho",
@@ -59,7 +60,7 @@ void Selections_Run(){
     "MCSmearLowR9EEPhi","MCSmearLowR9EERho","MaterialCentralBarrel","MaterialForward",
     "MaterialOuterBarrel","MvaShift","PUJIDShift","ShowerShapeHighR9EB","ShowerShapeHighR9EE",
     "ShowerShapeLowR9EB","ShowerShapeLowR9EE","SigmaEOverEShift",
-    "metJecUncertainty","metJerUncertainty","metPhoUncertainty","metUncUncertainty"};
+    "metJecUncertainty","metJerUncertainty","metPhoUncertainty","metUncUncertainty"};*/
   vector<string> shifts{"Up","Down"};
   TString TreeName;
   TString newTreeName;
