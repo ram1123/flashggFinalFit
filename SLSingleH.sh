@@ -5,17 +5,19 @@ source ./setup.sh
 WorkingDirectory="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/"
 
 SingleHiggs=("tth" "wzh" "vbf" "ggh")
+#SingleHiggs=("wzh" "vbf" "ggh")
+#SingleHiggs=("wzh")
+Names=("SingleHiggs_ttHJetToGG_2017_1_CategorizedTrees" "SingleHiggs_VHToGG_2017_1_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_1_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_1_CategorizedTrees")
 FullSingleHiggsNames=("ttHJetToGG" "VHToGG" "VBFHToGG" "GluGluHToGG")
-Names=("SingleHiggs_ttHJetToGG_2017_all_CategorizedTrees" "SingleHiggs_VHToGG_2017_all_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_all_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_all_CategorizedTrees")
+#Names=("SingleHiggs_ttHJetToGG_2017_all_CategorizedTrees" "SingleHiggs_VHToGG_2017_all_CategorizedTrees" "SingleHiggs_VBFHToGG_2017_all_CategorizedTrees" "SingleHiggs_GluGluHToGG_2017_all_CategorizedTrees")
 
-years=("2016" "2017" "2018")
-# TrainingLabel="HHWWyyDNN_binary_noHgg_noNegWeights_BalanceYields_allBkgs_LOSignals_noPtOverM"
 TrainingLabel="HHWWyyDNN_binary_noHgg_noNegWeights_BalanceYields_allBkgs_LOSignals_noPtOverM_withKinWeight_weightSel"
 
 HHWWggSingleHiggsScale="0"
 # inDir="/eos/user/b/bmarzocc/HHWWgg/January_2021_Production/${TrainingLabel}/"
 phpLoc="/eos/user/a/atishelm/www/HHWWgg/DNN/index.php" ##-- Location of php file for copying to new website directories 
 
+years=("2017")
 for year in ${years[@]}
 do
   
@@ -32,20 +34,22 @@ do
     cp ${phpLoc} /eos/user/a/atishelm/www/HHWWgg/DNN/${TrainingLabel}/fggfinalfit/${year}
     cp ${phpLoc} ${website}
     
-    ext="SL_${TrainingLabel}"
-    cat='HHWWggTag_SLDNN_0,HHWWggTag_SLDNN_1,HHWWggTag_SLDNN_2,HHWWggTag_SLDNN_3' #output cat name, it will be used in subsequence step
-    InputTreeCats='HHWWggTag_SL_0,HHWWggTag_SL_1,HHWWggTag_SL_2,HHWWggTag_SL_3' #input cat name in the tree
+    # year='2017'
+    ext='FH_${TrainingLabel}'
+    cat='HHWWggTag_FHDNN_0,HHWWggTag_FHDNN_1,HHWWggTag_FHDNN_2,HHWWggTag_FHDNN_3' #output cat name, it will be used in subsequence step
+    InputTreeCats='HHWWggTag_FH_0,HHWWggTag_FH_1,HHWWggTag_FH_2,HHWWggTag_FH_3' #input cat name in the tree
     catNames=(${cat//,/ })
     mass='125'
-
+    # TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/2017/Single_H_2017_Hadded/"
     TreePath="/eos/user/a/atishelm/ntuples/HHWWgg_flashgg/January_2021_Production/${year}/${TrainingLabel}/Single_H/"
-    InputWorkspace="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/Workspaces_${TrainingLabel}/"
+    #TreePath="/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/January_2021_Production/DNN/samples_w_DNN/HHWWyyDNN_binary_April2_WWZZgg_WithQCD_BalanceYields/CategorizeRootFile/"
+    # TreePath="/eos/user/c/chuw/HHWWgg_ntuple/2016/FH_DNN_Categorized_LOSignals_noPtOverM-Training/"
+    InputWorkspace="/eos/user/l/lipe/HHWWggWorkspace/FHDNN/"
+    #InputWorkspace="/afs/cern.ch/work/a/atishelm/private/fggFinalFit_ForLimits/CMSSW_10_2_13/src/flashggFinalFit/Workspaces_${TrainingLabel}/"
     mkdir -p ${InputWorkspace}
     doSelections="0"
     Selections='(1.)' # Selections you want to applied.
-    # Replace="HHWWggTag_SLDNN_0"
-    Replace="HHWWggTag_SLDNN_3" 
-
+    Replace="HHWWggTag_FHDNN_0"
     ############################################
     #  Tree selectors#
     #
@@ -63,11 +67,11 @@ do
     sed -i "s#YEAR#${year}#g" SingleHiggsSelections_Run.C
     sed -i "s#2017#${year}#g" SingleHiggsSelections_Run.C
     sed -i "s#INPUTPATH#${TreePath}#g" SingleHiggsSelections_Run.C
-  # if [ "$ext" = "SL" ]
-  # then
-  sed -i "s#tagsDumper/trees/##g" SingleHiggsSelections_Run.C ##-- Assuming TDirectory structure 
-  # fi
 
+  if [ "$ext" = "FH" ]
+  then
+    sed -i "s#tagsDumper/trees/##g" SingleHiggsSelections_Run.C ##-- Assuming TDirectory structure 
+  fi
   if [ $doSelections -eq "1" ]
   then
     echo "Selection start"
@@ -124,17 +128,17 @@ sed -i "s#PROCS#${procs}#g" HHWWgg_config_Run.py
 sed -i "s#HHWWggTest#${ext}#g" HHWWgg_config_Run.py
 sed -i "s#CAT#${cat}#g" HHWWgg_config_Run.py
 sed -i "s#INPUTDIR#${InputWorkspace}/Signal/Input/${year}/#g" HHWWgg_config_Run.py
-python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode fTest --modeOpts "doPlots"
+python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode fTest --modeOpts "doPlots" 
 
 #######################################
 # Run photon sys
 ######################################
-python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode calcPhotonSyst
+#python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode calcPhotonSyst
 
 #######################################
 #Run signal Fit
 #######################################
-python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode signalFit --groupSignalFitJobsByCat
+python RunSignalScripts.py --inputConfig HHWWgg_config_Run.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipSystematics True"
 for catName in ${catNames[@]}
 do
   echo "catName: ${catName}"
