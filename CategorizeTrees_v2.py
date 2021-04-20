@@ -287,6 +287,20 @@ def GetMCLabelFullyHad(MCfileName_):
 
     return NameDict[MCfileName_]
 
+def getallTrees(d, basepath="/", SearchString="Tag_1", verbose=False):
+    "Recurse through a ROOT file/dir and generate (path, obj) pairs"
+    for key in d.GetListOfKeys():
+        kname = key.GetName()
+        obj = key.ReadObj();
+        if obj.IsA().InheritsFrom(ROOT.TDirectory.Class()):
+            print kname
+            d.cd(key.GetName());
+            subdir = ROOT.gDirectory;
+            for i in getallTrees(subdir, basepath+kname+"/", SearchString):
+                yield i
+        elif (obj.IsA().InheritsFrom(ROOT.TTree.Class()) and (kname.find(SearchString) != -1)):
+            yield basepath+kname
+
 (opt,args) = get_options()
 
 nTupleDirec = opt.inp_dir
@@ -343,107 +357,7 @@ if (nBoundaries==6):
 
 print"cut_list:",cut_list
 
-
-if(opt.syst == "0"):
-  systLabels = [""]
-
-else:
-
-  if(opt.part == "1") or (opt.part == "all"): systLabels = [""]
-  else: systLabels = []
-
-  listOfSources_2016 = [
-                            "Absolute",
-                            "Absolute2016",
-                            "BBEC1",
-                            "BBEC12016",
-                            "EC2",
-                            "EC22016",
-                            "FlavorQCD",
-                            "HF",
-                            "HF2016",
-                            "RelativeBal",
-                            "RelativeSample2016"
-                           ]
-
-  listOfSources_2017 = [
-                    "Absolute",
-                    "Absolute2017",
-                    "BBEC1",
-                    "BBEC12017",
-                    "EC2",
-                    "EC22017",
-                    "FlavorQCD",
-                    "HF",
-                    "HF2017",
-                    "RelativeBal",
-                    "RelativeSample2017"
-                    ]
-
-  listOfSources_2018 = [
-                    "Absolute",
-                    "Absolute2018",
-                    "BBEC1",
-                    "BBEC12018",
-                    "EC2",
-                    "EC22018",
-                    "FlavorQCD",
-                    "HF",
-                    "HF2018",
-                    "RelativeBal",
-                    "RelativeSample2018"
-                    ]
-
-  for direction in ["Up","Down"]:
-
-    if(opt.part=="1") or (opt.part=="all"):
-        ##-- Photons
-        systLabels.append("MvaShift%s01sigma"%direction)
-        systLabels.append("SigmaEOverEShift%s01sigma"%direction)
-        systLabels.append("MaterialCentralBarrel%s01sigma"%direction)
-        systLabels.append("MaterialOuterBarrel%s01sigma"%direction)
-        systLabels.append("MaterialForward%s01sigma"%direction)
-        systLabels.append("FNUFEB%s01sigma"%direction)
-        systLabels.append("FNUFEE%s01sigma"%direction)
-        systLabels.append("MCScaleGain6EB%s01sigma"%direction)
-        systLabels.append("MCScaleGain1EB%s01sigma"%direction)
-
-        ##-- Jets
-        systLabels.append("JEC%s01sigma" % direction)
-        systLabels.append("JER%s01sigma" % direction)
-        systLabels.append("PUJIDShift%s01sigma" % direction)
-
-        ##-- Different reduced JEC names for different years
-        if(opt.year == '2016'):
-            for sourceName in listOfSources_2016:
-                systLabels.append("JEC%s%s01sigma" % (str(sourceName),direction))
-        elif(opt.year == '2017'):
-            for sourceName in listOfSources_2017:
-                systLabels.append("JEC%s%s01sigma" % (str(sourceName),direction))
-        elif(opt.year == '2018'):
-            for sourceName in listOfSources_2018:
-                systLabels.append("JEC%s%s01sigma" % (str(sourceName),direction))
-
-        ##-- HEM Systematic only in 2018
-        if(opt.year == '2018'):
-            systLabels.append("JetHEM%s01sigma" % (direction))
-
-        ##-- MET
-        systLabels.append("metJecUncertainty%s01sigma" % direction)
-        systLabels.append("metJerUncertainty%s01sigma" % direction)
-        systLabels.append("metPhoUncertainty%s01sigma" % direction)
-        systLabels.append("metUncUncertainty%s01sigma" % direction)
-
-    if(opt.part=="2") or (opt.part=="all"):
-        for r9 in ["HighR9","LowR9"]:
-            for region in ["EB","EE"]:
-                systLabels.append("ShowerShape%s%s%s01sigma"%(r9,region,direction))
-                systLabels.append("MCScale%s%s%s01sigma" % (r9,region,direction))
-                for var in ["Rho","Phi"]:
-                    systLabels.append("MCSmear%s%s%s%s01sigma" % (r9,region,var,direction))
-
-
-
+print "="*51
 for num,f in enumerate(input_files):
     # print 'input file: ',f
     if((opt.forceContainString != "") and (opt.forceContainString not in f)):
@@ -453,55 +367,11 @@ for num,f in enumerate(input_files):
     print 'input file: ',f
     treename = ""
     treelist = []
-    print("systLabels:",systLabels)
-    if (opt.option == 'Signal'):
-        for sys_i,syst in enumerate(systLabels):
-            print "Systematic: ",syst
-            systLabel = "%s_v1"%(syst)
-            if (channel == "FH"): systLabel = "%s"%(syst)
-            if (opt.year == '2016' and channel == "SL"):
-                if(systLabel == "_v1"): treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_v1"%(opt.node)
-                else: treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_%s"%(opt.node,systLabel)
-            elif (opt.year == '2017' and channel == "SL"):
-                if(systLabel == "_v1"): treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_v1"%(opt.node)
-                else: treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_%s"%(opt.node,systLabel)
-            elif (opt.year == '2018' and channel == "SL"):
-                if(systLabel == "_v1"): treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_v1"%(opt.node)
-                else: treename = "GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_0_%s"%(opt.node,systLabel)
 
-            elif (opt.year == '2017' and channel == "FH"):
-                if(systLabel == ""): treename = "GluGluToHHTo2G2ZTo2G4Q_node_%s_13TeV_HHWWggTag_1"%(opt.node)
-                else: treename = "GluGluToHHTo2G2ZTo2G4Q_node_%s_13TeV_HHWWggTag_1_%s"%(opt.node,systLabel)
-                print "[DEBUG#475]: treename: ",sys_i,"\t",treename
-
-            treelist.append(treename)
-    elif (opt.option == 'SingleHiggs'):
-        for sys_i,syst in enumerate(systLabels):
-            print "Systematic: ",syst
-            systLabel = "%s_v1"%(syst)
-            #if (opt.year == '2017'):
-                #MCTreeName = GetMCTreeName(f)
-                #if(systLabel == "_v1"): treename = "%s"%(MCTreeName)
-                #else: treename = "%s_%s"%(MCTreeName,systLabel)
-            if ((opt.year == '2018' or opt.year == '2016' or opt.year == '2017') and channel == "SL"):
-                MCTreeName = GetMCTreeName(f)
-                if(systLabel == "_v1"): treename = "%s"%(MCTreeName)
-                else:
-                    treename = "%s_%s"%(MCTreeName,systLabel)
-                    treename = treename.replace("HHWWggTag_0_v1","HHWWggTag_0")
-            if ((opt.year == '2018' or opt.year == '2016' or opt.year == '2017') and channel == "FH"):
-                print "[DEBUG] Inside FH tree condition..."
-                MCTreeName = GetMCTreeNameFullyHad(f)
-                if(systLabel == "_v1"): treename = "%s"%(MCTreeName)
-                else:
-                    treename = "%s_%s"%(MCTreeName,systLabel)
-                    treename = treename.replace("HHWWggTag_1","HHWWggTag_1")
-            print "treename",treename
-            treelist.append(treename)
-    else:
-        treename = "Data_13TeV_HHWWggTag_0_v1"
-        if channel == "FH": treename = "Data_13TeV_HHWWggTag_1"
-        treelist.append(treename)
+    rootobjects_raw =  list(getallTrees(tfile))
+    treelist = [item for item in rootobjects_raw]
+    print "Number of trees: ",len(treelist)
+    print "trees: ",(treelist)
 
     if(opt.option == "SingleHiggs"):
         MCLabel = ""
@@ -520,7 +390,7 @@ for num,f in enumerate(input_files):
     for tree_i, tree in enumerate(treelist):
         print"On Systematic %s / %s"%(tree_i+1, len(treelist))
         print"Looking for tree:",treelist[tree_i]
-        ntuple = tfile.Get(treelist[tree_i])
+        ntuple = tfile.Get(treelist[tree_i].replace("/",""))
         print("ntuple:",ntuple)
         for icat, cat in enumerate(cut_list):
             print"category:",icat
@@ -536,37 +406,11 @@ for num,f in enumerate(input_files):
             """
             print "Cut: ",(common_cut+'&&'+cut_list[icat])
             CategorizedTree = ntuple.CopyTree(common_cut+'&&'+cut_list[icat])
-            if (tree_i == 0):
-                if(opt.option == 'Signal' and channel == "SL"):
-                    print ("==> Signal SL")
-                    treename_tmp = 'GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_SL_%s'%(opt.node,str(icat))
-                elif(opt.option == 'Signal' and channel == "FH"):
-                    print ("==> Signal FH")
-                    if opt.node == "cHHH1" and opt.WhichSig == "ZZ":
-                        treename_tmp = 'GluGluToHHTo2G2ZTo2G4Q_node_%s_13TeV_HHWWggTag_FH_%s'%((opt.node).replace("GluGluToHHTo2G2Z_",""),str(icat))
-                    if opt.node == "cHHH1" and opt.WhichSig == "WW":
-                        treename_tmp = 'GluGluToHHTo2G4Q_node_%s_13TeV_HHWWggTag_FH_%s'%((opt.node).replace("GluGluToHHTo2G2W_",""),str(icat))
-                elif(opt.option=='SingleHiggs'):
-                    print ("==> Single Higgs")
-                    Label = ""
-                    treename_tmp = ""
-                    if channel=="SL":
-                        Label = ShortMCTreeName(f)
-                        treename_tmp = "%s_13TeV_HHWWggTag_SL_%s"%(Label,str(icat))
-                    if channel=="FH":
-                        Label = ShortMCTreeNameFullyHad(f)
-                        treename_tmp = "%s_13TeV_HHWWggTag_FH_%s"%(Label,str(icat))
-                else:
-                    print ("==> Data")
-                    if channel == "SL":
-                        treename_tmp = "Data_13TeV_HHWWggTag_SL_%s"%(str(icat))
-                    if channel == "FH":
-                        treename_tmp = "Data_13TeV_HHWWggTag_FH_%s"%(str(icat))
-            else:
-                if(opt.option == 'Signal'): treename_tmp = 'GluGluToHHTo2G2Qlnu_node_%s_13TeV_HHWWggTag_SL_%s_%s'%(opt.node, str(icat), systLabels[tree_i])
-                else:
-                    ShortMCLabel = ShortMCTreeName(f)
-                    treename_tmp = '%s_13TeV_HHWWggTag_SL_%s_%s'%(ShortMCLabel, str(icat), systLabels[tree_i])
+            treename_tmp = "test"
+            if channel == "FH":
+                treename_tmp = tree.replace("HHWWggTag_1","HHWWggTag_FH_%s"%(str(icat)))
+            if channel == "SL":
+                treename_tmp = tree.replace("HHWWggTag_0","HHWWggTag_SL_%s"%(str(icat)))
 
             CategorizedTree.SetName(treename_tmp)
             CategorizedTree.SetTitle(treename_tmp)
@@ -575,7 +419,5 @@ for num,f in enumerate(input_files):
             del CategorizedTree
         del ntuple
     del tfile
-
-            # print treename_tmp+'_Cat'+str(icat)
     # f_out.Write()
     f_out.Close()
