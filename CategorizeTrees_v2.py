@@ -303,6 +303,20 @@ def getallTrees(d, basepath="/", SearchString="Tag_1", verbose=False):
 
 (opt,args) = get_options()
 
+print("Input directory  = ",opt.inp_dir)
+print("m    = ",opt.m)
+print("option   = ",opt.option)
+print("nBoundaries  = ",opt.nBoundaries)
+print("year = ",opt.year)
+print("out_dir  = ",opt.out_dir)
+print("var  = ",opt.var)
+print("forceContainString   = ",opt.forceContainString)
+print("node = ",opt.node)
+print("part = ",opt.part)
+print("syst = ",opt.syst)
+print("channel  = ",opt.channel)
+print("WhichSig = ",opt.WhichSig)
+
 nTupleDirec = opt.inp_dir
 channel = opt.channel
 
@@ -372,6 +386,7 @@ for num,f in enumerate(input_files):
     treelist = [item for item in rootobjects_raw]
     print "Number of trees: ",len(treelist)
     print "trees: ",(treelist)
+    outName = "test.root"
 
     if(opt.option == "SingleHiggs"):
         MCLabel = ""
@@ -381,14 +396,17 @@ for num,f in enumerate(input_files):
         outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,MCLabel,opt.year,opt.part)
     elif(opt.option == "Signal"):
         outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.node,opt.year,opt.part)
-        if channel == "FH": outName = "%s/%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.WhichSig,opt.node,opt.year,opt.part)
+        if channel == "FH": outName = "%s/%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
     elif(opt.option == 'Data'):
         outName = "%s/%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.year)
+    print("output root file name: ",outName)
     f_out = ROOT.TFile.Open(outName,'RECREATE')
     common_cut = '(1)'
     #common_cut = '(((Leading_Photon_pt/CMS_hgg_mass) > (1/3))*((Subleading_Photon_pt/CMS_hgg_mass) > (1/4)) )'
     for tree_i, tree in enumerate(treelist):
         print"On Systematic %s / %s"%(tree_i+1, len(treelist))
+        if treelist[tree_i].startswith("/"):
+            treelist[tree_i] = treelist[tree_i][1:]
         print"Looking for tree:",treelist[tree_i]
         ntuple = tfile.Get(treelist[tree_i].replace("/",""))
         print("ntuple:",ntuple)
