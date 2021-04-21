@@ -1,6 +1,11 @@
 # Editors temp files
+*.cxx
 *.swp
 *~
+bin/
+lib/
+run_script*.sh
+*/
 
 # SCRAM business
 __init__.py

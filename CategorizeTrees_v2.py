@@ -383,7 +383,7 @@ for num,f in enumerate(input_files):
     treelist = []
 
     rootobjects_raw =  list(getallTrees(tfile))
-    treelist = [item for item in rootobjects_raw]
+    treelist = [item[1:] for item in rootobjects_raw]
     print "Number of trees: ",len(treelist)
     print "trees: ",(treelist)
     outName = "test.root"
@@ -393,18 +393,22 @@ for num,f in enumerate(input_files):
         if channel=="SL": MCLabel = GetMCLabel(f)
         if channel=="FH": MCLabel = GetMCLabelFullyHad(f)
         print"MCLabel:",MCLabel
-        outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,MCLabel,opt.year,opt.part)
+        # outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,MCLabel,opt.year,opt.part)
+        outName = "%s_%s_%s_%s_CategorizedTrees.root"%(opt.option,MCLabel,opt.year,opt.part)
     elif(opt.option == "Signal"):
         outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.node,opt.year,opt.part)
-        if channel == "FH": outName = "%s/%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
+        # if channel == "FH": outName = "%s/%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
+        if channel == "FH": outName = "%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
     elif(opt.option == 'Data'):
-        outName = "%s/%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.year)
+        # outName = "%s/%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.year)
+        outName = "%s_%s_CategorizedTrees.root"%(opt.option,opt.year)
     print("output root file name: ",outName)
     f_out = ROOT.TFile.Open(outName,'RECREATE')
     common_cut = '(1)'
     #common_cut = '(((Leading_Photon_pt/CMS_hgg_mass) > (1/3))*((Subleading_Photon_pt/CMS_hgg_mass) > (1/4)) )'
     for tree_i, tree in enumerate(treelist):
         print"On Systematic %s / %s"%(tree_i+1, len(treelist))
+        print"Looking for tree:",treelist[tree_i]
         if treelist[tree_i].startswith("/"):
             treelist[tree_i] = treelist[tree_i][1:]
         print"Looking for tree:",treelist[tree_i]
@@ -426,7 +430,7 @@ for num,f in enumerate(input_files):
             CategorizedTree = ntuple.CopyTree(common_cut+'&&'+cut_list[icat])
             treename_tmp = "test"
             if channel == "FH":
-                treename_tmp = tree.replace("HHWWggTag_1","HHWWggTag_FH_%s"%(str(icat)))
+                treename_tmp = tree.replace("HHWWggTag_1","HHWWggTag_FHDNN_%s"%(str(icat)))
             if channel == "SL":
                 treename_tmp = tree.replace("HHWWggTag_0","HHWWggTag_SL_%s"%(str(icat)))
 

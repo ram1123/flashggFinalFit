@@ -2,7 +2,7 @@
 # @Author: Ram Krishna Sharma
 # @Date:   2021-04-20
 # @Last Modified by:   Ram Krishna Sharma
-# @Last Modified time: 2021-04-20
+# @Last Modified time: 2021-04-21
 #!/usr/bin/python
 import numpy as n
 from ROOT import *
@@ -28,6 +28,12 @@ import os
 
 if __name__ == '__main__':
 
+  import argparse
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-y', '--Year', dest='Year', help='Year to run', default="2016", type=int)
+  parser.add_argument('-s', '--ExtraString', dest='ExtraString', help='Extra string to be added in the condor file name', default="", type=str)
+
+  args = parser.parse_args()
 #   parser = OptionParser()
 #   parser.add_option( "-d", "--inDir",   dest="inDir",    default="",   type="string", help="inDir" )
 #   parser.add_option( "-o", "--outDir",   dest="outDir",    default="",   type="string", help="outDir" )
@@ -56,21 +62,21 @@ if __name__ == '__main__':
   if not os.path.isdir('log'): os.mkdir('log')
 
   # Prepare condor jobs
-  condor = '''executable              = run_script_Signal.sh
+  condor = '''executable              = run_script_%s.sh
 output                  = output/strips.$(ClusterId).$(ProcId).out
 error                   = output/strips.$(ClusterId).$(ProcId).out
 log                     = log/strips.$(ClusterId).log
-transfer_input_files    = run_script_Signal.sh,BinBoundaries_20Apr.txt
+transfer_input_files    = run_script_%s.sh,BinBoundaries_20Apr.txt
 # on_exit_remove          = (ExitBySignal == False) && (ExitCode == 0)
 # periodic_release        = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*60))
 
 +JobFlavour             = "workday"
 # +AccountingGroup      = "group_u_CMS.CAF.ALCA"
-queue arguments from arguments_Signal.txt
+queue arguments from arguments_%s.txt
 '''
 
-  with open("condor_job_Signal.txt", "w") as cnd_out:
-     cnd_out.write(condor)
+  with open("condor_job_%s.txt"%(args.ExtraString), "w") as cnd_out:
+     cnd_out.write(condor%(args.ExtraString,args.ExtraString,args.ExtraString))
 
   outputDir = os.getcwd()
 
@@ -103,16 +109,52 @@ echo "WHICHNODE: ${WHICHNODE}"
 
 eval `scramv1 ru -sh`
 
-if [[ ${OPTION} -eq  "Signal" ]]; then
+if [[ ${OPTION} ==  "Signal" ]]; then
+  echo "Inside signal condition"
+  echo "==============="
+  date
+  echo "==============="
   python ${LOCAL}/CategorizeTrees_v2.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${OUTDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST} --WhichSig ${WHICHSIGNAL} --node ${WHICHNODE}
+  echo "==============="
+  echo "List all files"
+  ls
+  echo "==============="
+  echo "mv *${FINDSTRING}*.root ${OUTDIR}/"
+  mv *${FINDSTRING}*.root ${OUTDIR}/
+  echo "==============="
+  date
 fi
 
-if [[ ${OPTION} -eq  "SingleHiggs" ]]; then
+if [[ ${OPTION} ==  "SingleHiggs" ]]; then
+  echo "Inside SingleHiggs condition"
+  echo "==============="
+  date
+  echo "==============="
   python ${LOCAL}/CategorizeTrees_v2.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${OUTDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST}
+  echo "==============="
+  echo "List all files"
+  ls
+  echo "==============="
+  echo "mv *${FINDSTRING}*.root ${OUTDIR}/"
+  mv *${FINDSTRING}*.root ${OUTDIR}/
+  echo "==============="
+  date
 fi
 
-if [[ ${OPTION} -eq  "Data" ]]; then
+if [[ ${OPTION} ==  "Data" ]]; then
+  echo "Inside Data condition"
+  echo "==============="
+  date
+  echo "==============="
   python ${LOCAL}/CategorizeTrees_v2.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${OUTDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst 0
+  echo "==============="
+  echo "List all files"
+  ls
+  echo "==============="
+  echo "mv *${FINDSTRING}*.root ${OUTDIR}/"
+  mv *${FINDSTRING}*.root ${OUTDIR}/
+  echo "==============="
+  date
 fi
 
 echo -e "DONE";
@@ -125,7 +167,9 @@ echo -e "DONE";
   inDirStarts = [
      ##-- Binary
    #   "/eos/user/b/bmarzocc/HHWWgg/January_2021_Production",
-   "/eos/user/l/lipe/DNN_Evaluation_sample/2017/"
+   "/eos/user/l/lipe/DNN_Evaluation_sample/2016/"
+   # "/eos/user/l/lipe/DNN_Evaluation_sample/2017/"
+   # "/eos/user/l/lipe/DNN_Evaluation_sample/2018/"
   ]
 
 
@@ -133,11 +177,12 @@ echo -e "DONE";
   years = ["2017"]
 
   channel = "FH"
-  indir = "/eos/user/l/lipe/DNN_Evaluation_sample/2017/"
+  indir = "/eos/user/l/lipe/DNN_Evaluation_sample/2016/"
   option = "Signal"
   whichsignal = "ZZ"
   year = 2017
-  outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2017/CategorizeRootFileCondor/"
+  # outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2017/CategorizeRootFileCondor_21Apr_v3/"
+  outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2016/CategorizeRootFileCondor/"
   binboundarytextfile = "BinBoundaries_20Apr.txt"
   findstring = "GluGluToHHTo2G2Z"
   ifSyst = 1
@@ -146,17 +191,18 @@ echo -e "DONE";
   arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "WW", year, outdir, binboundarytextfile, "GluGluToHHTo2G2Z", ifSyst, whichNode))
   arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "ZZ", year, outdir, binboundarytextfile, "GluGluToHHTo2G4Q", ifSyst, whichNode))
 
-  # # SingleHiggs = [ "VHToGG", "VBFHToGG", "GluGluHToGG", "ttHJet" ]
-  SingleHiggs = [ "ttHJet" ]
+  SingleHiggs = [ "VHToGG", "VBFHToGG", "GluGluHToGG", "ttHJet" ]
+  # SingleHiggs = [ "ttHJet" ]
 
   for singleHiggsSample in SingleHiggs:
    arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "SingleHiggs", "ZZ", year, outdir, binboundarytextfile, singleHiggsSample, ifSyst, whichNode))
 
-  # Data
-  # arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "Data", "ZZ", year, outdir, binboundarytextfile, "Data", ifSyst, whichNode))
+  # # Data
+  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "Data", "ZZ", year, outdir, binboundarytextfile, "Data", ifSyst, whichNode))
 
-  with open("arguments_Signal.txt", "w") as args:
-     args.write("\n".join(arguments))
+  with open("arguments_%s.txt"%(args.ExtraString), "w") as argFile:
+     argFile.write("\n".join(arguments))
 
-  with open("run_script_Signal.sh", "w") as rs:
-     rs.write(script)
+  with open("run_script_%s.sh"%(args.ExtraString), "w") as scriptFile:
+     scriptFile.write(script)
+
