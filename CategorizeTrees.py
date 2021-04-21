@@ -124,114 +124,6 @@ def GetFiles(nTupleDirec_):
     files = [file for file in os.listdir(Direc) if file.endswith(".root")]
     return files
 
-def ShortMCTreeName(MCfileName_):
-    ShortTreeDict = {
-        "GluGluHToGG_HHWWggTag_0_MoreVars_odd.root" : "ggh_125",
-        "VBFHToGG_HHWWggTag_0_MoreVars_odd.root" : "vbf_125",
-        "VHToGG_HHWWggTag_0_MoreVars_odd.root" : "wzh_125",
-        "ttHJetToGG_HHWWggTag_0_MoreVars_odd.root" : "tth_125",
-
-        "ttHJetToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "tth_125",
-        "GluGluHToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "ggh_125",
-        "VHToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "wzh_125",
-        "VBFHToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "vbf_125",
-
-        "GluGluHToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "ggh_125",
-        "VBFHToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "vbf_125",
-        "VHToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "wzh_125",
-        "ttHJetToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "tth_125",
-
-        "GluGluHToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "ggh_125",
-        "VBFHToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "vbf_125",
-        "VHToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "wzh_125",
-        "ttHJetToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "tth_125",
-        "ttHJetToGG_2018_M125_HHWWggTag_0_MoreVars_odd.root" : "tth_125",
-
-        ##-- Full sample - not split into even/odd
-        "GluGluHToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "ggh_125",
-        "VBFHToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "vbf_125",
-        "VHToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "wzh_125",
-        "ttHJetToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "tth_125",
-
-        ##-- Full sample - not split into even/odd
-        "GluGluHToGG_2017_HHWWggTag_0_MoreVars.root" : "ggh_125",
-        "VBFHToGG_2017_HHWWggTag_0_MoreVars.root" : "vbf_125",
-        "VHToGG_2017_HHWWggTag_0_MoreVars.root" : "wzh_125",
-        "ttHJetToGG_2017_HHWWggTag_0_MoreVars.root" : "tth_125",
-
-        ##-- Full sample - not split into even/odd
-        "GluGluHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "ggh_125",
-        "VBFHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "vbf_125",
-        "VHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "wzh_125",
-        "ttHJetToGG_2018_M125_HHWWggTag_0_MoreVars.root" : "tth_125",
-
-    }
-
-    return ShortTreeDict[MCfileName_]
-
-def ShortMCTreeNameFullyHad(MCfileName_):
-    ShortTreeDict = {
-        "GluGluHToGG_M125.root": "ggh_125",
-        "VBFHToGG_M125.root": "vbf_125",
-        "VHToGG_M125.root": "wzh_125",
-        "ttHJetToGG_M125.root": "tth_125"
-    }
-
-    return ShortTreeDict[MCfileName_]
-
-def GetMCTreeName(MCfileName_):
-    TreeDict = {
-        "GluGluHToGG_HHWWggTag_0_MoreVars_odd.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_HHWWggTag_0_MoreVars_odd.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_HHWWggTag_0_MoreVars_odd.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_HHWWggTag_0_MoreVars_odd.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-
-        "ttHJetToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-        "GluGluHToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_2017_HHWWggTag_0_MoreVars_odd.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-
-        "GluGluHToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_M125_2016_HHWWggTag_0_MoreVars_odd.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-
-        "GluGluHToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_M125_2018_HHWWggTag_0_MoreVars_odd.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_2018_M125_HHWWggTag_0_MoreVars_odd.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-
-        ##-- Full sample - not split into even/odd
-        "GluGluHToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_M125_2016_HHWWggTag_0_MoreVars.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-
-        ##-- Full sample - not split into even/odd
-        "GluGluHToGG_2017_HHWWggTag_0_MoreVars.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_2017_HHWWggTag_0_MoreVars.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_2017_HHWWggTag_0_MoreVars.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_2017_HHWWggTag_0_MoreVars.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-
-        ##-- Full sample - not split into even/odd
-        "GluGluHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "ggh_125_13TeV_HHWWggTag_0_v1",
-        "VBFHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "vbf_125_13TeV_HHWWggTag_0_v1",
-        "VHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "wzh_125_13TeV_HHWWggTag_0_v1",
-        "ttHJetToGG_2018_M125_HHWWggTag_0_MoreVars.root" : "tth_125_13TeV_HHWWggTag_0_v1",
-    }
-
-    return TreeDict[MCfileName_]
-
-def GetMCTreeNameFullyHad(MCfileName_):
-    TreeDict = {
-        "GluGluHToGG_M125.root": "output_tree",
-        "VBFHToGG_M125.root": "output_tree",
-        "VHToGG_M125.root": "output_tree",
-        "ttHJetToGG_M125.root": "output_tree"
-    }
-    return TreeDict[MCfileName_]
-
 def GetMCLabel(MCfileName_):
     NameDict = {
         "GluGluHToGG_HHWWggTag_0_MoreVars_odd.root" : "GluGluHToGG",
@@ -271,10 +163,8 @@ def GetMCLabel(MCfileName_):
         "GluGluHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "GluGluHToGG",
         "VBFHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "VBFHToGG",
         "VHToGG_M125_2018_HHWWggTag_0_MoreVars.root" : "VHToGG",
-        "ttHJetToGG_2018_M125_HHWWggTag_0_MoreVars.root" : "ttHJetToGG",
-
+        "ttHJetToGG_2018_M125_HHWWggTag_0_MoreVars.root" : "ttHJetToGG"
     }
-
     return NameDict[MCfileName_]
 
 def GetMCLabelFullyHad(MCfileName_):
@@ -284,7 +174,6 @@ def GetMCLabelFullyHad(MCfileName_):
         "VHToGG_M125.root": "VHToGG",
         "ttHJetToGG_M125.root": "ttHJetToGG"
     }
-
     return NameDict[MCfileName_]
 
 def getallTrees(d, basepath="/", SearchString="Tag_1", verbose=False):
@@ -304,18 +193,18 @@ def getallTrees(d, basepath="/", SearchString="Tag_1", verbose=False):
 (opt,args) = get_options()
 
 print("Input directory  = ",opt.inp_dir)
-print("m    = ",opt.m)
-print("option   = ",opt.option)
-print("nBoundaries  = ",opt.nBoundaries)
-print("year = ",opt.year)
-print("out_dir  = ",opt.out_dir)
-print("var  = ",opt.var)
-print("forceContainString   = ",opt.forceContainString)
-print("node = ",opt.node)
-print("part = ",opt.part)
-print("syst = ",opt.syst)
-print("channel  = ",opt.channel)
-print("WhichSig = ",opt.WhichSig)
+print("m                = ",opt.m)
+print("option           = ",opt.option)
+print("nBoundaries      = ",opt.nBoundaries)
+print("year             = ",opt.year)
+print("out_dir          = ",opt.out_dir)
+print("var              = ",opt.var)
+print("forceContainString= ",opt.forceContainString)
+print("node             = ",opt.node)
+print("part             = ",opt.part)
+print("syst             = ",opt.syst)
+print("channel          = ",opt.channel)
+print("WhichSig         = ",opt.WhichSig)
 
 nTupleDirec = opt.inp_dir
 channel = opt.channel
@@ -327,13 +216,12 @@ input_names = []
 
 cut_list = []
 
-print opt.nBoundaries
 nBoundaries_file = open(opt.nBoundaries+'',"r")
 nBoundaries_list = []
 for word in nBoundaries_file.read().split():
     nBoundaries_list.append(word)
 
-print (nBoundaries_list)
+print ("Boundaries: ",nBoundaries_list)
 nBoundaries = len(nBoundaries_list)
 
 if (nBoundaries == 3):
@@ -393,15 +281,12 @@ for num,f in enumerate(input_files):
         if channel=="SL": MCLabel = GetMCLabel(f)
         if channel=="FH": MCLabel = GetMCLabelFullyHad(f)
         print"MCLabel:",MCLabel
-        # outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,MCLabel,opt.year,opt.part)
-        outName = "%s_%s_%s_%s_CategorizedTrees.root"%(opt.option,MCLabel,opt.year,opt.part)
+        outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,MCLabel,opt.year,opt.part)
     elif(opt.option == "Signal"):
         outName = "%s/%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.node,opt.year,opt.part)
-        # if channel == "FH": outName = "%s/%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
-        if channel == "FH": outName = "%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
+        if channel == "FH": outName = "%s/%s_%s_%s_%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.forceContainString,opt.node,opt.year,opt.part)
     elif(opt.option == 'Data'):
-        # outName = "%s/%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.year)
-        outName = "%s_%s_CategorizedTrees.root"%(opt.option,opt.year)
+        outName = "%s/%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.year)
     print("output root file name: ",outName)
     f_out = ROOT.TFile.Open(outName,'RECREATE')
     common_cut = '(1)'

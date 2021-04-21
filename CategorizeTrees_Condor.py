@@ -94,6 +94,11 @@ BinBoundaryTextFile=${8};
 FINDSTRING=${9};
 IFSYST=${10};
 WHICHNODE=${11};
+TEMPDIR="."
+
+# In condor jobs don't send the output directly to EOS. Keep them in condor local.
+# Once the job is done move it to EOS. Condor job could send files directly to EOS,
+# but I think this may be slow. While write to local should be fast.
 
 echo "LOCAL: ${LOCAL}"
 echo "CHANNEL: ${CHANNEL}"
@@ -114,7 +119,7 @@ if [[ ${OPTION} ==  "Signal" ]]; then
   echo "==============="
   date
   echo "==============="
-  python ${LOCAL}/CategorizeTrees_v2.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${OUTDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST} --WhichSig ${WHICHSIGNAL} --node ${WHICHNODE}
+  python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST} --WhichSig ${WHICHSIGNAL} --node ${WHICHNODE}
   echo "==============="
   echo "List all files"
   ls
@@ -130,7 +135,7 @@ if [[ ${OPTION} ==  "SingleHiggs" ]]; then
   echo "==============="
   date
   echo "==============="
-  python ${LOCAL}/CategorizeTrees_v2.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${OUTDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST}
+  python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST}
   echo "==============="
   echo "List all files"
   ls
@@ -146,7 +151,7 @@ if [[ ${OPTION} ==  "Data" ]]; then
   echo "==============="
   date
   echo "==============="
-  python ${LOCAL}/CategorizeTrees_v2.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${OUTDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst 0
+  python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst 0
   echo "==============="
   echo "List all files"
   ls
