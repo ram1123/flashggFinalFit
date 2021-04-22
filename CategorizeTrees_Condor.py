@@ -87,13 +87,12 @@ LOCAL=${1};
 CHANNEL=${2};
 INDIR=${3};
 OPTION=${4};
-WHICHSIGNAL=${5};
-YEAR=${6};
-OUTDIR=${7};
-BinBoundaryTextFile=${8};
-FINDSTRING=${9};
-IFSYST=${10};
-WHICHNODE=${11};
+YEAR=${5};
+OUTDIR=${6};
+BinBoundaryTextFile=${7};
+FINDSTRING=${8};
+IFSYST=${9};
+WHICHNODE=${10};
 TEMPDIR="."
 
 # In condor jobs don't send the output directly to EOS. Keep them in condor local.
@@ -104,7 +103,6 @@ echo "LOCAL: ${LOCAL}"
 echo "CHANNEL: ${CHANNEL}"
 echo "INDIR: ${INDIR}"
 echo "OPTION: ${OPTION}"
-echo "WHICHSIGNAL: ${WHICHSIGNAL}"
 echo "YEAR: ${YEAR}"
 echo "OUTDIR: ${OUTDIR}"
 echo "BinBoundaryTextFile: ${BinBoundaryTextFile}"
@@ -119,7 +117,7 @@ if [[ ${OPTION} ==  "Signal" ]]; then
   echo "==============="
   date
   echo "==============="
-  python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST} --WhichSig ${WHICHSIGNAL} --node ${WHICHNODE}
+  python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST} --node ${WHICHNODE}
   echo "==============="
   echo "List all files"
   ls -ltrh
@@ -172,7 +170,6 @@ echo -e "DONE";
   channel = "FH"
   indir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/"
   option = "Signal"
-  whichsignal = "ZZ"
   year = 2018
   outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/CategorizeRootFileCondor_21Apr_WithCuts/"
   # outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/CategorizeRootFileCondor/"
@@ -181,17 +178,17 @@ echo -e "DONE";
   ifSyst = 1
   whichNode = "cHHH1"
 
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "ZZ", year, outdir, binboundarytextfile, "GluGluToHHTo2G2Z", ifSyst, whichNode))
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "WW", year, outdir, binboundarytextfile, "GluGluToHHTo2G4Q", ifSyst, whichNode))
+  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, year, outdir, binboundarytextfile, "GluGluToHHTo2G2Z", ifSyst, whichNode))
+  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, year, outdir, binboundarytextfile, "GluGluToHHTo2G4Q", ifSyst, whichNode))
 
   SingleHiggs = [ "VHToGG", "VBFHToGG", "GluGluHToGG", "ttHJet" ]
   # SingleHiggs = [ "ttHJet" ]
 
   for singleHiggsSample in SingleHiggs:
-   arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "SingleHiggs", "ZZ", year, outdir, binboundarytextfile, singleHiggsSample, ifSyst, whichNode))
+   arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "SingleHiggs", year, outdir, binboundarytextfile, singleHiggsSample, ifSyst, whichNode))
 
   # # Data
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "Data", "ZZ", year, outdir, binboundarytextfile, "Data", ifSyst, whichNode))
+  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "Data", year, outdir, binboundarytextfile, "Data", ifSyst, whichNode))
 
   with open("arguments_%s.txt"%(args.ExtraString), "w") as argFile:
      argFile.write("\n".join(arguments))

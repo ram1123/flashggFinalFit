@@ -114,7 +114,6 @@ def get_options():
     parser.add_option("--part",type='string',dest='part',default='1')
     parser.add_option("--syst",type='string',dest='syst',default='1')
     parser.add_option("--ch",type='string',dest='channel',default='FH')
-    parser.add_option("--WhichSig",type='string',dest='WhichSig',default='WW')
     return parser.parse_args()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -204,7 +203,6 @@ print("node             = ",opt.node)
 print("part             = ",opt.part)
 print("syst             = ",opt.syst)
 print("channel          = ",opt.channel)
-print("WhichSig         = ",opt.WhichSig)
 
 nTupleDirec = opt.inp_dir
 channel = opt.channel
