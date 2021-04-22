@@ -2,7 +2,7 @@
 # @Author: Ram Krishna Sharma
 # @Date:   2021-04-20
 # @Last Modified by:   Ram Krishna Sharma
-# @Last Modified time: 2021-04-21
+# @Last Modified time: 2021-04-22
 #!/usr/bin/python
 import numpy as n
 from ROOT import *
@@ -122,7 +122,7 @@ if [[ ${OPTION} ==  "Signal" ]]; then
   python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST} --WhichSig ${WHICHSIGNAL} --node ${WHICHNODE}
   echo "==============="
   echo "List all files"
-  ls
+  ls -ltrh
   echo "==============="
   echo "mv *${FINDSTRING}*.root ${OUTDIR}/"
   mv *${FINDSTRING}*.root ${OUTDIR}/
@@ -138,7 +138,7 @@ if [[ ${OPTION} ==  "SingleHiggs" ]]; then
   python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst ${IFSYST}
   echo "==============="
   echo "List all files"
-  ls
+  ls -ltrh
   echo "==============="
   echo "mv *${FINDSTRING}*.root ${OUTDIR}/"
   mv *${FINDSTRING}*.root ${OUTDIR}/
@@ -154,7 +154,7 @@ if [[ ${OPTION} ==  "Data" ]]; then
   python ${LOCAL}/CategorizeTrees.py --ch ${CHANNEL} --iD ${INDIR} --opt ${OPTION} --year ${YEAR} --oD ${TEMPDIR} --nBoundaries  ${BinBoundaryTextFile} --f ${FINDSTRING} --syst 0
   echo "==============="
   echo "List all files"
-  ls
+  ls -ltrh
   echo "==============="
   echo "mv *${FINDSTRING}*.root ${OUTDIR}/"
   mv *${FINDSTRING}*.root ${OUTDIR}/
@@ -169,32 +169,20 @@ echo -e "DONE";
 
 
 
-  inDirStarts = [
-     ##-- Binary
-   #   "/eos/user/b/bmarzocc/HHWWgg/January_2021_Production",
-   "/eos/user/l/lipe/DNN_Evaluation_sample/2016/"
-   # "/eos/user/l/lipe/DNN_Evaluation_sample/2017/"
-   # "/eos/user/l/lipe/DNN_Evaluation_sample/2018/"
-  ]
-
-
-  # years = ["2016", "2017", "2018"]
-  years = ["2017"]
-
   channel = "FH"
-  indir = "/eos/user/l/lipe/DNN_Evaluation_sample/2016/"
+  indir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/"
   option = "Signal"
   whichsignal = "ZZ"
-  year = 2017
-  # outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2017/CategorizeRootFileCondor_21Apr_v3/"
-  outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2016/CategorizeRootFileCondor/"
+  year = 2018
+  outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/CategorizeRootFileCondor_21Apr_WithCuts/"
+  # outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/CategorizeRootFileCondor/"
   binboundarytextfile = "BinBoundaries_20Apr.txt"
   findstring = "GluGluToHHTo2G2Z"
   ifSyst = 1
   whichNode = "cHHH1"
 
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "WW", year, outdir, binboundarytextfile, "GluGluToHHTo2G2Z", ifSyst, whichNode))
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "ZZ", year, outdir, binboundarytextfile, "GluGluToHHTo2G4Q", ifSyst, whichNode))
+  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "ZZ", year, outdir, binboundarytextfile, "GluGluToHHTo2G2Z", ifSyst, whichNode))
+  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, "WW", year, outdir, binboundarytextfile, "GluGluToHHTo2G4Q", ifSyst, whichNode))
 
   SingleHiggs = [ "VHToGG", "VBFHToGG", "GluGluHToGG", "ttHJet" ]
   # SingleHiggs = [ "ttHJet" ]

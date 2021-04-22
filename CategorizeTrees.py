@@ -289,8 +289,9 @@ for num,f in enumerate(input_files):
         outName = "%s/%s_%s_CategorizedTrees.root"%(opt.out_dir,opt.option,opt.year)
     print("output root file name: ",outName)
     f_out = ROOT.TFile.Open(outName,'RECREATE')
-    common_cut = '(1)'
+    # common_cut = '(1)'
     #common_cut = '(((Leading_Photon_pt/CMS_hgg_mass) > (1/3))*((Subleading_Photon_pt/CMS_hgg_mass) > (1/4)) )'
+    common_cut = '( (Leading_Photon_pt/CMS_hgg_mass) > 1/3. && (Subleading_Photon_pt/CMS_hgg_mass) > 1/4. && Leading_Photon_MVA>-0.7 && Subleading_Photon_MVA>-0.7)'
     for tree_i, tree in enumerate(treelist):
         print"On Systematic %s / %s"%(tree_i+1, len(treelist))
         print"Looking for tree:",treelist[tree_i]
