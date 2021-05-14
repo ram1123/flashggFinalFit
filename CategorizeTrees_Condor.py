@@ -2,7 +2,7 @@
 # @Author: Ram Krishna Sharma
 # @Date:   2021-04-20
 # @Last Modified by:   Ram Krishna Sharma
-# @Last Modified time: 2021-04-22
+# @Last Modified time: 2021-05-14
 #!/usr/bin/python
 import numpy as n
 from ROOT import *
@@ -30,8 +30,10 @@ if __name__ == '__main__':
 
   import argparse
   parser = argparse.ArgumentParser()
-  parser.add_argument('-y', '--Year', dest='Year', help='Year to run', default="2016", type=int)
+  parser.add_argument('-y', '--Year', dest='Year', help='Year to run', default="2018", type=str)
   parser.add_argument('-s', '--ExtraString', dest='ExtraString', help='Extra string to be added in the condor file name', default="", type=str)
+  parser.add_argument('-b', '--BinFile', dest='BinFile', help='Extra string to be added in the condor file name', default="", type=str)
+  parser.add_argument('-d', '--inDir', dest='inDir', help='Input directory', default="", type=str)
 
   args = parser.parse_args()
 #   parser = OptionParser()
@@ -62,21 +64,22 @@ if __name__ == '__main__':
   if not os.path.isdir('log'): os.mkdir('log')
 
   # Prepare condor jobs
-  condor = '''executable              = run_script_%s.sh
+  condor = '''executable              = run_script_%s_%s.sh
 output                  = output/strips.$(ClusterId).$(ProcId).out
 error                   = output/strips.$(ClusterId).$(ProcId).out
 log                     = log/strips.$(ClusterId).log
-transfer_input_files    = run_script_%s.sh,BinBoundaries_20Apr.txt
+transfer_input_files    = run_script_%s_%s.sh,%s
+request_memory          = 12GB
 # on_exit_remove          = (ExitBySignal == False) && (ExitCode == 0)
 # periodic_release        = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*60))
 
 +JobFlavour             = "workday"
 # +AccountingGroup      = "group_u_CMS.CAF.ALCA"
-queue arguments from arguments_%s.txt
+queue arguments from arguments_%s_%s.txt
 '''
 
-  with open("condor_job_%s.txt"%(args.ExtraString), "w") as cnd_out:
-     cnd_out.write(condor%(args.ExtraString,args.ExtraString,args.ExtraString))
+  with open("condor_job_%s_%s.txt"%(args.ExtraString,args.Year), "w") as cnd_out:
+     cnd_out.write(condor%(args.ExtraString,args.Year,args.ExtraString,args.Year,args.BinFile,args.ExtraString,args.Year))
 
   outputDir = os.getcwd()
 
@@ -165,34 +168,40 @@ echo -e "DONE";
 
   arguments=[]
 
-
-
   channel = "FH"
-  indir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/"
+  indir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/"%(args.Year)
   option = "Signal"
-  year = 2018
-  outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/CategorizeRootFileCondor_21Apr_WithCuts/"
-  # outdir = "/eos/user/l/lipe/DNN_Evaluation_sample/2018/CategorizeRootFileCondor/"
-  binboundarytextfile = "BinBoundaries_20Apr.txt"
+  # year = args.Year
+  # outdir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/CategorizeRootFileCondor_21Apr_WithCuts/"%(args.Year)
+  outdir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/CategorizeRootFile/"%(args.Year)
+  if not os.path.isdir('log'): os.mkdir(outdir)
+
+  binboundarytextfile = args.BinFile
   findstring = "GluGluToHHTo2G2Z"
   ifSyst = 1
-  whichNode = "cHHH1"
+  whichNode = "cHHH5"
 
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, year, outdir, binboundarytextfile, "GluGluToHHTo2G2Z", ifSyst, whichNode))
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, option, year, outdir, binboundarytextfile, "GluGluToHHTo2G4Q", ifSyst, whichNode))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH1_%s"%(args.Year),    ifSyst = 1, whichNode = "cHHH1"))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH5_%s"%(args.Year),    ifSyst = 1, whichNode = "cHHH5"))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH2p45_%s"%(args.Year), ifSyst = 1, whichNode = "cHHH2p45"))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH1_%s"%(args.Year),          ifSyst = 1, whichNode = "cHHH1"))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH5_%s"%(args.Year),          ifSyst = 1, whichNode = "cHHH5"))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH2p45_%s"%(args.Year),       ifSyst = 1, whichNode = "cHHH2p45"))
 
   SingleHiggs = [ "VHToGG", "VBFHToGG", "GluGluHToGG", "ttHJet" ]
-  # SingleHiggs = [ "ttHJet" ]
+  # # SingleHiggs = [ "ttHJet" ]
 
   for singleHiggsSample in SingleHiggs:
-   arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "SingleHiggs", year, outdir, binboundarytextfile, singleHiggsSample, ifSyst, whichNode))
+    arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(local = local, channel = channel, indir = indir, option = "SingleHiggs", year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = singleHiggsSample,      ifSyst = 1, whichNode = ""))
 
   # # Data
-  arguments.append("{} {} {} {} {} {} {} {} {} {} {}".format(local, channel, indir, "Data", year, outdir, binboundarytextfile, "Data", ifSyst, whichNode))
+  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(  local = local, channel = channel, indir = indir, option = "Data",        year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "Data_%s"%(args.Year),  ifSyst = 0, whichNode = ""))
 
-  with open("arguments_%s.txt"%(args.ExtraString), "w") as argFile:
+  with open("arguments_%s_%s.txt"%(args.ExtraString,args.Year), "w") as argFile:
      argFile.write("\n".join(arguments))
 
-  with open("run_script_%s.sh"%(args.ExtraString), "w") as scriptFile:
+  with open("run_script_%s_%s.sh"%(args.ExtraString,args.Year), "w") as scriptFile:
      scriptFile.write(script)
 
+  print("submit condor jobs using below command:")
+  print("condor_submit condor_job_%s_%s.txt"%(args.ExtraString,args.Year))
