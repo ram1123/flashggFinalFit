@@ -2,10 +2,10 @@
 # @Author: Ram Krishna Sharma
 # @Date:   2021-04-20
 # @Last Modified by:   Ram Krishna Sharma
-# @Last Modified time: 2021-05-14
+# @Last Modified time: 2021-05-23
 #!/usr/bin/python
 import numpy as n
-from ROOT import *
+#from ROOT import *
 import sys, getopt
 from array import array
 import itertools
@@ -33,7 +33,7 @@ if __name__ == '__main__':
   parser.add_argument('-y', '--Year', dest='Year', help='Year to run', default="2018", type=str)
   parser.add_argument('-s', '--ExtraString', dest='ExtraString', help='Extra string to be added in the condor file name', default="", type=str)
   parser.add_argument('-b', '--BinFile', dest='BinFile', help='Extra string to be added in the condor file name', default="", type=str)
-  parser.add_argument('-d', '--inDir', dest='inDir', help='Input directory', default="", type=str)
+  # parser.add_argument('-d', '--inDir', dest='inDir', help='Input directory', default="", type=str)
 
   args = parser.parse_args()
 #   parser = OptionParser()
@@ -169,33 +169,37 @@ echo -e "DONE";
   arguments=[]
 
   channel = "FH"
-  indir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/"%(args.Year)
+  # indir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/"%(args.Year)
+  indir = "/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/January_2021_Production/DNNEval_15May_WithoutSH/{year}/".format(year = args.Year)
   option = "Signal"
   # year = args.Year
   # outdir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/CategorizeRootFileCondor_21Apr_WithCuts/"%(args.Year)
-  outdir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/CategorizeRootFile/"%(args.Year)
+  # outdir = "/eos/user/l/lipe/ntuple/DNN_sample/FlashggNtuples_WithMoreVars/%s/DNN_Evaluate_condor_WithSH/CategorizeRootFile/"%(args.Year)
+  outdir = "/eos/user/r/rasharma/post_doc_ihep/double-higgs/ntuples/January_2021_Production/DNNEval_15May_WithoutSH/{year}/CategorizeRootFile/".format(year = args.Year)
   if not os.path.isdir('log'): os.mkdir(outdir)
 
   binboundarytextfile = args.BinFile
-  findstring = "GluGluToHHTo2G2Z"
-  ifSyst = 1
-  whichNode = "cHHH5"
 
-  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH1_%s"%(args.Year),    ifSyst = 1, whichNode = "cHHH1"))
+  # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH1_%s"%(args.Year),    ifSyst = 1, whichNode = "cHHH1"))
   arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH5_%s"%(args.Year),    ifSyst = 1, whichNode = "cHHH5"))
-  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH2p45_%s"%(args.Year), ifSyst = 1, whichNode = "cHHH2p45"))
-  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH1_%s"%(args.Year),          ifSyst = 1, whichNode = "cHHH1"))
-  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH5_%s"%(args.Year),          ifSyst = 1, whichNode = "cHHH5"))
-  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH2p45_%s"%(args.Year),       ifSyst = 1, whichNode = "cHHH2p45"))
+  # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G2ZTo2G4Q_node_cHHH2p45_%s"%(args.Year), ifSyst = 1, whichNode = "cHHH2p45"))
+  # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH1_%s"%(args.Year),          ifSyst = 1, whichNode = "cHHH1"))
+  # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH5_%s"%(args.Year),          ifSyst = 1, whichNode = "cHHH5"))
+  # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode}".format(local = local, channel = channel, indir = indir, option = option, year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "GluGluToHHTo2G4Q_node_cHHH2p45_%s"%(args.Year),       ifSyst = 1, whichNode = "cHHH2p45"))
 
   SingleHiggs = [ "VHToGG", "VBFHToGG", "GluGluHToGG", "ttHJet" ]
+  # OtherBackgrounds = ["TTGG_0Jets","TTGJets","DiPhotonJetsBox","datadrivenQCD"]
+  OtherBackgrounds = ["datadrivenQCD"]
   # # SingleHiggs = [ "ttHJet" ]
 
-  for singleHiggsSample in SingleHiggs:
-    arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(local = local, channel = channel, indir = indir, option = "SingleHiggs", year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = singleHiggsSample,      ifSyst = 1, whichNode = ""))
+  # for singleHiggsSample in SingleHiggs:
+    # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(local = local, channel = channel, indir = indir, option = "SingleHiggs", year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = singleHiggsSample,      ifSyst = 1, whichNode = ""))
+
+  # for OtherBackground in OtherBackgrounds:
+    # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(local = local, channel = channel, indir = indir, option = "SingleHiggs", year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = OtherBackground,      ifSyst = 1, whichNode = ""))
 
   # # Data
-  arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(  local = local, channel = channel, indir = indir, option = "Data",        year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "Data_%s"%(args.Year),  ifSyst = 0, whichNode = ""))
+  # arguments.append("{local} {channel} {indir} {option} {year} {outdir} {binboundarytextfile} {findstring} {ifSyst} {whichNode} ".format(  local = local, channel = channel, indir = indir, option = "Data",        year = args.Year, outdir = outdir, binboundarytextfile = binboundarytextfile, findstring = "Data_%s"%(args.Year),  ifSyst = 0, whichNode = ""))
 
   with open("arguments_%s_%s.txt"%(args.ExtraString,args.Year), "w") as argFile:
      argFile.write("\n".join(arguments))

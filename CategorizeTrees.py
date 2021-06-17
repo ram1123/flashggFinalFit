@@ -171,7 +171,11 @@ def GetMCLabelFullyHad(MCfileName_):
         "GluGluHToGG_M125.root": "GluGluHToGG",
         "VBFHToGG_M125.root": "VBFHToGG",
         "VHToGG_M125.root": "VHToGG",
-        "ttHJetToGG_M125.root": "ttHJetToGG"
+        "ttHJetToGG_M125.root": "ttHJetToGG",
+        "datadrivenQCD_v2.root": "datadrivenQCD",
+        "DiPhotonJetsBox_MGG-80toInf_13TeV.root": "DiPhotonJetsBox",
+        "TTGG_0Jets_TuneCP5_13TeV.root": "TTGG_0Jets",
+        "TTGJets_TuneCP5_13TeV.root": "TTGJets"
     }
     return NameDict[MCfileName_]
 
